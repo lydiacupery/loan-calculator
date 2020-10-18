@@ -1,0 +1,10 @@
+query GetLoans {
+  getLoans {
+    id
+    name
+    startAt
+    paymentsPerYear
+    paymentAmount
+    principal
+  }
+}

@@ -1,0 +1,30 @@
+scalar IsoDate
+scalar IsoDateTime
+scalar IsoTime
+
+type Query {
+  getLoans: [Loan!]!
+  getLoan(loanId: ID!): Loan
+}
+
+type Loan {
+  id: String!
+  name: String!
+  startAt: IsoDateTime!
+  paymentsPerYear: Int!
+  paymentAmount: Float!
+  principal: Int!
+  completedPayments: [Payment!]!
+  remainingPayments: [Payment!]!
+}
+
+type Payment {
+  forLoan: Loan!
+  principalPayment: Float!
+  interestPayment: Float!
+  paidAt: IsoDateTime!
+}
+
+type Mutation {
+  exampleMutation: String
+}

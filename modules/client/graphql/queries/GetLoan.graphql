@@ -1,0 +1,15 @@
+query GetLoan($loanId: ID!) {
+  getLoan(loanId: $loanId) {
+    id
+    name
+    startAt
+    paymentsPerYear
+    paymentAmount
+    principal
+    completedPayments {
+      principalPayment
+      interestPayment
+      paidAt
+    }
+  }
+}
