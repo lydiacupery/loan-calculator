@@ -7,8 +7,8 @@ export type PaymentId = Flavor<UUID, "Payment Id">;
 
 export interface PaymentData {
   id: PaymentId;
-  amountForPrincipal: number;
-  amountForInterest: number;
+  principalPayment: number;
+  interestPayment: number;
   paidAt: DateTimeIso.Type;
   loanId: LoanId;
 }

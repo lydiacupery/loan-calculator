@@ -59,6 +59,7 @@ const internalResolver = {
     const customTypeImports = `
 import * as DateIso from "core/date-iso";
 import * as TimeIso from "core/time-iso";
+import * as DateTimeIsoModule from "core/date-time-iso";
 `;
     code = customTypeImports + code;
 

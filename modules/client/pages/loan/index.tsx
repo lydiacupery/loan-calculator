@@ -1,4 +1,5 @@
 import {
+  Box,
   Grid,
   Paper,
   Table,
@@ -14,6 +15,7 @@ import { makeStyles } from "client/styles";
 import { database } from "faker";
 import * as React from "react";
 import { CompletedLoanPayments } from "./completed-loan-payments";
+import { LoanInfo } from "./loan-info";
 
 type Props = {
   loanId: string;
@@ -31,18 +33,32 @@ export const LoanPage: React.FC<Props> = props => {
   if (loan.state !== "DONE" || !loan.data.getLoan) {
     return <div> LOADING </div>;
   }
-  return ( <Grid>
-  <Paper className={classes.paper} >
-    <Grid container direction="column">
-    <Typography variant="h3">{loan.data.getLoan?.name}</Typography>
-    <Typography variant="body1">Loan started on {loan.data.getLoan?.startAt}. </Typography>
-    <Typography variant="body1">Loan total amount is {loan.data.getLoan?.principal}. </Typography>
-    <Typography variant="body1">With payment amount of {loan.data.getLoan?.paymentAmount}. </Typography>
-    <Typography variant="body1">With {loan.data.getLoan?.paymentsPerYear} payments per year. </Typography>
 
-    </Grid>
+  const loanInfo = loan.data.getLoan
+  return (
+    <Grid>
+  <Paper className={classes.paper} >
+    <Typography variant="h3">{loan.data.getLoan?.name}</Typography>
   </Paper>
-  <CompletedLoanPayments completedPayments={loan.data.getLoan.completedPayments}/>
+    <Box m={6}/>
+    <Grid container wrap="nowrap" direction="column" alignContent="flex-start" >
+      <Grid item  container  >
+        <Grid item xs={1}/>
+        <Grid item container xs={10}>
+        <LoanInfo principal={loanInfo.principal} paymentAmount={loanInfo.paymentAmount} paymentsPerYear={loanInfo.paymentsPerYear} startAt={loanInfo.startAt}/>
+        </Grid>
+        <Grid item xs={1}/>
+      </Grid>
+
+    <Box m={6}/>
+      <Grid item container >
+        <Grid xs={1}/>
+        <Grid item container xs={10} style={{background: "red"}} >
+        <CompletedLoanPayments completedPayments={loan.data.getLoan.completedPayments}/>
+        </Grid>
+        <Grid xs={1}/>
+      </Grid>
+    </Grid>
   </Grid>)
 };
 

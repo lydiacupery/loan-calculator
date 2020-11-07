@@ -8,8 +8,8 @@ import { LoanId } from "core/loan/value";
 import { PaymentId } from "core/payment/value";
 
 export interface UnsavedPayment {
-  amountForPrincipal: number;
-  amountForInterest: number;
+  principalPayment: number;
+  interestPayment: number;
   paidAt: DateTimeIso.Type;
   loanId: LoanId;
 }

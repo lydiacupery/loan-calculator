@@ -19,8 +19,8 @@ const domainToDat: Isomorphism<Payment.Type, SavedPayment> = {
   to(domainPayment) {
     const sandboxRecord: SavedPayment = {
       id: Payment.id(domainPayment),
-      amountForInterest: Payment.amountForInterest(domainPayment),
-      amountForPrincipal: Payment.amountForPrincipal(domainPayment),
+      interestPayment: Payment.interestPayment(domainPayment),
+      principalPayment: Payment.principalPayment(domainPayment),
       loanId: Payment.loanId(domainPayment),
       paidAt: Payment.paidAt(domainPayment),
     };
@@ -36,24 +36,25 @@ const domainToDat: Isomorphism<Payment.Type, SavedPayment> = {
 export class PaymentRepository
   implements IAbstractDomainRepository<typeof PaymentDomainEntityInfo> {
   constructor(private readonly ctx: ServiceContext) {}
-  insertMany(
-    objects: OpaqueTypeOf<Opaque<"Loan", PaymentData>>[]
-  ): Promise<OpaqueTypeOf<Opaque<"Loan", PaymentData>>[]> {
-    throw new Error("Method not implemented.");
+  async insertMany(unsavedRecords: Payment.Type[]): Promise<Payment.Type[]> {
+    await this.ctx
+      .get(PaymentRecordRepositoryPort)
+      .insertMany(unsavedRecords.map(domainToDat.to));
+    return unsavedRecords;
   }
   update(
-    object: OpaqueTypeOf<Opaque<"Loan", PaymentData>>
-  ): Promise<OpaqueTypeOf<Opaque<"Loan", PaymentData>>> {
+    object: OpaqueTypeOf<Opaque<"Payment", PaymentData>>
+  ): Promise<OpaqueTypeOf<Opaque<"Payment", PaymentData>>> {
     throw new Error("Method not implemented.");
   }
   findMany(
     ids: { id: Flavor<Flavor<string, "A UUID">, "Payment Id"> }[]
-  ): Promise<(OpaqueTypeOf<Opaque<"Loan", PaymentData>> | null)[]> {
+  ): Promise<(OpaqueTypeOf<Opaque<"Payment", PaymentData>> | null)[]> {
     throw new Error("Method not implemented.");
   }
   insert(
-    unsavedRecord: OpaqueTypeOf<Opaque<"Loan", PaymentData>>
-  ): Promise<OpaqueTypeOf<Opaque<"Loan", PaymentData>>> {
+    unsavedRecord: OpaqueTypeOf<Opaque<"Payment", PaymentData>>
+  ): Promise<OpaqueTypeOf<Opaque<"Payment", PaymentData>>> {
     throw new Error("Method not implemented.");
   }
 

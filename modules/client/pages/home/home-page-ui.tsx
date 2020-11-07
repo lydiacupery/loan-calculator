@@ -24,6 +24,9 @@ export function HomePageUI(props: HomePageUIProps) {
               <li>
                 <ButtonLink to={`/error/`}>Error Page</ButtonLink>
               </li>
+              <li>
+                <ButtonLink to={`/loans/`}>Loans</ButtonLink>
+              </li>
             </ul>
           </Paper>
         </Grid>

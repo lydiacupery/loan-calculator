@@ -1,7 +1,7 @@
 import * as Opaque from "atomic-object/opaque/dirty_tracking";
 import * as Value from "./value";
 
-const _O = Opaque.of<"Loan", Value.PaymentData>();
+const _O = Opaque.of<"Payment", Value.PaymentData>();
 
 export type Type = SandboxEntity;
 export type SandboxEntity = Opaque.OpaqueTypeOf<typeof _O>;
@@ -10,8 +10,8 @@ const opaque = Opaque.iso(_O);
 // Accessors
 // =============================================================================
 export const id = Opaque.propLens(_O, "id").get;
-export const amountForPrincipal = Opaque.propLens(_O, "amountForPrincipal").get;
-export const amountForInterest = Opaque.propLens(_O, "amountForInterest").get;
+export const principalPayment = Opaque.propLens(_O, "principalPayment").get;
+export const interestPayment = Opaque.propLens(_O, "interestPayment").get;
 export const paidAt = Opaque.propLens(_O, "paidAt").get;
 export const loanId = Opaque.propLens(_O, "loanId").get;
 

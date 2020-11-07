@@ -1,5 +1,7 @@
 import {
   Grid,
+  Paper,
+  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -19,19 +21,23 @@ type Props = {
 
 export const CompletedLoanPayments: React.FC<Props> = props => {
   return (
-    <>
-      <TableHead>
-        <TableRow>
-          <TableCell>Principal Payment</TableCell>
-          <TableCell>Interest Payment</TableCell>
-          <TableCell>Paid At</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {props.completedPayments.map(payment => (
-          <CompletedLoanPayment {...payment} />
-        ))}
-      </TableBody>
-    </>
+    <Grid container style={{ background: "pink" }}>
+      <Paper style={{ width: "100%" }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Principal Payment</TableCell>
+              <TableCell>Interest Payment</TableCell>
+              <TableCell>Paid At</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {props.completedPayments.map(payment => (
+              <CompletedLoanPayment {...payment} />
+            ))}
+          </TableBody>
+        </Table>
+      </Paper>
+    </Grid>
   );
 };
