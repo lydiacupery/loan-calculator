@@ -1,5 +1,6 @@
 import * as Knex from "knex";
 import { addForeignKeyColumn } from "../helpers";
+import { loanLensOpsV1 } from "./effective-date-time-helpers/lens-definitions";
 
 export async function up(knex: Knex): Promise<any> {
   await knex.raw(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`);
@@ -23,11 +24,14 @@ export async function up(knex: Knex): Promise<any> {
 
     t.dateTime("effectiveStart");
     t.dateTime("effectiveEnd");
+    t.specificType("effectiveDateTimeRange", "tstzrange");
     addForeignKeyColumn(t, "parentId", "Loan");
   });
+  await loanLensOpsV1.on(knex);
 }
 
 export async function down(knex: Knex): Promise<any> {
+  await loanLensOpsV1.off(knex);
   await knex.schema.dropTable("LoanVersion");
   await knex.schema.dropTable("Loan");
 }

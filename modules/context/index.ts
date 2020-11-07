@@ -4,9 +4,11 @@ import {
 } from "atomic-object/apollo-client";
 import { ApolloClientPort } from "atomic-object/apollo-client/ports";
 import * as Hexagonal from "atomic-object/hexagonal";
+import { PortType } from "atomic-object/hexagonal/ports";
 import * as Recipe from "atomic-object/hexagonal/recipe";
 import { KnexPort } from "atomic-object/records/knex-port";
 import { ClientState } from "client/graphql/state-link";
+import { CurrentEffectiveDateTimePort } from "domain-services/current-effective-date-time";
 import {
   LoanRepository,
   LoanRepositoryAdapter,
@@ -41,6 +43,7 @@ export type ContextOpts = {
   initialState?: ClientState;
   portDefaults?: Recipe.Recipeable<any>;
   userSession?: UserSession;
+  currentEffectiveDateTime?: PortType<CurrentEffectiveDateTimePort>;
 };
 
 // Note: The order of these `add` calls matters. You must ensure that
@@ -56,6 +59,7 @@ const ContextBase = Hexagonal.contextClass(c =>
     .add(LoanRepositoryPort, LoanRepositoryAdapter)
     .add(PaymentRecordRepositoryPort, PaymentRecordRepositoryAdapter)
     .add(PaymentRepositoryPort, PaymentRepositoryAdapter)
+    .add(CurrentEffectiveDateTimePort, () => null)
 );
 
 /** The graphql context type for this app.  */
@@ -67,7 +71,11 @@ export class Context extends ContextBase {
         (x =>
           x
             .add(KnexPort, () => opts.db)
-            .add(ApolloClientStatePort, () => opts.initialState || undefined)),
+            .add(ApolloClientStatePort, () => opts.initialState || undefined)
+            .add(
+              CurrentEffectiveDateTimePort,
+              () => opts.currentEffectiveDateTime || null
+            )),
     });
   }
 

@@ -1,10 +1,13 @@
 import DataLoader from "dataloader";
 import { keyBy, keys, pick, pickBy } from "lodash-es";
 import * as DateTimeIso from "core/date-time-iso";
-import { EntityType, ITableHelpers, UnsavedR } from "./abstract";
+import { EntityType, ITableHelpers, SavedR, UnsavedR } from "./abstract";
 import Knex from "knex";
 import { Context } from "atomic-object/hexagonal/context";
 import { KnexPort } from "./knex-port";
+import { BaseHelpers } from ".";
+import { UUID } from "core";
+import { CurrentEffectiveDateTimePort } from "domain-services/current-effective-date-time";
 
 type ReadOnlyDataLoader<TKey, TValue> = {
   load: (key: TKey) => Promise<TValue>;
@@ -12,11 +15,11 @@ type ReadOnlyDataLoader<TKey, TValue> = {
 };
 
 export interface EffectiveDateTimeKnexRecordInfo<
-  Unsaved = any,
-  Saved extends Unsaved & { id: string } = any
-> extends EntityType<Unsaved, Saved, { id: string }> {
+  Saved extends { id: string } = any
+> extends EntityType<Saved, Saved, { id: string }> {
   versionTableName: string;
   tableName: string;
+  lensViewName: string;
   idKeys: ["id"];
 }
 
@@ -29,139 +32,105 @@ function castToEffectiveDateTimeRecordInfo(
   return runtimeData as EffectiveDateTimeKnexRecordInfo;
 }
 
-export function effectiveDateTimeRecordInfo<
-  Unsaved,
-  Saved extends Unsaved & { id: string } = any
->(
+export function effectiveDateTimeRecordInfo<Saved extends { id: string } = any>(
   versionTableName: string,
-  tableName: string
-): EffectiveDateTimeKnexRecordInfo<Unsaved, Saved>;
+  tableName: string,
+  lensViewName: string
+): EffectiveDateTimeKnexRecordInfo<Saved>;
 // creates the record which the repo operates on
 export function effectiveDateTimeRecordInfo(
   versionTableName: string,
-  tableName: string
+  tableName: string,
+  lensViewName: string
 ) {
   return castToEffectiveDateTimeRecordInfo({
-    idOf: rec => rec.id,
+    idOf: rec => pick(rec, "id"),
     versionTableName,
     tableName,
+    lensViewName,
     idKeys: ["id"],
   });
 }
 
-type MinimalContext = Context<KnexPort>;
-export abstract class EffectiveDateTimeHelpers<
+export interface DateTimeHelpers<
+  SavedDestType extends IdKeyT,
+  IdKeyT extends { id: string }
+> extends BaseHelpers<SavedDestType, IdKeyT> {
+  findById: ReadOnlyDataLoader<IdKeyT[keyof IdKeyT], SavedDestType | null>;
+}
+
+type MinimalContext = Context<KnexPort | CurrentEffectiveDateTimePort>;
+export abstract class EffectiveDateTimeDataPoolTableHelper<
   TContext extends MinimalContext,
-  TUnsavedR extends Record<string, any>
-> implements ITableHelpers<TUnsavedR & { id: string }, { id: string }> {
-  abstract recordType: EffectiveDateTimeKnexRecordInfo<
-    TUnsavedR,
-    TUnsavedR & { id: string }
-  >;
+  TSavedR extends Record<string, any> & { id: string }
+> implements DateTimeHelpers<TSavedR, { id: string }> {
+  abstract recordType: EffectiveDateTimeKnexRecordInfo<TSavedR>;
 
   public abstract db: Knex;
+  protected abstract ctx: TContext;
   public abstract versionColumns: string[];
   public abstract headerColumns: string[];
   /** The `find` data loader takes an object that has at the id fields on it */
   find = new DataLoader<
     {
-      dateTime: DateTimeIso.Type;
-      headerId: string;
+      id: string;
     },
-    (TUnsavedR & { id: string; headerId: string }) | null
+    TSavedR | null
   >(
-    async inputs => {
-      const queryIn = inputs.map(_ => "?");
-      const result = await this.db.raw<{
-        rows: (TUnsavedR & {
-          id: string;
-          headerId: string;
-          dateTime: DateTimeIso.Type;
-        })[];
-      }>(
-        /*  sql */ `
-        WITH arguments AS (
-          SELECT
-            UNNEST(ARRAY[
-              ${queryIn}
-            ]::uuid[]) AS "headerId",
-            UNNEST(ARRAY[
-              ${queryIn}
-            ]::timestamptz[]) AS "dateTime"
-          )
-          SELECT
-          A.*,
-          arguments.*
-          FROM
-          arguments
-          INNER JOIN LATERAL (
-            SELECT
-              *
-            FROM
-              ?? ht
-              JOIN ?? vt ON vt. "headerId" = ht.id
-            WHERE
-              ht.id = arguments."headerId"
-              AND ( (arguments. "dateTime" >= vt. "effectiveStart" AND arguments."dateTime" < vt. "effectiveEnd") OR 
-              (arguments."dateTime" >= vt."effectiveStart" and vt."effectiveEnd" IS NULL))) AS A ON TRUE
-        `,
-        [
-          ...inputs.map(i => i.headerId),
-          ...inputs.map(i => i.dateTime),
-          this.recordType.tableName,
-          this.recordType.versionTableName,
-        ]
+    async idRecords => {
+      const rows: TSavedR[] = await this.table().whereIn(
+        "id",
+        idRecords.map(rec => rec.id)
       );
-
-      const makeKey: (row: {
-        headerId: string;
-        dateTime: DateTimeIso.Type;
-      }) => string = row =>
-        `${row.headerId}-${DateTimeIso.toUTC(row.dateTime)}`;
-      const lookup = keyBy(result.rows, makeKey);
-      return inputs.map(i => lookup[makeKey(i)]);
+      const byId = keyBy(rows, "id");
+      return idRecords.map(rec => byId[rec.id]);
     },
     {
-      cacheKeyFn: key => key.id + key.dateTime,
+      cacheKeyFn: input => input.id + this.getCurrentEffectiveDateTime(),
     }
   );
 
   table() {
-    return this.db.table(this.recordType.tableName);
+    const effectiveDateTimeRange = this.getCurrentEffectiveDateTime();
+    return this.db
+      .table(
+        this.db.raw(
+          `:lensName:(:effectiveDateTimeRange::timestamptz) as :tableName:`,
+          {
+            lensName: this.recordType.lensViewName,
+            effectiveDateTimeRange,
+            tableName: this.recordType.tableName,
+          }
+        )
+      )
+      .clone();
+  }
+
+  getCurrentEffectiveDateTime() {
+    const currentEffectiveDateTime = this.ctx.get(CurrentEffectiveDateTimePort);
+    if (currentEffectiveDateTime) {
+      return currentEffectiveDateTime.getCurrentEffectiveDateTime();
+    } else {
+      throw new Error(
+        "Must have a current effective date time to use a data pool / effective date time repository"
+      );
+    }
   }
 
   versionTable() {
     return this.db.table(this.recordType.versionTableName);
   }
 
-  async insert(
-    unsaved: TUnsavedR
-  ): Promise<TUnsavedR & { id: string; headerId: string }> {
-    const headerValues = pick(unsaved, this.headerColumns);
-    let headerRecord = (await this.table().where(headerValues))[0];
-
-    if (!headerRecord) {
-      headerRecord = (await this.table().insert(headerValues, [
-        ...this.headerColumns,
-        "id",
-      ]))[0];
-    }
-    const versionValues = pick(unsaved, this.versionColumns);
-    const versinRecordId = (await this.versionTable().insert(
-      { headerId: headerRecord.id, ...versionValues },
-      "id"
-    ))[0];
-    return { ...unsaved, headerId: headerRecord.id, id: versinRecordId };
+  async insert(unsaved: TSavedR): Promise<TSavedR> {
+    throw new Error("insert not yet implemented");
   }
 
-  // Find by ID isn't used for effective date records
-  // If we find we want to use it for some reason, the `any` argument to ReadOnlyDataLoader should be updated
-  findById: ReadOnlyDataLoader<any, (TUnsavedR & { id: string }) | null> = {
-    load: (): Promise<(TUnsavedR & { id: string }) | null> => {
-      throw new Error("use find instead");
+  findById: ReadOnlyDataLoader<UUID, TSavedR | null> = {
+    load: async (id): Promise<TSavedR | null> => {
+      return this.find.load({ id });
     },
-    loadMany: (): Promise<((TUnsavedR & { id: string }) | null)[]> => {
-      throw new Error("use find instead");
+    loadMany: async (inputs): Promise<(TSavedR | null)[]> => {
+      return this.find.loadMany(inputs.map(id => ({ id })));
     },
   };
 }
@@ -169,7 +138,7 @@ export abstract class EffectiveDateTimeHelpers<
 export interface EffectiveDateKnexRepositoryBase<
   TContext extends MinimalContext,
   TRecordInfo extends EffectiveDateTimeKnexRecordInfo
-> extends EffectiveDateTimeHelpers<TContext, UnsavedR<TRecordInfo>> {
+> extends EffectiveDateTimeDataPoolTableHelper<TContext, SavedR<TRecordInfo>> {
   _recordType: TRecordInfo;
 }
 
@@ -179,10 +148,12 @@ export function EffectiveDateTimeUnboundRepositoryBase<
   TContext extends MinimalContext = MinimalContext
 >(
   aRecordType: TRecordInfo,
-  columnInfo: { [key in keyof UnsavedR<TRecordInfo>]: "version" | "header" }
+  columnInfo: {
+    [key in Exclude<keyof SavedR<TRecordInfo>, "id">]: "version" | "header"
+  }
 ) {
   return class Repository
-    extends EffectiveDateTimeHelpers<TContext, UnsavedR<TRecordInfo>>
+    extends EffectiveDateTimeDataPoolTableHelper<TContext, SavedR<TRecordInfo>>
     implements EffectiveDateKnexRepositoryBase<TContext, TRecordInfo> {
     _recordType!: TRecordInfo;
     static readonly recordType = aRecordType;
