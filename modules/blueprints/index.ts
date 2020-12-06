@@ -5,7 +5,8 @@ import { padStart } from "lodash-es";
 import * as uuid from "uuid";
 import * as DateTimeIso from "core/date-time-iso";
 import { LoanRecord } from "records/impl/core";
-import { LoanRecordRepositoryPort, UnsavedLoan } from "records/loan";
+import { LoanRecordRepositoryPort, SavedLoan, UnsavedLoan } from "records/loan";
+import { v4 } from "uuid";
 
 const padToTwoDigits = (n: number) => padStart(n.toString(), 2, "0");
 
@@ -21,11 +22,13 @@ export const loan = declareBlueprint({
   entityType: LoanRecord,
   getRepo: ctx => ctx.get(LoanRecordRepositoryPort),
   buildBlueprint: universe =>
-    Blueprint.design<UnsavedLoan>({
+    Blueprint.design<SavedLoan>({
       startAt: DateTimeIso.now(),
       principal: 1000.0,
       paymentsPerYear: 12,
       paymentAmount: 100,
+      rate: 0.03,
+      id: v4(),
     }),
 });
 

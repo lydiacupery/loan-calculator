@@ -25,7 +25,7 @@ export async function up(knex: Knex): Promise<any> {
     t.dateTime("effectiveStart");
     t.dateTime("effectiveEnd");
     t.specificType("effectiveDateTimeRange", "tstzrange");
-    addForeignKeyColumn(t, "parentId", "Loan");
+    addForeignKeyColumn(t, "headerId", "Loan");
   });
   await loanLensOpsV1.on(knex);
 }

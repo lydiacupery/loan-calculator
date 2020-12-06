@@ -10,4 +10,5 @@ export interface LoanData {
   startAt: DateTimeIso.Type;
   paymentsPerYear: number;
   paymentAmount: number;
+  rate: number;
 }

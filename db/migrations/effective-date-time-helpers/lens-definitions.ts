@@ -11,22 +11,15 @@ type DataPoolLensOps = {
 
 export const loanLensOpsV1: DataPoolLensOps = {
   off: async (knex: Knex) => {
-    await knex.raw(getDropLensCode("MarketProductVariantSalesBundleEntry"));
+    await knex.raw(getDropLensCode("Loan"));
   },
   on: async (knex: Knex) => {
     const makeLensCode = await generateDataLensFromBaseAndVersionWithRangesBuilderCode(
       knex,
       {
-        tableBaseName: "MarketProductVariantSalesBundleEntry",
-        tableVersionName: "MarketProductVariantSalesBundleEntryVersion",
+        tableBaseName: "Loan",
+        tableVersionName: "LoanVersion",
         isDeletedSupported: false,
-        additionalConstraints: [
-          [
-            "productSalesBundleEntryId",
-            "marketProductVariantId",
-            "parentMarketProductVariantId",
-          ],
-        ],
       }
     );
     await knex.raw(makeLensCode.lensCode);

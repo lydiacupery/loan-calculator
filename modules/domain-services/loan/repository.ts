@@ -22,6 +22,7 @@ const domainToDat: Isomorphism<Loan.Type, SavedLoan> = {
       paymentsPerYear: Loan.paymentsPerYear(domainLoan),
       principal: Loan.principal(domainLoan),
       startAt: Loan.startAt(domainLoan),
+      rate: Loan.rate(domainLoan),
     };
 
     return sandboxRecord;

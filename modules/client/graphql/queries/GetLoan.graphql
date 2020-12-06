@@ -9,7 +9,7 @@ query GetLoan($loanId: ID!) {
     completedPayments {
       principalPayment
       interestPayment
-      paidAt
+      dateTime
     }
   }
 }

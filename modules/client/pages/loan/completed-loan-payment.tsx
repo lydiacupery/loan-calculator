@@ -5,7 +5,7 @@ import * as DateTimeIso from "core/date-time-iso";
 type Props = {
   principalPayment: number;
   interestPayment: number;
-  paidAt: DateTimeIso.Type;
+  dateTime: DateTimeIso.Type;
 };
 export const CompletedLoanPayment: React.FC<Props> = props => {
   return (
@@ -17,7 +17,7 @@ export const CompletedLoanPayment: React.FC<Props> = props => {
         <Typography>{props.interestPayment}</Typography>
       </TableCell>
       <TableCell>
-        <Typography>{DateTimeIso.dateFromTimestamp(props.paidAt)}</Typography>
+        <Typography>{DateTimeIso.dateFromTimestamp(props.dateTime)}</Typography>
       </TableCell>
     </TableRow>
   );

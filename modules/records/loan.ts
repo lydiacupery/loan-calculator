@@ -15,6 +15,7 @@ export interface UnsavedLoan {
   startAt: DateTimeIso.Type;
   paymentsPerYear: number;
   paymentAmount: number;
+  rate: number;
 }
 export interface SavedLoan extends UnsavedLoan {
   id: LoanId;
@@ -25,6 +26,7 @@ const columnInfo = {
   startAt: "version",
   paymentsPerYear: "version",
   paymentAmount: "version",
+  rate: "version",
 } as const;
 
 export class LoanRecordRepository extends EffectiveDateTimeRepositoryBase(

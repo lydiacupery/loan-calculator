@@ -15,7 +15,7 @@ type Props = {
   completedPayments: {
     principalPayment: number;
     interestPayment: number;
-    paidAt: DateTimeIso.Type;
+    dateTime: DateTimeIso.Type;
   }[];
 };
 

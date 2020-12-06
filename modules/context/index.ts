@@ -8,7 +8,10 @@ import { PortType } from "atomic-object/hexagonal/ports";
 import * as Recipe from "atomic-object/hexagonal/recipe";
 import { KnexPort } from "atomic-object/records/knex-port";
 import { ClientState } from "client/graphql/state-link";
-import { CurrentEffectiveDateTimePort } from "domain-services/current-effective-date-time";
+import {
+  CurrentEffectiveDateTime,
+  CurrentEffectiveDateTimePort,
+} from "domain-services/current-effective-date-time";
 import {
   LoanRepository,
   LoanRepositoryAdapter,
@@ -33,6 +36,11 @@ import {
 } from "records/payment";
 import * as db from "../db";
 import { UserSessionPort } from "./ports";
+import * as DateTimeIso from "core/date-time-iso";
+import {
+  LoanDomainGraphManagerAdapter,
+  LoanDomainGraphManagerPort,
+} from "domain-services/domain-graph-managers/loan-domain-graph-manager";
 
 export function buildLocalApollo(schema: GraphQLSchema = executableSchema) {
   return new Context().apolloClient;
@@ -55,11 +63,12 @@ const ContextBase = Hexagonal.contextClass(c =>
     .add(UserSessionRepositoryPort, userSessionRepositoryAdapter)
     .add(ApolloClientStatePort, () => {})
     .add(ApolloClientPort, apolloClientAdapter)
+    .add(CurrentEffectiveDateTimePort, () => null)
     .add(LoanRecordRepositoryPort, LoanRecordRepositoryAdapter)
     .add(LoanRepositoryPort, LoanRepositoryAdapter)
     .add(PaymentRecordRepositoryPort, PaymentRecordRepositoryAdapter)
     .add(PaymentRepositoryPort, PaymentRepositoryAdapter)
-    .add(CurrentEffectiveDateTimePort, () => null)
+    .add(LoanDomainGraphManagerPort, LoanDomainGraphManagerAdapter)
 );
 
 /** The graphql context type for this app.  */
@@ -74,7 +83,7 @@ export class Context extends ContextBase {
             .add(ApolloClientStatePort, () => opts.initialState || undefined)
             .add(
               CurrentEffectiveDateTimePort,
-              () => opts.currentEffectiveDateTime || null
+              () => new CurrentEffectiveDateTime(DateTimeIso.now()) || null
             )),
     });
   }

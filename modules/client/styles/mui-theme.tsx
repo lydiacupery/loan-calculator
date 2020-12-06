@@ -92,16 +92,16 @@ export const PlacementTheme = createMuiTheme({
       root: {
         paddingRight: pxToRem(4),
       },
-      action: {
-        // Style the typography inside of the MuiDialogAction component
-        "& p": {
-          fontWeight: fontWeightMedium,
-          textTransform: "uppercase" as "uppercase",
-          [breakpoints.down("xs")]: {
-            fontSize: pxToRem(smallFontSize),
-          },
-        },
-      },
+      // action: {
+      // Style the typography inside of the MuiDialogAction component
+      // "& p": {
+      //   fontWeight: fontWeightMedium,
+      //   textTransform: "uppercase" as "uppercase",
+      //   [breakpoints.down("xs")]: {
+      //     fontSize: pxToRem(smallFontSize),
+      //   },
+      // },
+      // },
     },
     MuiTableCell: {
       root: {

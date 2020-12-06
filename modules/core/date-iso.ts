@@ -68,6 +68,9 @@ export function toLongDay(date: Type): string {
 export function toMonthAndDay(date: Type): string {
   return DateFns.format(validateAndParse(date), "M/d");
 }
+export function toDateWithMonthDay(date: Type, monthDay: number) {
+  return toIsoDate(DateFns.setDate(new Date(date), monthDay));
+}
 
 export function toMonthAndDate(date: Type): string {
   return DateFns.format(validateAndParse(date), "MMMM d");

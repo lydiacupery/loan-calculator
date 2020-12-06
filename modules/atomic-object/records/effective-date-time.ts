@@ -125,6 +125,11 @@ export abstract class EffectiveDateTimeDataPoolTableHelper<
     throw new Error("insert not yet implemented");
   }
 
+  async all(): Promise<TSavedR[]> {
+    const result = await this.table();
+    return result;
+  }
+
   findById: ReadOnlyDataLoader<UUID, TSavedR | null> = {
     load: async (id): Promise<TSavedR | null> => {
       return this.find.load({ id });

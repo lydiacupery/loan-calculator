@@ -14,6 +14,7 @@ export const principal = Opaque.propLens(_O, "principal");
 export const startAt = Opaque.propLens(_O, "startAt");
 export const paymentsPerYear = Opaque.propLens(_O, "paymentsPerYear");
 export const paymentAmount = Opaque.propLens(_O, "paymentAmount");
+export const rate = Opaque.propLens(_O, "rate");
 
 // Derived values not stored in the database (were in resolvers)
 // =============================================================================

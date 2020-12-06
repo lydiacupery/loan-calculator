@@ -8,8 +8,9 @@ import {
 import { LoanRepositoryPort } from "domain-services/loan/repository";
 
 const getLoans: QueryResolvers.GetLoansResolver = async (parent, args, ctx) => {
+  console.log("---about to get the loans");
   const loans = await ctx.get(LoanRepositoryPort).all();
-  console.log({ loans });
+  console.log("got the loans....", { loans });
   return loans;
 };
 

@@ -1,4 +1,6 @@
 import Knex from "knex";
+// tslint:disable-next-line:import-blacklist
+import * as _ from "lodash";
 
 const getTypeName = (baseName: string) => `${baseName}_DPType`;
 const getLensName = (baseName: string) => `${baseName}_DPLens`;
@@ -136,11 +138,8 @@ export function buildDataPoolLensFunctionSupportingEffectiveDatesUsingRanges(
       FROM
       "${baseName}" base
       JOIN "${versionName}" version ON version."headerId" = base.id
-      where base."id" = o."id"
-			AND ( o."effectiveDateTimeRange" @> $1::timestamptz )
-      )
-      ${isDeletedSupport ? 'AND ($2 or version."isDeleted" = false)' : ""}
       AND (version."effectiveDateTimeRange" @> $1::timestamptz )
+      ${isDeletedSupport ? 'AND ($2 or version."isDeleted" = false)' : ""}
     $$
     LANGUAGE SQL;
   `;

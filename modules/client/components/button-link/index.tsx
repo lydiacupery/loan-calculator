@@ -15,7 +15,7 @@ export function ButtonLink(props: Props) {
   return (
     <Button
       {...props.buttonProps}
-      component={linkProps => (
+      component={(linkProps: any) => (
         <Link to={props.to} replace={props.replace} {...linkProps as any} />
       )}
     >

@@ -448,16 +448,6 @@ export function loaderOf<
   return new LoaderFactory<SavedR<TRecInfo>, KeyType<TRecInfo>>(repo as any);
 }
 
-interface BaseHelpers<SavedDestType extends IdKeyT, IdKeyT extends object> {
-  table: () => knex.QueryBuilder;
-  db: Knex;
-  recordType: KnexRecordInfo<any, SavedDestType, IdKeyT>;
-  find: DataLoader<
-    KeyType<KnexRecordInfo<any, SavedDestType, any>>,
-    SavedDestType | null
-  >;
-}
-
 export interface ITableHelpers<
   SavedDestType extends IdKeyT,
   IdKeyT extends object
