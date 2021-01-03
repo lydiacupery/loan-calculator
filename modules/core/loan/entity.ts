@@ -15,6 +15,12 @@ export const startAt = Opaque.propLens(_O, "startAt");
 export const paymentsPerYear = Opaque.propLens(_O, "paymentsPerYear");
 export const paymentAmount = Opaque.propLens(_O, "paymentAmount");
 export const rate = Opaque.propLens(_O, "rate");
+export const extraPayment = Opaque.propLens(_O, "extraPayment");
+export const name = Opaque.propLens(_O, "name");
+export const effectiveDateTimeRange = Opaque.propLens(
+  _O,
+  "effectiveDateTimeRange"
+);
 
 // Derived values not stored in the database (were in resolvers)
 // =============================================================================

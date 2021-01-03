@@ -7,6 +7,8 @@ import * as Payment from "core/payment/entity";
 import * as Loan from "core/loan/entity";
 import * as DateTimeIso from "core/date-time-iso";
 import * as DateIso from "core/date-iso";
+import * as Finance from "core/finance";
+import { length } from "../../../__mocks__/fileMock";
 
 export type ServiceContext = Hexagonal.Context<
   LoanRepositoryPort | PaymentRepositoryPort
@@ -16,8 +18,8 @@ export class LoanDomainGraphManager {
   constructor(private readonly ctx: ServiceContext) {}
 
   async getRemainingPaymentsForLoan(
-    loanId: LoanId
-    // effectiveDate: IsoDateTime
+    loanId: LoanId,
+    currentDateTime: DateTimeIso.Type
   ) {
     const loan = await this.ctx.get(LoanRepositoryPort).find({ id: loanId });
     if (!loan) {
@@ -32,20 +34,22 @@ export class LoanDomainGraphManager {
 
     const remainingPrincipal = Loan.principal(loan) - totalPrincipalPayments;
 
-    // for now, making the (maybe incorrect) assumption that there are always 12 payments per year - on the 10th of each month
+    // for now, making the (probably incorrect) assumption that there are always 12 payments per year - on the 10th of each month
+
+    const currentDate = DateTimeIso.dateFromTimestamp(currentDateTime);
 
     const startDate =
-      DateIso.getMonthDayFromIsoDate(DateIso.today()) > 10
+      DateIso.getMonthDayFromIsoDate(currentDate) > 10
         ? // next month the tenth
-          DateIso.toDateWithMonthDay(DateIso.addMonths(DateIso.today(), 1), 10)
+          DateIso.toDateWithMonthDay(DateIso.addMonths(currentDate, 1), 10)
         : // this month the tenth
-          DateIso.toDateWithMonthDay(DateIso.today(), 10);
+          DateIso.toDateWithMonthDay(currentDate, 10);
 
     const payments = this.generatePaymentsStartingFromDate({
       totalPayment: remainingPrincipal,
       paymentAmount: Loan.paymentAmount(loan),
       startDate,
-      interestRate: Loan.rate(loan),
+      interestRate: Loan.rate(loan) / 12, // again, making the assumption of 12 payment periods
     });
     return payments;
   }
@@ -57,20 +61,66 @@ export class LoanDomainGraphManager {
     startDate: DateIso.Type;
   }) {
     const { totalPayment, paymentAmount, startDate, interestRate } = args;
-    const remainingPaymentCount = Math.ceil(totalPayment / paymentAmount);
+    const remainingPaymentCount = Math.ceil(
+      Finance.numberOfPayments(interestRate / 12, -paymentAmount, totalPayment)
+    );
 
     // need to make 'count' number of payments starting on startDate
 
     // todo, should probably actually be looking up the loan interest rate separetely for each date
-    return Array.from({ length: remainingPaymentCount }).map((_, i) => {
-      const interestPayment = (totalPayment - i * paymentAmount) * interestRate;
-      return {
-        dateTime: DateIso.addMonths(startDate, i),
-        interestPayment,
-        principalPayment: paymentAmount - interestPayment,
-        paymentAmount,
-      };
-    });
+    // return Array.from({ length: remainingPaymentCount }).map((_, i) => {
+    //   const interestPayment = (totalPayment - i * paymentAmount) * interestRate;
+    //   return {
+    //     dateTime: DateIso.addMonths(startDate, i),
+    //     interestPayment,
+    //     principalPayment: paymentAmount - interestPayment,
+    //     paymentAmount,
+    //   };
+    // });
+
+    const reducedArray = Array.from({
+      length: remainingPaymentCount - 1,
+    }).reduce(
+      (
+        acc: {
+          dateTime: DateIso.Type;
+          interestPayment: number;
+          principalPayment: number;
+          remainingPrincipal: number;
+          paymentAmount: number;
+        }[],
+        curr
+      ) => {
+        const prev = acc[acc.length - 1];
+        const interestPayment = prev.remainingPrincipal * interestRate;
+        const principalPayment = Math.min(
+          paymentAmount - interestPayment,
+          prev.remainingPrincipal
+        );
+        return [
+          ...acc,
+          {
+            dateTime: DateIso.addMonths(prev.dateTime, 1),
+            interestPayment,
+            principalPayment,
+            remainingPrincipal: prev.remainingPrincipal - principalPayment,
+            paymentAmount,
+          },
+        ];
+      },
+      [
+        {
+          dateTime: startDate,
+          interestPayment: totalPayment * interestRate,
+          principalPayment: paymentAmount - totalPayment * interestRate,
+          paymentAmount,
+          remainingPrincipal:
+            totalPayment - (paymentAmount - totalPayment * interestRate),
+        },
+      ]
+    );
+
+    return reducedArray;
   }
 }
 

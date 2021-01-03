@@ -16,6 +16,7 @@ import { database } from "faker";
 import * as React from "react";
 import { CompletedLoanPayments } from "./completed-loan-payments";
 import { LoanInfo } from "./loan-info";
+import * as DateTimeIso from "core/date-time-iso"
 
 type Props = {
   loanId: string;
@@ -26,6 +27,7 @@ export const LoanPage: React.FC<Props> = props => {
   const loan = useQueryBundle(GetLoan, {
     variables: {
       loanId: props.loanId,
+      effectiveDateTime: DateTimeIso.now()
     },
   });
 
@@ -42,7 +44,7 @@ export const LoanPage: React.FC<Props> = props => {
   </Paper>
     <Box m={6}/>
     <Grid container wrap="nowrap" direction="column" alignContent="flex-start" >
-      <Grid item  container  >
+      <Grid item  container >
         <Grid item xs={1}/>
         <Grid item container xs={10}>
         <LoanInfo principal={loanInfo.principal} paymentAmount={loanInfo.paymentAmount} paymentsPerYear={loanInfo.paymentsPerYear} startAt={loanInfo.startAt}/>
@@ -54,11 +56,20 @@ export const LoanPage: React.FC<Props> = props => {
       <Grid item container >
         <Grid xs={1}/>
         <Grid item container xs={10} style={{background: "red"}} >
-        <CompletedLoanPayments completedPayments={loan.data.getLoan.completedPayments}/>
+        <CompletedLoanPayments completedPayments={loan.data.getLoan.remainingPayments}/>
         </Grid>
         <Grid xs={1}/>
       </Grid>
     </Grid>
+
+    <Box m={6}/>
+      <Grid item container >
+        <Grid xs={1}/>
+        <Grid item container xs={10} style={{background: "red"}} >
+        <CompletedLoanPayments completedPayments={loan.data.getLoan.completedPayments}/>
+        </Grid>
+        <Grid xs={1}/>
+      </Grid>
   </Grid>)
 };
 

@@ -1,5 +1,5 @@
-query GetLoan($loanId: ID!) {
-  getLoan(loanId: $loanId) {
+query GetLoan($loanId: ID!, $effectiveDateTime: IsoDateTime!) {
+  getLoan(loanId: $loanId, effectiveDateTime: $effectiveDateTime) {
     id
     name
     startAt
@@ -7,6 +7,11 @@ query GetLoan($loanId: ID!) {
     paymentAmount
     principal
     completedPayments {
+      principalPayment
+      interestPayment
+      dateTime
+    }
+    remainingPayments {
       principalPayment
       interestPayment
       dateTime

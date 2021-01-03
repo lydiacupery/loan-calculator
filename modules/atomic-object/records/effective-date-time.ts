@@ -1,4 +1,3 @@
-import DataLoader from "dataloader";
 import { keyBy, keys, pick, pickBy } from "lodash-es";
 import * as DateTimeIso from "core/date-time-iso";
 import { EntityType, ITableHelpers, SavedR, UnsavedR } from "./abstract";
@@ -8,6 +7,10 @@ import { KnexPort } from "./knex-port";
 import { BaseHelpers } from ".";
 import { UUID } from "core";
 import { CurrentEffectiveDateTimePort } from "domain-services/current-effective-date-time";
+import { batchDataLoaderFunction } from "./utils";
+import stringify from "json-stable-stringify";
+import { v4 } from "uuid";
+import * as DataLoader from "dataloader";
 
 type ReadOnlyDataLoader<TKey, TValue> = {
   load: (key: TKey) => Promise<TValue>;
@@ -121,8 +124,44 @@ export abstract class EffectiveDateTimeDataPoolTableHelper<
     return this.db.table(this.recordType.versionTableName);
   }
 
-  async insert(unsaved: TSavedR): Promise<TSavedR> {
-    throw new Error("insert not yet implemented");
+  headerTable() {
+    return this.db.table(this.recordType.tableName).clone();
+  }
+
+  private insertHeader = new DataLoader<object, unknown>(
+    batchDataLoaderFunction(100, async inputs => {
+      await this.headerTable().insert(inputs);
+      return inputs;
+    }),
+    {
+      cache: false,
+      cacheKeyFn: stringify,
+    }
+  );
+
+  private insertVersion = new DataLoader<object, unknown>(
+    batchDataLoaderFunction(100, async inputs => {
+      await this.versionTable().insert(inputs);
+      return inputs;
+    }),
+    {
+      cache: false,
+      cacheKeyFn: () => v4(),
+    }
+  );
+
+  async insert(record: TSavedR): Promise<TSavedR> {
+    const headerValues = pick(record, [...this.headerColumns]);
+
+    const versionValues = pick(record, this.versionColumns);
+
+    await this.insertHeader.load({ ...headerValues, id: record.id });
+    await this.insertVersion.load({
+      headerId: record.id,
+      ...versionValues,
+    });
+
+    return record;
   }
 
   async all(): Promise<TSavedR[]> {

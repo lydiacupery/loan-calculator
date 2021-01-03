@@ -1,4 +1,4 @@
-import { keyBy } from "lodash-es";
+import { chunk, keyBy } from "lodash-es";
 
 /** Create a complete lookup table from  buildDefault() to fill a collection of RecordT by calling buildDefault() for missing keys */
 export function buildLoaderTableWithDefaults<
@@ -31,3 +31,16 @@ export function buildLoaderTableWithDefaults<
      ...
    }
  * */
+export const batchDataLoaderFunction = <T, R>(
+  batchSize: number,
+  fn: (inputs: T[]) => Promise<R[]>
+) => {
+  return async (x: T[]) => {
+    const y = chunk(x, batchSize);
+    const res: R[] = [];
+    for (const z of y) {
+      res.push(...(await fn(z)));
+    }
+    return res;
+  };
+};

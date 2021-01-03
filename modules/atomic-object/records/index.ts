@@ -1,4 +1,4 @@
-import DataLoader from "dataloader";
+import * as DataLoader from "dataloader";
 import stringify from "json-stable-stringify";
 import knex from "knex";
 import { at, compact, groupBy, keyBy, pick } from "lodash-es";

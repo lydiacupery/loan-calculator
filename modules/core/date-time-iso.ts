@@ -40,3 +40,17 @@ export function validateAndParse(dateTime: Type): Date {
 export function toUTC(dateTime: Type): Type {
   return validateAndParse(dateTime).toISOString() as Type;
 }
+
+export function dateTimeIso(
+  literals: TemplateStringsArray,
+  ...placeholders: never[]
+) {
+  if (literals.length !== 1) {
+    throw new Error("One parameter only, please.");
+  }
+  const dateTime = literals[0];
+  if (!VALID_REGEX.test(dateTime)) {
+    throw new Error(`Invalid IsoDateTime ${dateTime}`);
+  }
+  return dateTime as Type;
+}

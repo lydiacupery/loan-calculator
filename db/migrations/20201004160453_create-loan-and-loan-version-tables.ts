@@ -22,9 +22,7 @@ export async function up(knex: Knex): Promise<any> {
     t.decimal("extraPayment");
     t.decimal("rate");
 
-    t.dateTime("effectiveStart");
-    t.dateTime("effectiveEnd");
-    t.specificType("effectiveDateTimeRange", "tstzrange");
+    t.specificType("effectiveDateTimeRange", "tstzrange").notNullable();
     addForeignKeyColumn(t, "headerId", "Loan");
   });
   await loanLensOpsV1.on(knex);

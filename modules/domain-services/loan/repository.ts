@@ -23,6 +23,9 @@ const domainToDat: Isomorphism<Loan.Type, SavedLoan> = {
       principal: Loan.principal(domainLoan),
       startAt: Loan.startAt(domainLoan),
       rate: Loan.rate(domainLoan),
+      extraPayment: Loan.extraPayment(domainLoan),
+      name: Loan.name(domainLoan),
+      effectiveDateTimeRange: Loan.effectiveDateTimeRange(domainLoan),
     };
 
     return sandboxRecord;
@@ -69,10 +72,13 @@ export class LoanRepository
   ): Promise<(OpaqueTypeOf<Opaque<"Loan", LoanData>> | null)[]> {
     throw new Error("Method not implemented.");
   }
-  insert(
+  async insert(
     unsavedRecord: OpaqueTypeOf<Opaque<"Loan", LoanData>>
   ): Promise<OpaqueTypeOf<Opaque<"Loan", LoanData>>> {
-    throw new Error("Method not implemented.");
+    const inserted = await this.ctx
+      .get(LoanRecordRepositoryPort)
+      .insert(domainToDat.to(unsavedRecord));
+    return domainToDat.from(inserted);
   }
 }
 

@@ -9,24 +9,31 @@ import { LoanRecord } from "./impl/core";
 import { buildRepositoryPortAndAdapter } from "./helpers";
 import { LoanId } from "core/loan/value";
 import { EffectiveDateTimeDataPoolTableHelper } from "atomic-object/records/effective-date-time";
+import { TSTZRange } from "db/tstzrange";
 
 export interface UnsavedLoan {
   principal: number;
+  name: string;
   startAt: DateTimeIso.Type;
   paymentsPerYear: number;
   paymentAmount: number;
   rate: number;
+  extraPayment: number;
+  effectiveDateTimeRange: TSTZRange;
 }
 export interface SavedLoan extends UnsavedLoan {
   id: LoanId;
 }
 
 const columnInfo = {
-  principal: "version",
-  startAt: "version",
-  paymentsPerYear: "version",
-  paymentAmount: "version",
+  principal: "header",
+  startAt: "header",
+  paymentsPerYear: "header",
+  paymentAmount: "header",
+  name: "header",
   rate: "version",
+  extraPayment: "version",
+  effectiveDateTimeRange: "version",
 } as const;
 
 export class LoanRecordRepository extends EffectiveDateTimeRepositoryBase(
