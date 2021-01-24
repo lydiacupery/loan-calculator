@@ -24,10 +24,11 @@ type Props = {
 
 export const LoanPage: React.FC<Props> = props => {
   const classes = useStyles()
+  const [isUpcomingSelected, setIsUpcomingSelected] = React.useState(true)
   const loan = useQueryBundle(GetLoan, {
     variables: {
       loanId: props.loanId,
-      effectiveDateTime: DateTimeIso.now()
+      effectiveDateTime: DateTimeIso.toIsoDateTime(new Date(2021, 1, 9))
     },
   });
 
@@ -44,32 +45,37 @@ export const LoanPage: React.FC<Props> = props => {
   </Paper>
     <Box m={6}/>
     <Grid container wrap="nowrap" direction="column" alignContent="flex-start" >
-      <Grid item  container >
+      <Grid item container >
         <Grid item xs={1}/>
         <Grid item container xs={10}>
-        <LoanInfo principal={loanInfo.principal} paymentAmount={loanInfo.paymentAmount} paymentsPerYear={loanInfo.paymentsPerYear} startAt={loanInfo.startAt}/>
+        <LoanInfo principal={loanInfo.principal} paymentAmount={loanInfo.paymentAmount} paymentsPerYear={loanInfo.paymentsPerYear} startAt={loanInfo.startAt} extraPayment={loanInfo.extraPayment}/>
         </Grid>
         <Grid item xs={1}/>
+      </Grid>
+
+      
+
+    <Box m={6}/>
+      <Grid item container >
+        <Grid xs={1}/>
+        <Grid item container xs={10} >
+        <Typography variant="h3">Completed Payments</Typography>
+        <CompletedLoanPayments payments={loan.data.getLoan.completedPayments} paymentDateText="Paid At" />
+        </Grid>
+        <Grid xs={1}/>
       </Grid>
 
     <Box m={6}/>
       <Grid item container >
         <Grid xs={1}/>
-        <Grid item container xs={10} style={{background: "red"}} >
-        <CompletedLoanPayments completedPayments={loan.data.getLoan.remainingPayments}/>
+        <Grid item container xs={10} >
+        <Typography variant="h3">Upcoming Payments</Typography>
+        <CompletedLoanPayments payments={loan.data.getLoan.remainingPayments} paymentDateText="To Be Paid At"/>
         </Grid>
         <Grid xs={1}/>
       </Grid>
     </Grid>
 
-    <Box m={6}/>
-      <Grid item container >
-        <Grid xs={1}/>
-        <Grid item container xs={10} style={{background: "red"}} >
-        <CompletedLoanPayments completedPayments={loan.data.getLoan.completedPayments}/>
-        </Grid>
-        <Grid xs={1}/>
-      </Grid>
   </Grid>)
 };
 

@@ -1,41 +1,26 @@
-const path = require("path");
-const loaders = require("../webpack/loaders");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-var HappyPack = require("happypack");
-var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const os = require("os");
-const webpack = require("webpack");
+const path = require('path');
+const loaders = require('../webpack/loaders');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HappyPack = require('happypack');
+var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const os = require('os');
+const webpack = require('webpack');
 
 // Export a function. Accept the base config as the only param.
-module.exports = (storybookBaseConfig, configType) => {
+module.exports = ({ config: storybookBaseConfig }) => {
   // configType has a value of 'DEVELOPMENT' or 'PRODUCTION'
   // You can change the configuration based on that.
   // 'PRODUCTION' is used when building the static version of storybook.
 
   // Make whatever fine-grained changes you need
   storybookBaseConfig.module.rules.push(
-    {
-      test: /\.s?css$/,
-      loaders: [
-        "style-loader",
-        "css-loader",
-        {
-          loader: "sass-loader",
-          options: { includePaths: [path.resolve(__dirname, "../modules")] },
-        },
-      ],
-      include: path.resolve(__dirname, "../"),
-    },
     loaders.mjs,
     loaders.clientSideTypeScript,
     loaders.graphql,
-    ...loaders.allImagesAndFontsArray
   );
 
-  storybookBaseConfig.resolve.extensions.push(".ts", ".tsx");
-  storybookBaseConfig.resolve.modules.unshift(
-    path.resolve(__dirname, "../modules")
-  );
+  storybookBaseConfig.resolve.extensions.push('.ts', '.tsx');
+  storybookBaseConfig.resolve.modules.unshift(path.resolve(__dirname, '../modules'));
 
   storybookBaseConfig.plugins.push(
     //   new HappyPack({
@@ -51,12 +36,14 @@ module.exports = (storybookBaseConfig, configType) => {
     new ForkTsCheckerWebpackPlugin({
       // https://github.com/Realytics/fork-ts-checker-webpack-plugin#options
       useTypescriptIncrementalApi: true,
+      memoryLimit: 4096,
       // checkSyntacticErrors: true
     }),
     new webpack.DefinePlugin({
       // Flag to detect non-production
-      __TEST__: "false",
-    })
+      __TEST__: 'false',
+      CONFIG: JSON.stringify({}),
+    }),
   );
   // Return the altered config
   return storybookBaseConfig;

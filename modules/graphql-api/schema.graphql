@@ -14,6 +14,7 @@ type Loan {
   paymentsPerYear: Int!
   paymentAmount: Float!
   principal: Int!
+  extraPayment: Int!
   completedPayments: [Payment!]!
   remainingPayments: [Payment!]!
 }
@@ -22,6 +23,8 @@ type Payment {
   forLoan: Loan!
   principalPayment: Float!
   interestPayment: Float!
+  totalPayment: Float!
+  remainingPrincipal: Float!
   dateTime: IsoDateTime!
 }
 

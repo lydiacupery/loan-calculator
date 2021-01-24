@@ -16,11 +16,13 @@ import { database } from "faker";
 import * as React from "react";
 import { CompletedLoanPayments } from "./completed-loan-payments";
 import * as DateTimeIso from "core/date-time-iso";
+import { formatUSD } from "core/formatter";
 
 type Props = {
   principal: number;
   paymentAmount: number;
   paymentsPerYear: number;
+  extraPayment: number;
   startAt: DateTimeIso.Type;
 };
 
@@ -48,10 +50,7 @@ export const LoanInfo: React.FC<Props> = props => {
           </Grid>
           <Grid item xs={6}>
             <Typography variant="body1">
-              {Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-              }).format(props.principal)}
+              {formatUSD(props.principal)}
             </Typography>
           </Grid>
         </Grid>
@@ -62,10 +61,7 @@ export const LoanInfo: React.FC<Props> = props => {
           </Grid>
           <Grid item xs={6}>
             <Typography variant="body1">
-              {Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-              }).format(props.paymentAmount)}{" "}
+              {formatUSD(props.paymentAmount)}{" "}
             </Typography>
           </Grid>
         </Grid>
@@ -76,6 +72,17 @@ export const LoanInfo: React.FC<Props> = props => {
           </Grid>
           <Grid item xs={6}>
             <Typography variant="body1">{props.paymentsPerYear}</Typography>
+          </Grid>
+        </Grid>
+        <Box m={2} />
+        <Grid container justify="space-between">
+          <Grid item xs={6}>
+            <Typography variant="body1">Extra Payment</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="body1">
+              {formatUSD(props.extraPayment)}
+            </Typography>
           </Grid>
         </Grid>
       </Paper>

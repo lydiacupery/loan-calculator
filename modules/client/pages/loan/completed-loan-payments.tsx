@@ -12,11 +12,14 @@ import { CompletedLoanPayment } from "./completed-loan-payment";
 import * as DateTimeIso from "core/date-time-iso";
 
 type Props = {
-  completedPayments: {
+  payments: {
     principalPayment: number;
     interestPayment: number;
+    remainingPrincipal: number;
+    totalPayment: number;
     dateTime: DateTimeIso.Type;
   }[];
+  paymentDateText: "Paid At" | "To Be Paid At";
 };
 
 export const CompletedLoanPayments: React.FC<Props> = props => {
@@ -26,13 +29,15 @@ export const CompletedLoanPayments: React.FC<Props> = props => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Principal Payment</TableCell>
+              <TableCell>{props.paymentDateText}</TableCell>
               <TableCell>Interest Payment</TableCell>
-              <TableCell>Paid At</TableCell>
+              <TableCell>Principal Payment</TableCell>
+              <TableCell>Total Payment</TableCell>
+              <TableCell>Remaining Principal</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.completedPayments.map(payment => (
+            {props.payments.map(payment => (
               <CompletedLoanPayment {...payment} />
             ))}
           </TableBody>

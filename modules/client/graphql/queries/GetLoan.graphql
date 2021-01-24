@@ -6,15 +6,20 @@ query GetLoan($loanId: ID!, $effectiveDateTime: IsoDateTime!) {
     paymentsPerYear
     paymentAmount
     principal
+    extraPayment
     completedPayments {
       principalPayment
       interestPayment
+      remainingPrincipal
       dateTime
+      totalPayment
     }
     remainingPayments {
       principalPayment
       interestPayment
+      remainingPrincipal
       dateTime
+      totalPayment
     }
   }
 }

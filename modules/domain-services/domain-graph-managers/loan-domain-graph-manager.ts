@@ -47,7 +47,7 @@ export class LoanDomainGraphManager {
 
     const payments = this.generatePaymentsStartingFromDate({
       totalPayment: remainingPrincipal,
-      paymentAmount: Loan.paymentAmount(loan),
+      paymentAmount: Loan.paymentAmount(loan) + Loan.extraPayment(loan),
       startDate,
       interestRate: Loan.rate(loan) / 12, // again, making the assumption of 12 payment periods
     });
@@ -64,6 +64,8 @@ export class LoanDomainGraphManager {
     const remainingPaymentCount = Math.ceil(
       Finance.numberOfPayments(interestRate / 12, -paymentAmount, totalPayment)
     );
+
+    console.log("remaining count", remainingPaymentCount);
 
     // need to make 'count' number of payments starting on startDate
 
@@ -86,8 +88,8 @@ export class LoanDomainGraphManager {
           dateTime: DateIso.Type;
           interestPayment: number;
           principalPayment: number;
+          totalPayment: number;
           remainingPrincipal: number;
-          paymentAmount: number;
         }[],
         curr
       ) => {
@@ -104,7 +106,7 @@ export class LoanDomainGraphManager {
             interestPayment,
             principalPayment,
             remainingPrincipal: prev.remainingPrincipal - principalPayment,
-            paymentAmount,
+            totalPayment: paymentAmount,
           },
         ];
       },
@@ -113,12 +115,14 @@ export class LoanDomainGraphManager {
           dateTime: startDate,
           interestPayment: totalPayment * interestRate,
           principalPayment: paymentAmount - totalPayment * interestRate,
-          paymentAmount,
+          totalPayment: paymentAmount,
           remainingPrincipal:
             totalPayment - (paymentAmount - totalPayment * interestRate),
         },
       ]
     );
+
+    console.log("...reduced array", reducedArray);
 
     return reducedArray;
   }

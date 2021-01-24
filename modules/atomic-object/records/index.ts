@@ -426,8 +426,6 @@ export class LoaderFactory<
    * */
   private async _primeAll(rows: SavedDestType[]): Promise<SavedDestType[]> {
     for (const row of rows) {
-      console.log("priming table...", this.repo.table());
-      console.log("row id", this.repo.recordType.idOf(row));
       this.repo.find.prime(this.repo.recordType.idOf(row), row);
     }
     const ids = rows.map(row => this.repo.recordType.idOf(row));
