@@ -1,4 +1,4 @@
-import * as DataLoader from "dataloader";
+import DataLoader from "dataloader";
 export async function uncachedLoad<K, V>(
   dataloader: DataLoader<K, V>,
   key: K

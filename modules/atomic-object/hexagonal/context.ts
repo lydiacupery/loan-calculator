@@ -4,12 +4,14 @@ import * as Recipe from "./recipe";
 export interface Context<TPorts extends Port = Port> {
   /** Unused. Exists in the type to disallow assignment of contexts not supporting all needed ports */
   _needs: { [K in TPorts["key"]]: K };
+  _parentContext: this | null;
   get<TP extends TPorts>(port: TP): PortType<TP>;
   clone(overrides?: Recipe.RecipeOverride<TPorts>): this;
 }
 
 type ConstructorArgs<U extends Port> = {
   portDefaults?: Recipe.RecipeOverride<U>;
+  parentContext?: any;
 };
 
 export type ContextClass<TCapabilities extends Port> = {
@@ -33,13 +35,14 @@ export interface ContextBase<TCapabilities extends Port>
 export abstract class ContextBaseImpl<TPorts extends Port>
   implements ContextBase<TPorts> {
   _needs = null as any;
+  _parentContext = null as this | null;
   protected portDefaults: Recipe.Recipe<Port>;
   protected instances: Map<Port, any>;
   protected abstract classRecipe: Recipe.Recipe<Port>;
 
   constructor(args?: ConstructorArgs<Port>) {
     this.instances = new Map();
-
+    this._parentContext = (args ? args.parentContext : null) || null;
     if (args && args.portDefaults) {
       const recipe = Recipe.coerce(args.portDefaults);
       this.portDefaults = recipe;

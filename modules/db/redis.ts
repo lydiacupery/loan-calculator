@@ -1,5 +1,5 @@
-import * as IORedis from "ioredis";
-import * as config from "config";
+import IORedis from "ioredis";
+import config from "config";
 
 // declare function getRedisConnection(): Redis;
 let _redis: IORedis.Redis | null = null;

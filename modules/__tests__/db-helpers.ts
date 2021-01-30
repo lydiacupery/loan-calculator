@@ -2,7 +2,7 @@ import { ClientState, DEFAULTS } from "client/graphql/state-link";
 import * as db from "db";
 import { Context } from "../context";
 
-import * as uuid from "uuid";
+import uuid from "uuid";
 import { getRedisConnection } from "db/redis";
 import * as Blueprints from "atomic-object/blueprints";
 import { UserSession } from "domain-services/user-session/types";

@@ -1,0 +1,10 @@
+{
+  "title": "AddPaymentToLoan",
+  "type": "object",
+  "properties": {
+    "loanId": {
+      "$ref": "int:uuid"
+    }
+  },
+  "required": ["loanId"]
+}

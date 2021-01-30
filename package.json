@@ -101,7 +101,7 @@
     "@types/react-window-infinite-loader": "^1.0.3",
     "@types/throng": "^4.0.0",
     "@types/yup": "0.26.9",
-    "ajv": "^6.9.1",
+    "ajv": "^6.10.2",
     "ajv-errors": "^1.0.1",
     "apollo-cache-inmemory": "^1.4.2",
     "apollo-client": "^2.6.10",

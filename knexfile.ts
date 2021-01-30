@@ -1,6 +1,6 @@
 // Update with your config settings.
 const config = require("config");
-// import * as config from config;
+// import config from config;
 
 module.exports = {
   test: {

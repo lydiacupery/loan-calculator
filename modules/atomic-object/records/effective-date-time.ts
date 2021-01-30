@@ -10,7 +10,7 @@ import { CurrentEffectiveDateTimePort } from "domain-services/current-effective-
 import { batchDataLoaderFunction } from "./utils";
 import stringify from "json-stable-stringify";
 import { v4 } from "uuid";
-import * as DataLoader from "dataloader";
+import DataLoader from "dataloader";
 
 type ReadOnlyDataLoader<TKey, TValue> = {
   load: (key: TKey) => Promise<TValue>;

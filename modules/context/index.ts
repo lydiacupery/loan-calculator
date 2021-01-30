@@ -41,6 +41,13 @@ import {
   LoanDomainGraphManagerAdapter,
   LoanDomainGraphManagerPort,
 } from "domain-services/domain-graph-managers/loan-domain-graph-manager";
+import { ActionDispatchEventBusPort } from "atomic-object/cqrs/event-bus/port";
+import { MessageBusAdapter } from "atomic-object/cqrs/event-bus/adapter";
+import { eventDispatchAdapter, EventDispatchPort } from "domain-services";
+import {
+  EventLogRecordRepositoryAdapter,
+  EventLogRecordRepositoryPort,
+} from "records/event-log";
 
 export function buildLocalApollo(schema: GraphQLSchema = executableSchema) {
   return new Context().apolloClient;
@@ -60,6 +67,7 @@ const ContextBase = Hexagonal.contextClass(c =>
   c
     .add(KnexPort, () => db.getConnection())
     .add(UserSessionPort, () => null)
+    .add(ActionDispatchEventBusPort, MessageBusAdapter)
     .add(UserSessionRepositoryPort, userSessionRepositoryAdapter)
     .add(ApolloClientStatePort, () => {})
     .add(ApolloClientPort, apolloClientAdapter)
@@ -69,6 +77,8 @@ const ContextBase = Hexagonal.contextClass(c =>
     .add(PaymentRecordRepositoryPort, PaymentRecordRepositoryAdapter)
     .add(PaymentRepositoryPort, PaymentRepositoryAdapter)
     .add(LoanDomainGraphManagerPort, LoanDomainGraphManagerAdapter)
+    .add(EventLogRecordRepositoryPort, EventLogRecordRepositoryAdapter)
+    .add(EventDispatchPort, eventDispatchAdapter)
 );
 
 /** The graphql context type for this app.  */
@@ -86,6 +96,7 @@ export class Context extends ContextBase {
               () => new CurrentEffectiveDateTime(DateTimeIso.now()) || null
             )),
     });
+    this.get(ActionDispatchEventBusPort).subscribe(this.get(EventDispatchPort));
   }
 
   get apolloClient() {

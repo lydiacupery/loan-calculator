@@ -1,5 +1,5 @@
 import * as core from "express-serve-static-core";
-import * as config from "config";
+import config from "config";
 const API_KEY = config.get<string>("server.apiKey");
 export function handleExceptions(fn: core.RequestHandler): core.RequestHandler {
   return async (

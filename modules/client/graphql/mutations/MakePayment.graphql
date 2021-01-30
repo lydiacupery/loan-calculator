@@ -1,0 +1,27 @@
+mutation MakePayment(
+  $loanId: ID!
+  $paymentAmount: Int!
+  $effectiveDateTime: IsoDateTime!
+) {
+  makePayment(
+    loanId: $loanId
+    paymentAmount: $paymentAmount
+    effectiveDateTime: $effectiveDateTime
+  ) {
+    id
+    completedPayments {
+      principalPayment
+      interestPayment
+      remainingPrincipal
+      dateTime
+      totalPayment
+    }
+    remainingPayments {
+      principalPayment
+      interestPayment
+      remainingPrincipal
+      dateTime
+      totalPayment
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import * as config from "config";
+import config from "config";
 
 describe("the database connection", () => {
   it.todo("is configured by the environment", () => {

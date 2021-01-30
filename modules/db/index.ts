@@ -1,4 +1,4 @@
-import * as config from "config";
+import config from "config";
 import * as DateTimeIso from "core/date-time-iso";
 const env = config.get<string>("environment");
 

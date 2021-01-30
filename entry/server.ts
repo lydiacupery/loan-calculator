@@ -1,6 +1,6 @@
 import { buildApp } from "server";
 import * as throng from "throng";
-import * as config from "config";
+import config from "config";
 import express from "express";
 
 const expressStaticGzip = require("express-static-gzip");

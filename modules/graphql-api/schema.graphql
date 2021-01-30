@@ -29,5 +29,9 @@ type Payment {
 }
 
 type Mutation {
-  exampleMutation: String
+  makePayment(
+    loanId: ID!
+    paymentAmount: Int!
+    effectiveDateTime: IsoDateTime!
+  ): Loan
 }

@@ -1,5 +1,5 @@
 import * as Bull from "bull";
-import * as config from "config";
+import config from "config";
 
 const mainQueue = new Bull("main", {
   redis: config.get("redis.url"),
