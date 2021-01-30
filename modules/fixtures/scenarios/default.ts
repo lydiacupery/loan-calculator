@@ -1,8 +1,8 @@
-import { Universe } from "atomic-object/blueprints";
-import * as Blueprint from "blueprints";
-import { toIsoDate } from "core/date-iso";
+import { Universe } from "modules/atomic-object/blueprints";
+import * as Blueprint from "modules/blueprints";
+import { toIsoDate } from "modules/core/date-iso";
 import { addMonths } from "date-fns";
-import { Knex } from "db";
+import { Knex } from "modules/db";
 import { Context } from "context";
 import * as faker from "faker";
 

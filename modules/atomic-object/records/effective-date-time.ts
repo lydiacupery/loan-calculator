@@ -1,12 +1,12 @@
 import { keyBy, keys, pick, pickBy } from "lodash-es";
-import * as DateTimeIso from "core/date-time-iso";
+import * as DateTimeIso from "modules/core/date-time-iso";
 import { EntityType, ITableHelpers, SavedR, UnsavedR } from "./abstract";
 import Knex from "knex";
-import { Context } from "atomic-object/hexagonal/context";
+import { Context } from "modules/atomic-object/hexagonal/context";
 import { KnexPort } from "./knex-port";
 import { BaseHelpers } from ".";
-import { UUID } from "core";
-import { CurrentEffectiveDateTimePort } from "domain-services/current-effective-date-time";
+import { UUID } from "modules/core";
+import { CurrentEffectiveDateTimePort } from "modules/domain-services/current-effective-date-time";
 import { batchDataLoaderFunction } from "./utils";
 import stringify from "json-stable-stringify";
 import { v4 } from "uuid";

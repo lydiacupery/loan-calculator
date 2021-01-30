@@ -1,4 +1,4 @@
-import * as TimeIso from "core/time-iso";
+import * as TimeIso from "modules/core/time-iso";
 
 describe("isValid", () => {
   it("checks that a thing is an IsoTime", async () => {

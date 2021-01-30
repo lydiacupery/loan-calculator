@@ -1,4 +1,4 @@
-import * as ErrorNotifier from "atomic-object/error-notifier";
+import * as ErrorNotifier from "modules/atomic-object/error-notifier";
 import { concat, each, filter, identity, omit } from "lodash-es";
 
 let requestId: string | null = null;

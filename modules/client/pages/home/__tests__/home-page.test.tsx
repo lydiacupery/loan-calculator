@@ -1,7 +1,7 @@
-import { HomePage } from "client/pages/home";
-import { mockProvider } from "client/test-helpers/mock-provider";
+import { HomePage } from "modules/client/pages/home";
+import { mockProvider } from "modules/client/test-helpers/mock-provider";
 import { mount } from "enzyme";
-import { sleep } from "helpers";
+import { sleep } from "modules/helpers";
 import * as React from "react";
 
 describe("Home page", () => {

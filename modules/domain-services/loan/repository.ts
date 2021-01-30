@@ -1,16 +1,19 @@
 import {
   DomainEntityType,
   IAbstractDomainRepository,
-} from "domain-services/types";
-import * as Loan from "core/loan/entity";
-import { LoanData, LoanId } from "core/loan/value";
-import * as Hexagonal from "atomic-object/hexagonal";
-import { LoanRecordRepositoryPort, SavedLoan } from "records/loan";
-import { KnexPort } from "atomic-object/records/knex-port";
-import { OpaqueTypeOf, Opaque } from "atomic-object/opaque/dirty_tracking";
-import { Flavor } from "helpers";
+} from "modules/domain-services/types";
+import * as Loan from "modules/core/loan/entity";
+import { LoanData, LoanId } from "modules/core/loan/value";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
+import { LoanRecordRepositoryPort, SavedLoan } from "modules/records/loan";
+import { KnexPort } from "modules/atomic-object/records/knex-port";
+import {
+  OpaqueTypeOf,
+  Opaque,
+} from "modules/atomic-object/opaque/dirty_tracking";
+import { Flavor } from "modules/helpers";
 import { Isomorphism } from "@atomic-object/lenses";
-import * as Result from "atomic-object/result";
+import * as Result from "modules/atomic-object/result";
 
 type ServiceContext = Hexagonal.Context<KnexPort | LoanRecordRepositoryPort>;
 

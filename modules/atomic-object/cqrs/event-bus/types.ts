@@ -1,4 +1,4 @@
-import { GlobalDispatch, GlobalActions } from "domain-services";
+import { GlobalDispatch, GlobalActions } from "modules/domain-services";
 
 export type SubscribeFunction = (
   dispatcher: Pick<GlobalDispatch, "orThrow">

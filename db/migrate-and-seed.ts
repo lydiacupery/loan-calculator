@@ -1,6 +1,6 @@
 const spawn = require("cross-spawn");
 import * as fixtures from "fixtures";
-import * as db from "db";
+import * as db from "modules/db";
 
 export const migrateAndSeed = async () => {
   if (process.env.USE_FAKE_DATA) {

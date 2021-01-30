@@ -1,4 +1,4 @@
-import * as Factory from "atomic-object/blueprints/blueprint";
+import * as Factory from "modules/atomic-object/blueprints/blueprint";
 
 describe("FactoryBuilder", () => {
   it("builds an object if no values are provided", async () => {

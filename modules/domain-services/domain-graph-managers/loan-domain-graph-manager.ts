@@ -1,13 +1,13 @@
-import * as Hexagonal from "atomic-object/hexagonal";
-import { IsoDateTime } from "client/graphql/types.gen";
-import { LoanId } from "core/loan/value";
-import { LoanRepositoryPort } from "domain-services/loan/repository";
-import { PaymentRepositoryPort } from "domain-services/payment/repository";
-import * as Payment from "core/payment/entity";
-import * as Loan from "core/loan/entity";
-import * as DateTimeIso from "core/date-time-iso";
-import * as DateIso from "core/date-iso";
-import * as Finance from "core/finance";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
+import { IsoDateTime } from "modules/client/graphql/types.gen";
+import { LoanId } from "modules/core/loan/value";
+import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
+import { PaymentRepositoryPort } from "modules/domain-services/payment/repository";
+import * as Payment from "modules/core/payment/entity";
+import * as Loan from "modules/core/loan/entity";
+import * as DateTimeIso from "modules/core/date-time-iso";
+import * as DateIso from "modules/core/date-iso";
+import * as Finance from "modules/core/finance";
 import { length } from "../../../__mocks__/fileMock";
 
 export type ServiceContext = Hexagonal.Context<

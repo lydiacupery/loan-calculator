@@ -1,4 +1,4 @@
-import { Flavor } from "helpers";
+import { Flavor } from "modules/helpers";
 
 export type Maybe<T> = T | null | undefined;
 export const orThrow = (message: string) => <T>(x: Maybe<T>): T => {

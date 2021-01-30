@@ -1,5 +1,5 @@
-import * as Hexagonal from "atomic-object/hexagonal";
-import introspectionQueryResultData from "client/graphql/introspection-result.gen";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
+import introspectionQueryResultData from "modules/client/graphql/introspection-result.gen";
 import ApolloClient from "apollo-client";
 import {
   IntrospectionFragmentMatcher,
@@ -7,9 +7,9 @@ import {
 } from "apollo-cache-inmemory";
 import { ApolloLink } from "apollo-link";
 import SchemaLink from "apollo-link-schema";
-import { ClientSideResolvers } from "client/graphql/resolvers";
+import { ClientSideResolvers } from "modules/client/graphql/resolvers";
 import { ApolloClientPort } from "./ports";
-import { executableSchema } from "graphql-api";
+import { executableSchema } from "modules/graphql-api";
 
 export const ApolloClientStatePort = Hexagonal.port<
   unknown,

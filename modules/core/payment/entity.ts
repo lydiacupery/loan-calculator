@@ -1,4 +1,4 @@
-import * as Opaque from "atomic-object/opaque/dirty_tracking";
+import * as Opaque from "modules/atomic-object/opaque/dirty_tracking";
 import * as Value from "./value";
 
 const _O = Opaque.of<"Payment", Value.PaymentData>();

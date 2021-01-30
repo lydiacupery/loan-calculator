@@ -1,4 +1,4 @@
-import { useTranslator } from "client/translations";
+import { useTranslator } from "modules/client/translations";
 
 import * as React from "react";
 import { SchemaBuilder } from "./core";

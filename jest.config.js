@@ -11,7 +11,7 @@ module.exports = {
     "\\.(css|less|scss)$": "identity-obj-proxy",
     "\\.(gif|ttf|eot|svg)$": "<rootDir>/__mocks__/fileMock.js",
   },
-  moduleDirectories: ["modules", "node_modules"],
+  moduleDirectories: ["<rootDir>", "node_modules"],
   // TODO: figure out a better way to reference global setup/teardown.
   // (reading files out of dist means that we have to explicitly build before we can test)
   // https://github.com/facebook/jest/issues/5164#issuecomment-376006851

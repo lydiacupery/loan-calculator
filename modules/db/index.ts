@@ -1,5 +1,5 @@
 import config from "config";
-import * as DateTimeIso from "core/date-time-iso";
+import * as DateTimeIso from "modules/core/date-time-iso";
 const env = config.get<string>("environment");
 
 const knexConfig: any = require("../../knexfile")[env];

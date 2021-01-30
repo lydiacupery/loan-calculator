@@ -1,6 +1,6 @@
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
-import { ENGLISH, TranslationProvider } from "client/translations";
+import { ENGLISH, TranslationProvider } from "modules/client/translations";
 import * as React from "react";
 import { PlacementTheme } from "../../styles/mui-theme";
 

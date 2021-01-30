@@ -1,5 +1,5 @@
-import { RecordBlueprint } from "atomic-object/blueprints";
-import { EntityType, SavedR } from "atomic-object/records/abstract";
+import { RecordBlueprint } from "modules/atomic-object/blueprints";
+import { EntityType, SavedR } from "modules/atomic-object/records/abstract";
 import { first as firstElement, last as lastElement, sample } from "lodash-es";
 
 export type BlueprintCanvas<T = any> = {

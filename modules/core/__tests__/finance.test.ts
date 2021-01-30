@@ -1,4 +1,4 @@
-import * as Finance from "core/finance";
+import * as Finance from "modules/core/finance";
 
 describe("finance module", () => {
   describe("number of payments", () => {

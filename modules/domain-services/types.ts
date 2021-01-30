@@ -1,4 +1,4 @@
-import { IAbstractInsertRepository } from "atomic-object/records/abstract";
+import { IAbstractInsertRepository } from "modules/atomic-object/records/abstract";
 
 export interface DomainEntityType<
   TObjectType = any,

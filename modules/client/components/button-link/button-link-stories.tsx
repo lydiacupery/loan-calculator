@@ -1,7 +1,7 @@
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import { ButtonLink } from ".";
-import { mockProvider } from "client/test-helpers/mock-provider";
+import { mockProvider } from "modules/client/test-helpers/mock-provider";
 
 const Provider = mockProvider({});
 

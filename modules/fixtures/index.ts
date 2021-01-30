@@ -1,4 +1,4 @@
-import { Knex } from "db";
+import { Knex } from "modules/db";
 import * as defaultScenario from "fixtures/scenarios/default";
 
 export async function seedScenarios(knex: Knex): Promise<null> {

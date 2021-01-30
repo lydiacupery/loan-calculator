@@ -1,8 +1,8 @@
 import * as React from "react";
-import { useTranslator, I18nProps } from "client/translations";
+import { useTranslator, I18nProps } from "modules/client/translations";
 import { Grid, Button } from "@material-ui/core";
 import { Copy } from "../copy";
-import { makeStyles } from "client/styles";
+import { makeStyles } from "modules/client/styles";
 
 export type ErrorType = "notFound" | "unknownUser" | "serverError";
 export type Props = {

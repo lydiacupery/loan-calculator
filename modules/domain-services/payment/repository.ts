@@ -1,17 +1,23 @@
 import {
   DomainEntityType,
   IAbstractDomainRepository,
-} from "domain-services/types";
-import * as Payment from "core/payment/entity";
-import { PaymentData, PaymentId } from "core/payment/value";
-import * as Hexagonal from "atomic-object/hexagonal";
-import { PaymentRecordRepositoryPort, SavedPayment } from "records/payment";
-import { KnexPort } from "atomic-object/records/knex-port";
-import { OpaqueTypeOf, Opaque } from "atomic-object/opaque/dirty_tracking";
-import { Flavor } from "helpers";
+} from "modules/domain-servicestypes";
+import * as Payment from "modules/core/payment/entity";
+import { PaymentData, PaymentId } from "modules/core/payment/value";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
+import {
+  PaymentRecordRepositoryPort,
+  SavedPayment,
+} from "modules/records/payment";
+import { KnexPort } from "modules/atomic-object/records/knex-port";
+import {
+  OpaqueTypeOf,
+  Opaque,
+} from "modules/atomic-object/opaque/dirty_tracking";
+import { Flavor } from "modules/helpers";
 import { Isomorphism } from "@atomic-object/lenses";
-import * as Result from "atomic-object/result";
-import { LoanId } from "core/loan/value";
+import * as Result from "modules/atomic-object/result";
+import { LoanId } from "modules/core/loan/value";
 
 type ServiceContext = Hexagonal.Context<KnexPort | PaymentRecordRepositoryPort>;
 

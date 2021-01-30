@@ -5,7 +5,7 @@ import {
   ENGLISH,
   TranslationProvider,
   Translation,
-} from "client/translations";
+} from "modules/client/translations";
 
 describe("useTranslation", () => {
   it("Should return the translated text", () => {

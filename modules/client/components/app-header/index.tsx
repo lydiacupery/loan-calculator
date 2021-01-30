@@ -1,8 +1,8 @@
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "client/styles";
-import { Translation } from "client/translations";
+import { makeStyles } from "modules/client/styles";
+import { Translation } from "modules/client/translations";
 import * as React from "react";
 import { Link } from "react-router-dom";
 

@@ -1,12 +1,8 @@
-import { QueryResolvers } from "graphql-api/server-types.gen";
+import { QueryResolvers } from "modules/graphql-api/server-types.gen";
 import * as faker from "faker";
 import { keyBy } from "lodash-es";
-import {
-  LoanRecordRepositoryAdapter,
-  LoanRecordRepositoryPort,
-} from "records/loan";
-import { LoanRepositoryPort } from "domain-services/loan/repository";
-import { CurrentEffectiveDateTimePort } from "domain-services/current-effective-date-time";
+import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
+import { CurrentEffectiveDateTimePort } from "modules/domain-services/current-effective-date-time";
 
 const getLoans: QueryResolvers.GetLoansResolver = async (parent, args, ctx) => {
   console.log("---about to get the loans");

@@ -1,4 +1,4 @@
-import { getTranslation, I18nMap } from "atomic-object/i18n";
+import { getTranslation, I18nMap } from "modules/atomic-object/i18n";
 import * as React from "react";
 
 export function buildComponents<Props>(defaultValue: I18nMap<Props>) {

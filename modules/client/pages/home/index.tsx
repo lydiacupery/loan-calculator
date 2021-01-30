@@ -1,4 +1,4 @@
-import { HomePageUI } from "client/pages/home/home-page-ui";
+import { HomePageUI } from "modules/client/pages/home/home-page-ui";
 import * as React from "react";
 
 const HomePageWithClick: React.SFC<{

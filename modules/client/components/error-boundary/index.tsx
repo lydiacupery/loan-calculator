@@ -1,4 +1,4 @@
-import * as Logger from "atomic-object/logger";
+import * as Logger from "modules/atomic-object/logger";
 import * as React from "react";
 import { ErrorComponent } from "../error";
 

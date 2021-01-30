@@ -1,8 +1,8 @@
-import { AnalyticsProvider } from "client/analytics";
-import * as GALoader from "client/analytics/load-ga";
-import "client/bootstrap-mui"; // this must be the first import
-import { buildGraphqlClient } from "client/graphql/client";
-import * as ErrorNotifier from "atomic-object/error-notifier";
+import { AnalyticsProvider } from "modules/client/analytics";
+import * as GALoader from "modules/client/analytics/load-ga";
+import "modules/client/bootstrap-mui"; // this must be the first import
+import { buildGraphqlClient } from "modules/client/graphql/client";
+import * as ErrorNotifier from "modules/atomic-object/error-notifier";
 import { createBrowserHistory } from "history";
 import * as React from "react";
 import { ApolloProvider } from "react-apollo";

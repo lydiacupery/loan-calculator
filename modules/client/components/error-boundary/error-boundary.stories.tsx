@@ -1,6 +1,6 @@
 import * as React from "react";
 import { storiesOf } from "@storybook/react";
-import { mockProvider } from "client/test-helpers/mock-provider";
+import { mockProvider } from "modules/client/test-helpers/mock-provider";
 import { ErrorBoundary } from ".";
 
 const Provider = mockProvider({});

@@ -4,8 +4,8 @@ import { ClientSideResolvers } from "./resolvers";
 import { ApolloLink } from "apollo-link";
 
 import { Query as ClientSideQuery } from "./types.gen";
-import { Query as ServerSideQuery } from "graphql-api/server-types.gen";
-import * as DateIso from "core/date-iso";
+import { Query as ServerSideQuery } from "modules/graphql-api/server-types.gen";
+import * as DateIso from "modules/core/date-iso";
 type ClientSideProps = Exclude<keyof ClientSideQuery, keyof ServerSideQuery>;
 
 export type ClientState = Pick<ClientSideQuery, ClientSideProps>;

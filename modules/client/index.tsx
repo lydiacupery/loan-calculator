@@ -1,4 +1,4 @@
-import { AppShell } from "client/components/app";
+import { AppShell } from "modules/client/components/app";
 import * as React from "react";
 import { asyncComponent } from "react-async-component";
 import { Route, Switch } from "react-router-dom";
@@ -46,7 +46,8 @@ function RoutesWithHeader() {
           exact
           path="/"
           component={asyncComponent({
-            resolve: async () => (await import("client/pages/home")).HomePage,
+            resolve: async () =>
+              (await import("modules/client/pages/home")).HomePage,
             name: "Home Page",
           })}
         />

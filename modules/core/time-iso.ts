@@ -1,5 +1,5 @@
 import * as DateFns from "date-fns";
-import { Flavor } from "helpers";
+import { Flavor } from "modules/helpers";
 
 // todo: refactor and resolve these:
 // (this file's type was meant to represent time-of-day, but in practice sometimes holds (new Date()).toString()s in it.)

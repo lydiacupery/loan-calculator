@@ -1,4 +1,4 @@
-import * as Hexagonal from "atomic-object/hexagonal";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
 import ApolloClient from "apollo-client";
 
 export const ApolloClientPort = Hexagonal.port<

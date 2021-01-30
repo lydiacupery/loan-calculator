@@ -1,4 +1,4 @@
-import { useTranslator, I18nProps } from "client/translations";
+import { useTranslator, I18nProps } from "modules/client/translations";
 import { Typography } from "@material-ui/core";
 import { TypographyProps } from "@material-ui/core/Typography";
 import { keys, pick, omit } from "lodash-es";

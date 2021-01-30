@@ -1,4 +1,4 @@
-import { ILens, Isomorphism, Lens } from "atomic-object/lenses";
+import { ILens, Isomorphism, Lens } from "modules/atomic-object/lenses";
 import { identity } from "lodash-es";
 import { produce } from "immer";
 

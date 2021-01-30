@@ -8,7 +8,7 @@ import {
 } from "apollo-client";
 import { useMemo, useRef } from "react";
 import { MutationFn } from "react-apollo";
-import { Omit } from "helpers";
+import { Omit } from "modules/helpers";
 import { flow } from "lodash-es";
 
 type NonOptional<O> = O extends null | undefined | (infer T) ? T : O;

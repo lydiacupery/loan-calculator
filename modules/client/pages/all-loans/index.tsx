@@ -7,9 +7,9 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { useQueryBundle } from "client/graphql/hooks";
-import { GetLoans, LocalDate } from "client/graphql/types.gen";
-import { LoanRoute } from "client/routes/loan";
+import { useQueryBundle } from "modules/client/graphql/hooks";
+import { GetLoans, LocalDate } from "modules/client/graphql/types.gen";
+import { LoanRoute } from "modules/client/routes/loan";
 import * as React from "react";
 
 type Props = {

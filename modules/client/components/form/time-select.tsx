@@ -6,13 +6,13 @@ import {
   Grid,
   FormHelperText,
 } from "@material-ui/core";
-import { I18nProps, useTranslator } from "client/translations";
-import * as TimeIso from "core/time-iso";
+import { I18nProps, useTranslator } from "modules/client/translations";
+import * as TimeIso from "modules/core/time-iso";
 import { range } from "lodash-es";
 import * as React from "react";
 import { Field } from "formik";
 import { SelectProps } from "@material-ui/core/Select";
-import { makeStyles } from "client/styles";
+import { makeStyles } from "modules/client/styles";
 
 export type TimeSelectProps = {
   translation: I18nProps;

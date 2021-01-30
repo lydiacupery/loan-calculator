@@ -1,7 +1,7 @@
 import { withContext } from "__tests__/db-helpers";
 import { LocalDate } from "../types.gen";
-import * as DateIso from "core/date-iso";
-import { dateIso } from "core/date-iso";
+import * as DateIso from "modules/core/date-iso";
+import { dateIso } from "modules/core/date-iso";
 
 describe("LocalDate", () => {
   it(

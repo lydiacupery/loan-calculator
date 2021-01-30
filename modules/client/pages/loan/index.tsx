@@ -10,16 +10,16 @@ import {
   TabsProps,
   Typography,
 } from "@material-ui/core";
-import { useQueryBundle } from "client/graphql/hooks";
-import { GetLoan, GetLoans, LocalDate } from "client/graphql/types.gen";
-import { makeStyles } from "client/styles";
+import { useQueryBundle } from "modules/client/graphql/hooks";
+import { GetLoan, GetLoans, LocalDate } from "modules/client/graphql/types.gen";
+import { makeStyles } from "modules/client/styles";
 import { database } from "faker";
 import * as React from "react";
 import { CompletedLoanPayments } from "./completed-loan-payments";
 import { LoanInfo } from "./loan-info";
-import * as DateTimeIso from "core/date-time-iso"
-import { StyledTabs } from "client/components/tabs/tabs";
-import { StyledTab } from "client/components/tabs/tab";
+import * as DateTimeIso from "modules/core/date-time-iso"
+import { StyledTabs } from "modules/client/components/tabs/tabs";
+import { StyledTab } from "modules/client/components/tabs/tab";
 import { isNil } from "lodash-es";
 
 type Props = {

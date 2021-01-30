@@ -2,7 +2,7 @@ import { useApolloClient } from "react-apollo-hooks";
 
 import * as React from "react";
 import { FetchPolicy, ErrorPolicy } from "apollo-client";
-import { GraphqlBundle } from "client/graphql/core";
+import { GraphqlBundle } from "modules/client/graphql/core";
 
 export interface QueryBaseOptions<TVariables> {
   variables?: TVariables;

@@ -1,8 +1,8 @@
 import { orderBy } from "lodash-es";
-import { Action, ActionObjectTypes } from "atomic-object/cqrs/actions";
-import * as Hexagonal from "atomic-object/hexagonal";
-import { JsonMap } from "helpers/json";
-import { KnexPort } from "atomic-object/records/knex-port";
+import { Action, ActionObjectTypes } from "modules/atomic-object/cqrs/actions";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
+import { JsonMap } from "modules/helpers/json";
+import { KnexPort } from "modules/atomic-object/records/knex-port";
 
 export interface UnsavedEventLog {
   type: string;

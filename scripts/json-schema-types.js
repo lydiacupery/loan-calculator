@@ -57,9 +57,9 @@ const internalResolver = {
     code = code.replace(/\s*\[\w+:\s*string\]:.*/g, "");
 
     const customTypeImports = `
-import * as DateIso from "core/date-iso";
-import * as TimeIso from "core/time-iso";
-import * as DateTimeIsoModule from "core/date-time-iso";
+import * as DateIso from "modules/core/date-iso";
+import * as TimeIso from "modules/core/time-iso";
+import * as DateTimeIsoModule from "modules/core/date-time-iso";
 `;
     code = customTypeImports + code;
 

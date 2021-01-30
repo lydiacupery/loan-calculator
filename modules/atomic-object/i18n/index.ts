@@ -1,4 +1,4 @@
-import { bomb } from "helpers";
+import { bomb } from "modules/helpers";
 
 /** Definition of a tag for a translation that has no interpolated variables. */
 export interface I18nPlain<Tag extends string> {

@@ -1,7 +1,7 @@
 import { Grid, TableCell, TableRow, Typography } from "@material-ui/core";
 import * as React from "react";
-import * as DateTimeIso from "core/date-time-iso";
-import { formatUSD } from "core/formatter";
+import * as DateTimeIso from "modules/core/date-time-iso";
+import { formatUSD } from "modules/core/formatter";
 
 type Props = {
   principalPayment: number;

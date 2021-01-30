@@ -1,4 +1,4 @@
-import { GlobalDispatch } from "domain-services";
+import { GlobalDispatch } from "modules/domain-services";
 import { SendEventFunction, SubscribeFunction } from "./types";
 
 export class ActionDispatchEventBus {

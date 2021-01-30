@@ -1,7 +1,7 @@
-import * as DateIso from "core/date-iso";
-import * as TimeIso from "core/time-iso";
+import * as DateIso from "modules/core/date-iso";
+import * as TimeIso from "modules/core/time-iso";
 import * as DateFns from "date-fns";
-import { Brand } from "helpers";
+import { Brand } from "modules/helpers";
 
 export type Type = Brand<string, "ISO8601DateTime">;
 

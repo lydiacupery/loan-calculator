@@ -1,12 +1,12 @@
-import { LoanResolvers } from "graphql-api/server-types.gen";
-import { SavedLoan } from "records/loan";
-import { PaymentRecordRepositoryPort } from "records/payment";
-import * as Loan from "core/loan/entity";
-import { LoanDomainGraphManagerPort } from "domain-services/domain-graph-managers/loan-domain-graph-manager";
-import { CurrentEffectiveDateTimePort } from "domain-services/current-effective-date-time";
-import * as DateTimeIso from "core/date-time-iso";
+import { LoanResolvers } from "modules/graphql-api/server-types.gen";
+import { SavedLoan } from "modules/records/loan";
+import { PaymentRecordRepositoryPort } from "modules/records/payment";
+import * as Loan from "modules/core/loan/entity";
+import { LoanDomainGraphManagerPort } from "modules/domain-services/domain-graph-managers/loan-domain-graph-manager";
+import { CurrentEffectiveDateTimePort } from "modules/domain-services/current-effective-date-time";
+import * as DateTimeIso from "modules/core/date-time-iso";
 import { sortBy } from "lodash-es";
-import { LoanRepositoryPort } from "domain-services/loan/repository";
+import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
 
 export type MinimalLoan = Loan.Type;
 

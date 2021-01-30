@@ -1,4 +1,4 @@
-import { I18nProps, useTranslator } from "client/translations";
+import { I18nProps, useTranslator } from "modules/client/translations";
 import { Field, FieldAttributes, useField } from "formik";
 import * as FMUI from "formik-material-ui";
 

@@ -1,5 +1,5 @@
-import { UserSession } from "domain-services/user-session/types";
-import * as Hexagonal from "atomic-object/hexagonal";
+import { UserSession } from "modules/domain-servicesuser-session/types";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
 
 export const UserSessionPort = Hexagonal.port<
   UserSession | null,

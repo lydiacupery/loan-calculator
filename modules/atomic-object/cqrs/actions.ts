@@ -1,9 +1,9 @@
 import { flatMap } from "lodash-es";
-import { Context } from "atomic-object/hexagonal";
+import { Context } from "modules/atomic-object/hexagonal";
 
-import { JsonMap } from "helpers/json";
-import { LoanRepositoryPort } from "domain-services/loan/repository";
-import { EventLogRecordRepositoryPort } from "records/event-log";
+import { JsonMap } from "modules/helpers/json";
+import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
+import { EventLogRecordRepositoryPort } from "modules/records/event-log";
 
 export type ActionCommon<TPayload, TJobPayload extends TPayload = TPayload> = {
   schema: JsonMap;

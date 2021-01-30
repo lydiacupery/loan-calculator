@@ -1,8 +1,8 @@
-import * as Result from "atomic-object/result";
+import * as Result from "modules/atomic-object/result";
 
-import { UserSessionPort } from "context/ports";
-import { UserSessionRepositoryPort } from "domain-services/user-session/ports";
-import { UserSession } from "domain-services/user-session/types";
+import { UserSessionPort } from "modules/context/ports";
+import { UserSessionRepositoryPort } from "modules/domain-servicesuser-session/ports";
+import { UserSession } from "modules/domain-servicesuser-session/types";
 
 // This import wants to use "@types/express-serve-static-core" for types only,
 // which is at a later version than npm "express-serve-static-core".

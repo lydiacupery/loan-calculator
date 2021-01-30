@@ -1,4 +1,4 @@
-import * as DateTimeIso from "core/date-time-iso";
+import * as DateTimeIso from "modules/core/date-time-iso";
 
 type TSTZRangeT = {
   start: DateTimeIso.Type;

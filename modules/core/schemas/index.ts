@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import * as Result from "atomic-object/result";
+import * as Result from "modules/atomic-object/result";
 
 if (__TEST__) {
   // Polyfill `require.context` in jest to simulate webpack "require all" functionality

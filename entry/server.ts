@@ -1,5 +1,5 @@
-import { buildApp } from "server";
-import * as throng from "throng";
+import { buildApp } from "modules/server";
+import throng from "throng";
 import config from "config";
 import express from "express";
 

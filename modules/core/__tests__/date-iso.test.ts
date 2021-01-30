@@ -1,5 +1,5 @@
-import * as DateIso from "core/date-iso";
-import { dateIso } from "core/date-iso";
+import * as DateIso from "modules/core/date-iso";
+import { dateIso } from "modules/core/date-iso";
 
 describe("toIsoDate", () => {
   it("should format date in ISO8601 date format (YYYY-MM-DD)", () => {

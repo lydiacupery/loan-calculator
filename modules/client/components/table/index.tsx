@@ -2,7 +2,7 @@ import * as React from "react";
 import { Column, useTable } from "react-table";
 import { ItemData } from "./Item";
 import { TableContent } from "./content";
-import * as DateTimeIso from "core/date-time-iso";
+import * as DateTimeIso from "modules/core/date-time-iso";
 import { ItemType } from "./types";
 
 const columns: Column<ItemType>[] = [

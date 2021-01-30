@@ -1,4 +1,4 @@
-import * as LoanEventTypes from "domain-services/loan/events";
+import * as PaymentEventTypes from "modules/domain-services/payment/event";
 import { ActionDispatchEventBus } from "..";
 
 describe("Action Dispatch Event Bus", () => {
@@ -10,13 +10,13 @@ describe("Action Dispatch Event Bus", () => {
       orThrow: mockOrThrow,
     });
     await eventBus.sendEvent({
-      type: LoanEventTypes.makePaymentToLoanEvent,
+      type: PaymentEventTypes.makePaymentToLoanEventType,
       payload: { loanId: "asdf" },
     });
 
     expect(mockOrThrow).toBeCalledTimes(1);
     expect(mockOrThrow).toBeCalledWith({
-      type: LoanEventTypes.makePaymentToLoanEvent,
+      type: PaymentEventTypes.makePaymentToLoanEventType,
       payload: { loanId: "asdf" },
     });
   });
@@ -26,7 +26,7 @@ describe("Action Dispatch Event Bus", () => {
 
     await expect(
       eventBus.sendEvent({
-        type: LoanEventTypes.makePaymentToLoanEvent,
+        type: PaymentEventTypes.makePaymentToLoanEventType,
         payload: { loanId: "asdf" },
       })
     ).rejects.toThrow();

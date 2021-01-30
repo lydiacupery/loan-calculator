@@ -1,6 +1,6 @@
 import { asyncComponent } from "react-async-component";
 import * as React from "react";
-import { ErrorComponent } from "client/components/error";
+import { ErrorComponent } from "modules/client/components/error";
 
 export const NotFoundErrorPageRouteLoader = asyncComponent({
   resolve: async () => {

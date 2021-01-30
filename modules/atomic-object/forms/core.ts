@@ -1,7 +1,7 @@
 import { Isomorphism } from "@atomic-object/lenses";
 import { FormikContext, FormikHelpers } from "formik";
 import * as yup from "yup";
-import { Translator } from "client/translations";
+import { Translator } from "modules/client/translations";
 import { DocumentNode } from "graphql";
 
 export const IDENTITY_ISO: Isomorphism<any, any> = {

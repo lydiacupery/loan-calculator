@@ -1,7 +1,7 @@
-import { UUID } from "core";
-import * as DateTimeIso from "core/date-time-iso";
-import { TSTZRange } from "db/tstzrange";
-import { Flavor } from "helpers";
+import { UUID } from "modules/core";
+import * as DateTimeIso from "modules/core/date-time-iso";
+import { TSTZRange } from "modules/db/tstzrange";
+import { Flavor } from "modules/helpers";
 
 export type LoanId = Flavor<UUID, "Loan Id">;
 

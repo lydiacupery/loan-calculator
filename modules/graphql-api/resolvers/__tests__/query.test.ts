@@ -1,5 +1,5 @@
-// import * as Blueprint from "blueprints";
-// import { GetLoggedInUser } from "client/graphql/types.gen";
+// import * as Blueprint from "modules/blueprints";
+// import { GetLoggedInUser } from "modules/client/graphql/types.gen";
 // import { withContext } from "__tests__/db-helpers";
 
 // todo - if feeeling ambitious right a pagination test

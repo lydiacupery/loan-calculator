@@ -1,15 +1,15 @@
-import { buildLoan } from "core/loan/entity";
-import { LoanRepositoryPort } from "domain-services/loan/repository";
-import { buildContext } from "server/context";
-import * as uuid from "uuid";
-import * as DateTimeIso from "core/date-time-iso";
+import { buildLoan } from "modules/core/loan/entity";
+import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
+import { buildContext } from "modules/server/context";
+import uuid from "uuid";
+import * as DateTimeIso from "modules/core/date-time-iso";
 import {
   NodeScript,
   run,
   scriptFailure,
   scriptSuccess,
-} from "helpers/scripting";
-import { TSTZRange } from "db/tstzrange";
+} from "modules/helpers/scripting";
+import { TSTZRange } from "modules/db/tstzrange";
 
 const main: NodeScript = async () => {
   const context = buildContext();

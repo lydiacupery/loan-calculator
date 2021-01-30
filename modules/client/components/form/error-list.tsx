@@ -1,9 +1,9 @@
 import { FunctionComponent, Fragment } from "react";
 import * as React from "react";
 import { Typography } from "@material-ui/core";
-import { Copy } from "client/components/copy";
-import { MutationFormState } from "atomic-object/forms/use-mutation-form";
-import { I18nProps } from "client/translations";
+import { Copy } from "modules/client/components/copy";
+import { MutationFormState } from "modules/atomic-object/forms/use-mutation-form";
+import { I18nProps } from "modules/client/translations";
 
 export const MutationFormSubmissionErrors: FunctionComponent<{
   state: MutationFormState;

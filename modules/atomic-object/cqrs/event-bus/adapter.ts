@@ -1,4 +1,4 @@
-import * as Hexagonal from "atomic-object/hexagonal";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
 import { ActionDispatchEventBus } from ".";
 import { ActionDispatchEventBusPort } from "./port";
 

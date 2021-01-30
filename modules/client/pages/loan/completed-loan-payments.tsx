@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 import * as React from "react";
 import { CompletedLoanPayment } from "./completed-loan-payment";
-import * as DateTimeIso from "core/date-time-iso";
+import * as DateTimeIso from "modules/core/date-time-iso";
 
 type Props = {
   payments: {

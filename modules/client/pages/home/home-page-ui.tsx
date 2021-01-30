@@ -1,6 +1,6 @@
 import { Grid, Paper, Typography } from "@material-ui/core";
-import { ButtonLink } from "client/components/button-link";
-import { makeStyles } from "client/styles";
+import { ButtonLink } from "modules/client/components/button-link";
+import { makeStyles } from "modules/client/styles";
 import * as React from "react";
 
 export interface HomePageUIProps {

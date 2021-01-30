@@ -1,9 +1,9 @@
-import { I18nProps, useTranslator } from "client/translations";
+import { I18nProps, useTranslator } from "modules/client/translations";
 import { Field, FieldAttributes, useField } from "formik";
 import * as FMUI from "formik-material-ui";
 
 import * as React from "react";
-import { makeStyles } from "client/styles";
+import { makeStyles } from "modules/client/styles";
 
 export type TextFieldProps = {
   name: string;

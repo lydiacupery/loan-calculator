@@ -1,6 +1,6 @@
 import { QueryResolvers } from "../client-types.gen";
 import { ApolloCache } from "apollo-cache";
-import * as DateIso from "core/date-iso";
+import * as DateIso from "modules/core/date-iso";
 
 const localDate: QueryResolvers.LocalDateResolver<
   DateIso.Type

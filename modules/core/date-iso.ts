@@ -1,5 +1,5 @@
 import * as DateFns from "date-fns";
-import { Brand } from "helpers";
+import { Brand } from "modules/helpers";
 import { range, reverse, values, groupBy } from "lodash-es";
 
 export type Type = Brand<string, "ISO8601Date">;

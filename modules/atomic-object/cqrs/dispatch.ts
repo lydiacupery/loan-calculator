@@ -1,10 +1,13 @@
 import Ajv from "ajv";
 import config from "config";
-import * as Result from "atomic-object/result";
-import { buildAjv, SchemaError } from "core/schemas";
+import * as Result from "modules/atomic-object/result";
+import { buildAjv, SchemaError } from "modules/core/schemas";
 
 import { Action, ActionContext, Actions, UnwrapActions } from "./actions";
-import { EventLogRecordRepositoryPort, SavedEventLog } from "records/event-log";
+import {
+  EventLogRecordRepositoryPort,
+  SavedEventLog,
+} from "modules/records/event-log";
 
 type DispatchResult<T> = {
   value: T;

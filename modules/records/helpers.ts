@@ -1,4 +1,4 @@
-import * as Hexagonal from "atomic-object/hexagonal";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
 
 interface RepositoryClass<TContext extends Hexagonal.Context<any>, TRepo> {
   new (ctx: TContext): TRepo;

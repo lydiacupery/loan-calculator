@@ -1,15 +1,15 @@
-import { Flavor } from "helpers";
-import { loaderOf, Knex } from "atomic-object/records";
+import { Flavor } from "modules/helpers";
+import { loaderOf, Knex } from "modules/atomic-object/records";
 import {
   EffectiveDateTimeRepositoryBase,
   RepositoryBase,
-} from "records/impl/base";
-import * as DateTimeIso from "core/date-time-iso";
+} from "modules/records/impl/base";
+import * as DateTimeIso from "modules/core/date-time-iso";
 import { LoanRecord } from "./impl/core";
 import { buildRepositoryPortAndAdapter } from "./helpers";
-import { LoanId } from "core/loan/value";
-import { EffectiveDateTimeDataPoolTableHelper } from "atomic-object/records/effective-date-time";
-import { TSTZRange } from "db/tstzrange";
+import { LoanId } from "modules/core/loan/value";
+import { EffectiveDateTimeDataPoolTableHelper } from "modules/atomic-object/records/effective-date-time";
+import { TSTZRange } from "modules/db/tstzrange";
 
 export interface UnsavedLoan {
   principal: number;

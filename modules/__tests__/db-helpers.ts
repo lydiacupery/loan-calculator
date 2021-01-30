@@ -1,11 +1,11 @@
-import { ClientState, DEFAULTS } from "client/graphql/state-link";
-import * as db from "db";
+import { ClientState, DEFAULTS } from "modules/client/graphql/state-link";
+import * as db from "modules/db";
 import { Context } from "../context";
 
 import uuid from "uuid";
-import { getRedisConnection } from "db/redis";
-import * as Blueprints from "atomic-object/blueprints";
-import { UserSession } from "domain-services/user-session/types";
+import { getRedisConnection } from "modules/db/redis";
+import * as Blueprints from "modules/atomic-object/blueprints";
+import { UserSession } from "modules/domain-services/user-session/types";
 
 export function withTransactionalConnection(
   fn: (knex: db.Knex) => Promise<any>

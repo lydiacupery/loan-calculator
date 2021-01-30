@@ -1,11 +1,11 @@
-import { Flavor } from "helpers";
-import { loaderOf, Knex } from "atomic-object/records";
-import { RepositoryBase } from "records/impl/base";
-import * as DateTimeIso from "core/date-time-iso";
+import { Flavor } from "modules/helpers";
+import { loaderOf, Knex } from "modules/atomic-object/records";
+import { RepositoryBase } from "modules/records/impl/base";
+import * as DateTimeIso from "modules/core/date-time-iso";
 import { LoanRecord, PaymentRecord } from "./impl/core";
 import { buildRepositoryPortAndAdapter } from "./helpers";
-import { LoanId } from "core/loan/value";
-import { PaymentId } from "core/payment/value";
+import { LoanId } from "modules/core/loan/value";
+import { PaymentId } from "modules/core/payment/value";
 
 export interface UnsavedPayment {
   principalPayment: number;

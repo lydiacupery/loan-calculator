@@ -4,8 +4,8 @@ import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import ApolloClient from "apollo-client";
 import { SchemaLink } from "apollo-link-schema";
 import { GraphQLResolveInfo, ResponsePath } from "graphql";
-import { SchemaMap } from "graphql-api";
-import { rawSchema } from "graphql-api/schema-base";
+import { SchemaMap } from "modules/graphql-api";
+import { rawSchema } from "modules/graphql-api/schema-base";
 import {
   addMockFunctionsToSchema,
   makeExecutableSchema,
@@ -18,14 +18,14 @@ import { ApolloProvider } from "react-apollo";
 import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
 import { MemoryRouter, MemoryRouterProps } from "react-router";
 import { PlacementTheme } from "../styles/mui-theme";
-import { TranslationProvider, ENGLISH } from "client/translations";
+import { TranslationProvider, ENGLISH } from "modules/client/translations";
 import { ThemeProvider } from "@material-ui/styles";
 import * as uuid from "uuid";
 import { mapValues as _mapValues } from "lodash-es";
 
 export { MockList } from "graphql-tools";
-import * as DateIso from "core/date-iso";
-import * as TimeIso from "core/time-iso";
+import * as DateIso from "modules/core/date-iso";
+import * as TimeIso from "modules/core/time-iso";
 import { from } from "apollo-link";
 
 type DeepPartial<T> = {
@@ -55,7 +55,7 @@ export function mockClient(
   });
 
   const clientSchema = makeExecutableSchema({
-    typeDefs: require("client/graphql/schema.graphql"),
+    typeDefs: require("modules/client/graphql/schema.graphql"),
   });
   addMockFunctionsToSchema({
     schema: clientSchema,

@@ -3,28 +3,28 @@ import {
   run,
   scriptFailure,
   scriptSuccess,
-} from "helpers/scripting";
+} from "modules/helpers/scripting";
 import * as path from "path";
 import * as fs from "fs";
 import { Row, Workbook } from "exceljs";
-import * as DateIso from "core/date-iso";
+import * as DateIso from "modules/core/date-iso";
 import {
   buildAssertColumnHeader,
   columnGetterForRow,
-} from "helpers/excel-import-helpers";
-import { Payment } from "core/schemas/payment.gen";
-import * as Loan from "core/loan/entity";
-import { buildValidator } from "core/schemas";
-import { buildContext } from "server/context";
-import * as DateTimeIso from "core/date-time-iso";
-import { PaymentRepositoryPort } from "domain-services/payment/repository";
-import { PaymentRecordRepositoryPort } from "records/payment";
-import { buildPayment } from "core/payment/entity";
+} from "modules/helpers/excel-import-helpers";
+import { Payment } from "modules/core/schemas/payment.gen";
+import * as Loan from "modules/core/loan/entity";
+import { buildValidator } from "modules/core/schemas";
+import { buildContext } from "modules/server/context";
+import * as DateTimeIso from "modules/core/date-time-iso";
+import { PaymentRepositoryPort } from "modules/domain-services/payment/repository";
+import { PaymentRecordRepositoryPort } from "modules/records/payment";
+import { buildPayment } from "modules/core/payment/entity";
 import uuid from "uuid";
-import { LoanRepositoryPort } from "domain-services/loan/repository";
+import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
 
 export const Validator = buildValidator<Payment>({
-  schema: require("core/schemas/payment.schema.json"),
+  schema: require("modules/core/schemas/payment.schema.json"),
 });
 
 enum ColumnHeaderIndexes {

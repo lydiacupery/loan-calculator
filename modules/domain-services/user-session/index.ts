@@ -1,7 +1,7 @@
-import { UserSessionPort } from "context/ports";
-import { orThrow as baseOrThrow } from "core";
+import { UserSessionPort } from "modules/context/ports";
+import { orThrow as baseOrThrow } from "modules/core";
 // import { MutableUserSessionStoragePort } from "../store/ports";
-import * as Hexagonal from "atomic-object/hexagonal";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
 
 type ServiceContext = Hexagonal.Context<UserSessionPort>;
 

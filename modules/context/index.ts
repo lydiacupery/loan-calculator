@@ -1,53 +1,56 @@
 import {
   apolloClientAdapter,
   ApolloClientStatePort,
-} from "atomic-object/apollo-client";
-import { ApolloClientPort } from "atomic-object/apollo-client/ports";
-import * as Hexagonal from "atomic-object/hexagonal";
-import { PortType } from "atomic-object/hexagonal/ports";
-import * as Recipe from "atomic-object/hexagonal/recipe";
-import { KnexPort } from "atomic-object/records/knex-port";
-import { ClientState } from "client/graphql/state-link";
+} from "modules/atomic-object/apollo-client";
+import { ApolloClientPort } from "modules/atomic-object/apollo-client/ports";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
+import { PortType } from "modules/atomic-object/hexagonal/ports";
+import * as Recipe from "modules/atomic-object/hexagonal/recipe";
+import { KnexPort } from "modules/atomic-object/records/knex-port";
+import { ClientState } from "modules/client/graphql/state-link";
 import {
   CurrentEffectiveDateTime,
   CurrentEffectiveDateTimePort,
-} from "domain-services/current-effective-date-time";
+} from "modules/domain-services/current-effective-date-time";
 import {
   LoanRepository,
   LoanRepositoryAdapter,
   LoanRepositoryPort,
-} from "domain-services/loan/repository";
+} from "modules/domain-services/loan/repository";
 import {
   PaymentRepositoryAdapter,
   PaymentRepositoryPort,
-} from "domain-services/payment/repository";
-import { userSessionRepositoryAdapter } from "domain-services/user-session/adapter";
-import { UserSessionRepositoryPort } from "domain-services/user-session/ports";
-import { UserSession } from "domain-services/user-session/types";
+} from "modules/domain-services/payment/repository";
+import { userSessionRepositoryAdapter } from "modules/domain-services/user-session/adapter";
+import { UserSessionRepositoryPort } from "modules/domain-services/user-session/ports";
+import { UserSession } from "modules/domain-services/user-session/types";
 import { GraphQLSchema } from "graphql";
-import { executableSchema } from "graphql-api";
+import { executableSchema } from "modules/graphql-api";
 import {
   LoanRecordRepositoryAdapter,
   LoanRecordRepositoryPort,
-} from "records/loan";
+} from "modules/records/loan";
 import {
   PaymentRecordRepositoryAdapter,
   PaymentRecordRepositoryPort,
-} from "records/payment";
+} from "modules/records/payment";
 import * as db from "../db";
 import { UserSessionPort } from "./ports";
-import * as DateTimeIso from "core/date-time-iso";
+import * as DateTimeIso from "modules/core/date-time-iso";
 import {
   LoanDomainGraphManagerAdapter,
   LoanDomainGraphManagerPort,
-} from "domain-services/domain-graph-managers/loan-domain-graph-manager";
-import { ActionDispatchEventBusPort } from "atomic-object/cqrs/event-bus/port";
-import { MessageBusAdapter } from "atomic-object/cqrs/event-bus/adapter";
-import { eventDispatchAdapter, EventDispatchPort } from "domain-services";
+} from "modules/domain-services/domain-graph-managers/loan-domain-graph-manager";
+import { ActionDispatchEventBusPort } from "modules/atomic-object/cqrs/event-bus/port";
+import { MessageBusAdapter } from "modules/atomic-object/cqrs/event-bus/adapter";
+import {
+  eventDispatchAdapter,
+  EventDispatchPort,
+} from "modules/domain-services";
 import {
   EventLogRecordRepositoryAdapter,
   EventLogRecordRepositoryPort,
-} from "records/event-log";
+} from "modules/records/event-log";
 
 export function buildLocalApollo(schema: GraphQLSchema = executableSchema) {
   return new Context().apolloClient;

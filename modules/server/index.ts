@@ -3,13 +3,13 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import express, { Request } from "express";
 import { formatError, GraphQLError } from "graphql";
-import * as ErrorNotifier from "atomic-object/error-notifier";
-import { Logger } from "atomic-object/logger";
-import * as Result from "atomic-object/result";
-// import { userSessionValidator } from "domain-services/user-session/validator";
-import resolvers from "graphql-api/resolvers";
-import { rawSchema } from "graphql-api/schema-base";
-// import { executableSchema } from "graphql-api";
+import * as ErrorNotifier from "modules/atomic-object/error-notifier";
+import { Logger } from "modules/atomic-object/logger";
+import * as Result from "modules/atomic-object/result";
+// import { userSessionValidator } from "modules/domain-servicesuser-session/validator";
+import resolvers from "modules/graphql-api/resolvers";
+import { rawSchema } from "modules/graphql-api/schema-base";
+// import { executableSchema } from "modules/graphql-api";
 import { serverConfig } from "server/config";
 import {
   buildContext as defaultContextBuilder,
@@ -26,7 +26,7 @@ import {
   invalidCookieSessionError,
 } from "./error-handling";
 import { enforcePasswordIfSpecified } from "./middleware";
-import { UserSession } from "domain-services/user-session/types";
+import { UserSession } from "modules/domain-servicesuser-session/types";
 
 const knex = db.getConnection();
 const knexLogger = require("knex-logger");

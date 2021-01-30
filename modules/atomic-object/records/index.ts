@@ -2,7 +2,7 @@ import DataLoader from "dataloader";
 import stringify from "json-stable-stringify";
 import knex from "knex";
 import { at, compact, groupBy, keyBy, pick } from "lodash-es";
-import { Context } from "atomic-object/hexagonal/context";
+import { Context } from "modules/atomic-object/hexagonal/context";
 import { EntityType, KeyType, SavedR, UnsavedR } from "./abstract";
 import { buildLoaderTableWithDefaults } from "./utils";
 import { KnexPort } from "./knex-port";

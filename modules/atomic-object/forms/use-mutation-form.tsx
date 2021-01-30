@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { RefetchQueriesProviderFn } from "react-apollo";
 import { useMutation } from "react-apollo-hooks";
 import { SubmitFn } from "./core";
-import { GraphqlBundle } from "client/graphql/core";
+import { GraphqlBundle } from "modules/client/graphql/core";
 
 export type MutationFormState =
   | { key: "INITIAL" }

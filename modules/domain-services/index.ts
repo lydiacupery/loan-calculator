@@ -2,14 +2,16 @@ import {
   Actions,
   ActionsObjectTypes,
   UnwrapActions,
-} from "atomic-object/cqrs/actions";
-import { Dispatcher } from "atomic-object/cqrs/dispatch";
-import * as LoanService from "domain-services/loan/events";
-import * as Hexagonal from "atomic-object/hexagonal";
-import { EventLogRecordRepositoryPort } from "records/event-log";
+} from "modules/atomic-object/cqrs/actions";
+import { Dispatcher } from "modules/atomic-object/cqrs/dispatch";
+import * as PaymentService from "modules/domain-services/payment/event";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
+import { EventLogRecordRepositoryPort } from "modules/records/event-log";
 import { LoanRepositoryPort } from "./loan/repository";
 
-export const ALL_SERVICE_ACTIONS = new Actions().withAll(LoanService.ACTIONS);
+export const ALL_SERVICE_ACTIONS = new Actions().withAll(
+  PaymentService.ACTIONS
+);
 
 export type GlobalActions = ActionsObjectTypes<typeof ALL_SERVICE_ACTIONS>;
 export type GlobalDispatch = Dispatcher<

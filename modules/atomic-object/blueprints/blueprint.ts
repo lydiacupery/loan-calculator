@@ -1,5 +1,5 @@
 import { identity } from "lodash-es";
-import { Entropy, hashInt } from "entropy";
+import { Entropy, hashInt } from "modules/entropy";
 
 type DesignFn<T, P extends keyof T> = (x: Entropy) => PromiseLike<T[P]> | T[P];
 type BlueprintDesign<T> = {

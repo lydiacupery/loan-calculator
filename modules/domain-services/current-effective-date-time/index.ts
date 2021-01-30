@@ -1,5 +1,5 @@
-import * as Hexagonal from "atomic-object/hexagonal";
-import * as DateTimeIso from "core/date-time-iso";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
+import * as DateTimeIso from "modules/core/date-time-iso";
 
 export class CurrentEffectiveDateTime {
   constructor(private currentEffectiveDateTime: DateTimeIso.Type) {}

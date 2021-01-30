@@ -1,5 +1,5 @@
-import { ILens, Isomorphism, Lens } from "atomic-object/lenses";
-import * as Result from "atomic-object/result";
+import { ILens, Isomorphism, Lens } from "modules/atomic-object/lenses";
+import * as Result from "modules/atomic-object/result";
 import deepEqual from "fast-deep-equal";
 import { produce } from "immer";
 

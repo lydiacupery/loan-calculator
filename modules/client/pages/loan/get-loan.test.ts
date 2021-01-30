@@ -1,8 +1,8 @@
-import { withContext } from "__tests__/db-helpers";
-import * as Blueprints from "blueprints";
-import * as DateTiemIso from "core/date-time-iso";
-import * as DateTimeIso from "core/date-time-iso";
-import { GetLoan } from "client/graphql/types.gen";
+import { withContext } from "modules/__tests__/db-helpers";
+import * as Blueprints from "modules/blueprints";
+import * as DateTiemIso from "modules/core/date-time-iso";
+import * as DateTimeIso from "modules/core/date-time-iso";
+import { GetLoan } from "modules/client/graphql/types.gen";
 
 describe("Get loan query", () => {
   it(

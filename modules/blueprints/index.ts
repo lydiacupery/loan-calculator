@@ -1,14 +1,21 @@
-import { declareBlueprint, Universe } from "atomic-object/blueprints";
-import * as Blueprint from "atomic-object/blueprints/blueprint";
-import * as DateIso from "core/date-iso";
+import { declareBlueprint, Universe } from "modules/atomic-object/blueprints";
+import * as Blueprint from "modules/atomic-object/blueprints/blueprint";
+import * as DateIso from "modules/core/date-iso";
 import { padStart } from "lodash-es";
 import * as uuid from "uuid";
-import * as DateTimeIso from "core/date-time-iso";
-import { LoanRecord, PaymentRecord } from "records/impl/core";
-import { LoanRecordRepositoryPort, SavedLoan, UnsavedLoan } from "records/loan";
+import * as DateTimeIso from "modules/core/date-time-iso";
+import { LoanRecord, PaymentRecord } from "modules/records/impl/core";
+import {
+  LoanRecordRepositoryPort,
+  SavedLoan,
+  UnsavedLoan,
+} from "modules/records/loan";
 import { v4 } from "uuid";
-import { TSTZRange } from "db/tstzrange";
-import { PaymentRecordRepositoryPort, SavedPayment } from "records/payment";
+import { TSTZRange } from "modules/db/tstzrange";
+import {
+  PaymentRecordRepositoryPort,
+  SavedPayment,
+} from "modules/records/payment";
 
 const padToTwoDigits = (n: number) => padStart(n.toString(), 2, "0");
 

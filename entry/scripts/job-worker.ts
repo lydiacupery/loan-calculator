@@ -1,4 +1,4 @@
-import * as Bull from "bull";
+import Bull from "bull";
 import config from "config";
 
 const mainQueue = new Bull("main", {

@@ -1,5 +1,5 @@
-import { I18nProfile, MapOf, PropsOf } from "atomic-object/i18n";
-import { buildComponents } from "atomic-object/i18n/component";
+import { I18nProfile, MapOf, PropsOf } from "modules/atomic-object/i18n";
+import { buildComponents } from "modules/atomic-object/i18n/component";
 
 export const I18n = I18nProfile.with("header.productTitle")
   .with("core.cancel")

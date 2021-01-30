@@ -1,7 +1,7 @@
-import { UUID } from "core";
-import * as DateTimeIso from "core/date-time-iso";
-import { LoanId } from "core/loan/value";
-import { Flavor } from "helpers";
+import { UUID } from "modules/core";
+import * as DateTimeIso from "modules/core/date-time-iso";
+import { LoanId } from "modules/core/loan/value";
+import { Flavor } from "modules/helpers";
 
 export type PaymentId = Flavor<UUID, "Payment Id">;
 

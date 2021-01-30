@@ -1,5 +1,5 @@
-import * as Hexagonal from "atomic-object/hexagonal";
-import { UserSessionPort } from "context/ports";
+import * as Hexagonal from "modules/atomic-object/hexagonal";
+import { UserSessionPort } from "modules/context/ports";
 import { UserSessionRepository } from ".";
 import { UserSessionRepositoryPort } from "./ports";
 

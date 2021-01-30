@@ -3,10 +3,10 @@ import {
   IAbstractInsertRepository,
   SavedR,
   UnsavedR,
-} from "atomic-object/records/abstract";
+} from "modules/atomic-object/records/abstract";
 import { Context } from "context";
 import * as Factory from "factory.ts"; /* eslint-disable-line */
-import { DomainEntityType, ObjectType } from "domain-services/types";
+import { DomainEntityType, ObjectType } from "modules/domain-servicestypes";
 import * as Blueprint from "./blueprint";
 import { BlueprintCanvas } from "./canvas";
 

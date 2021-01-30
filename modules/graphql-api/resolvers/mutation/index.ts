@@ -1,6 +1,6 @@
-import { ActionDispatchEventBusPort } from "atomic-object/cqrs/event-bus/port";
-import { makePaymentToLoanEventType } from "domain-services/loan/events";
-import { MutationResolvers } from "graphql-api/server-types.gen";
+import { ActionDispatchEventBusPort } from "modules/atomic-object/cqrs/event-bus/port";
+import { makePaymentToLoanEventType } from "modules/domain-services/payment/event";
+import { MutationResolvers } from "modules/graphql-api/server-types.gen";
 
 const makePayment: MutationResolvers.MakePaymentResolver = async (
   parent,
