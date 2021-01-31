@@ -1,5 +1,5 @@
 const spawn = require("cross-spawn");
-import * as fixtures from "fixtures";
+import * as fixtures from "modules/fixtures";
 import * as db from "modules/db";
 
 export const migrateAndSeed = async () => {

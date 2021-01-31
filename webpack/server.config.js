@@ -1,68 +1,68 @@
-const path = require("path");
-const nodeExternals = require("webpack-node-externals");
-const webpack = require("webpack");
-const loaders = require("./loaders");
-const fs = require("fs");
+const path = require('path');
+const nodeExternals = require('webpack-node-externals');
+const webpack = require('webpack');
+const fs = require('fs');
 
-var HappyPack = require("happypack");
-var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
-const os = require("os");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const loaders = require('./loaders');
 
-const scriptsDir = path.join(__dirname, "../entry/scripts");
+const lambdaDir = path.join(__dirname, '../entry/lambda');
+
+
+const scriptsDir = path.join(__dirname, '../entry/scripts');
 
 /** A map of of entry points for every file in scripts */
 const scriptEntry = fs
   .readdirSync(scriptsDir)
-  .filter(f => /\.tsx?$/.test(f))
-  .filter(f => fs.statSync(path.join(scriptsDir, f)).isFile())
+  .filter((f) => /\.tsx?$/.test(f))
+  .filter((f) => fs.statSync(path.join(scriptsDir, f)).isFile())
   .reduce((o, f) => {
-    o[`scripts/${f.replace(/\.tsx?$/, "")}`] = path.resolve(
-      path.join(scriptsDir, f)
+    o[`scripts/${f.replace(/\.tsx?$/, '')}`] = path.resolve(
+      path.join(scriptsDir, f),
     );
     return o;
   }, {});
 
-const entry = Object.assign(
-  {
-    server: "./entry/server.ts",
-  },
-  scriptEntry
-);
-console.log(entry);
+const entry = {
+  server: './entry/server.ts',
+  ...scriptEntry,
+  // 'scripts/load-data-from-dbo-to-public':
+  //   './entry/scripts/load-data-from-dbo-to-public.ts',
+};
+console.info(entry);
 
 module.exports = {
-  entry: entry,
+  entry,
   // Never minify the server
-  mode: "development",
-  target: "node",
+  mode: 'development',
+  target: 'node',
 
-  //devtool: "source-map",
-  devtool: "inline-source-map",
+  // devtool: "source-map",
+  devtool: 'inline-source-map',
   optimization: {
     // Don't turn process.env.NODE_ENV into a compile-time constant
     nodeEnv: false,
   },
   context: `${__dirname}/../`,
 
-  target: "node",
   node: {
     __dirname: false,
   },
   output: {
-    path: path.resolve(__dirname, "../dist"),
-    filename: "[name].js",
-    devtoolModuleFilenameTemplate: "[absolute-resource-path]",
-    libraryTarget: "commonjs2",
+    path: path.resolve(__dirname, '../dist'),
+    filename: '[name].js',
+    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
+    libraryTarget: 'commonjs2',
   },
 
   resolve: {
-    extensions: [".ts", ".tsx", ".js"],
-    modules: [path.resolve(__dirname, "../modules"), "node_modules"],
+    extensions: ['.ts', '.tsx', '.js'],
+    modules: [path.resolve(__dirname, '..'), 'node_modules'],
   },
 
   externals: [
     nodeExternals({
-      whitelist: [/^lodash-es/],
+      allowlist: [/^lodash-es/],
     }),
   ],
   module: {
@@ -82,16 +82,20 @@ module.exports = {
     }),
 
     new webpack.DefinePlugin({
-      __TEST__: "false",
-      __DEV__: JSON.stringify(process.env.NODE_ENV !== "production"),
+      __TEST__: 'false',
+      __DEV__: JSON.stringify(process.env.NODE_ENV !== 'production'),
     }),
+
+    ...(process.env.ANALYZE
+      ? [new (require('webpack-bundle-analyzer').BundleAnalyzerPlugin)()]
+      : []),
 
     // new webpack.debug.ProfilingPlugin({
     //   outputPath: "server-build.json"
     // }),
 
     // new HappyPack({
-    //   id: "ts",
+    //   id: "ts",pu
     //   threads: process.env.CI ? 1 : Math.max(1, os.cpus().length / 2 - 1),
     //   loaders: [
     //     {
@@ -101,8 +105,12 @@ module.exports = {
     //   ],
     // }),
     new ForkTsCheckerWebpackPlugin({
+      // typescript: {
       // https://github.com/Realytics/fork-ts-checker-webpack-plugin#options
       useTypescriptIncrementalApi: true,
+      memoryLimit: 4096,
+      // },
     }),
+   
   ],
 };

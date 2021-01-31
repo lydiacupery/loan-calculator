@@ -1,6 +1,6 @@
 const { getConnection, destroyConnection, truncateAll } = require("modules/db");
 const cp = require("child_process");
-const redis = require("db/redis");
+const redis = require("modules/db/redis");
 
 module.exports = async () => {
   if (process.env.NODE_ENV !== "test") {

@@ -3,7 +3,7 @@ import * as Blueprint from "modules/blueprints";
 import { toIsoDate } from "modules/core/date-iso";
 import { addMonths } from "date-fns";
 import { Knex } from "modules/db";
-import { Context } from "context";
+import { Context } from "modules/context";
 import * as faker from "faker";
 
 export async function seed(knex: Knex): Promise<null> {

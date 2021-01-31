@@ -1,16 +1,16 @@
 import * as Result from "modules/atomic-object/result";
 
 import { UserSessionPort } from "modules/context/ports";
-import { UserSessionRepositoryPort } from "modules/domain-servicesuser-session/ports";
-import { UserSession } from "modules/domain-servicesuser-session/types";
+import { UserSessionRepositoryPort } from "modules/domain-services/user-session/ports";
+import { UserSession } from "modules/domain-services/user-session/types";
 
 // This import wants to use "@types/express-serve-static-core" for types only,
 // which is at a later version than npm "express-serve-static-core".
 // eslint-disable-next-line import/no-unresolved
 import * as core from "express-serve-static-core";
 import passportLocal from "passport-local";
-import { serverConfig } from "server/config";
-import { ContextBuilder } from "server/context";
+import { serverConfig } from "modules/server/config";
+import { ContextBuilder } from "modules/server/context";
 import { devLoginForm } from "./development-login";
 
 export function addAuthenticationEndpoints(

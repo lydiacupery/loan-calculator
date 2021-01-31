@@ -1,5 +1,5 @@
 import * as zlib from "zlib";
-import { getRedisConnection } from "db/redis";
+import { getRedisConnection } from "modules/db/redis";
 
 export class RedisCacheStore implements CacheStore {
   constructor(public readonly keyPrefix: string) {}

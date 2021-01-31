@@ -1,4 +1,4 @@
-import * as Nightmare from "nightmare";
+import Nightmare from "nightmare";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 

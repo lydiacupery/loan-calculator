@@ -1,4 +1,4 @@
-import { Context as GraphQLContext, ContextOpts } from "context";
+import { Context as GraphQLContext, ContextOpts } from "modules/context";
 
 export type ContextBuilder = (opts?: ContextOpts) => GraphQLContext;
 

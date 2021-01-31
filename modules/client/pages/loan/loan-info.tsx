@@ -1,22 +1,8 @@
-import {
-  Box,
-  Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from "@material-ui/core";
-import { useQueryBundle } from "modules/client/graphql/hooks";
-import { GetLoan, GetLoans, LocalDate } from "modules/client/graphql/types.gen";
+import { Box, Grid, Paper, Typography } from "@material-ui/core";
 import { makeStyles } from "modules/client/styles";
-import { database } from "faker";
-import * as React from "react";
-import { CompletedLoanPayments } from "./completed-loan-payments";
 import * as DateTimeIso from "modules/core/date-time-iso";
 import { formatUSD } from "modules/core/formatter";
+import * as React from "react";
 
 type Props = {
   principal: number;

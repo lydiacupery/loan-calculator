@@ -37,7 +37,7 @@ generates:
             IsoTime: TimeIso.Type
             IsoDateTime: DateTimeIsoModule.Type
       - "typescript-resolvers":
-          contextType: client/graphql/client-context#ClientContext
+          contextType: modules/client/graphql/client-context#ClientContext
       - "typescript-server"
 
   modules/graphql-api/server-types.gen.ts:
@@ -54,7 +54,7 @@ generates:
             IsoTime: TimeIso.Type
             IsoDateTime: DateTimeIsoModule.Type
       - "typescript-resolvers":
-          contextType: context#ApiContext
+          contextType: modules/context#ApiContext
           defaultMapper: any
           mappers:
             User: "./resolvers/user#MinimalUser"

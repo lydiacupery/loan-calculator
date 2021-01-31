@@ -4,9 +4,9 @@ import {
   SavedR,
   UnsavedR,
 } from "modules/atomic-object/records/abstract";
-import { Context } from "context";
+import { Context } from "modules/context";
 import * as Factory from "factory.ts"; /* eslint-disable-line */
-import { DomainEntityType, ObjectType } from "modules/domain-servicestypes";
+import { DomainEntityType, ObjectType } from "modules/domain-services/types";
 import * as Blueprint from "./blueprint";
 import { BlueprintCanvas } from "./canvas";
 

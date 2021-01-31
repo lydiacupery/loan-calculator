@@ -1,5 +1,5 @@
 {
-  "modules/core": {
+  "core": {
     "loading": "Loading...",
     "cancel": "Cancel",
     "accept": "Accept",

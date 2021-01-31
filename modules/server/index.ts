@@ -10,12 +10,12 @@ import * as Result from "modules/atomic-object/result";
 import resolvers from "modules/graphql-api/resolvers";
 import { rawSchema } from "modules/graphql-api/schema-base";
 // import { executableSchema } from "modules/graphql-api";
-import { serverConfig } from "server/config";
+import { serverConfig } from "modules/server/config";
 import {
   buildContext as defaultContextBuilder,
   ContextBuilder,
   contextFromResponseBuilder,
-} from "server/context";
+} from "modules/server/context";
 import morgan from "morgan";
 import passport from "passport";
 import * as db from "../db";
@@ -26,7 +26,7 @@ import {
   invalidCookieSessionError,
 } from "./error-handling";
 import { enforcePasswordIfSpecified } from "./middleware";
-import { UserSession } from "modules/domain-servicesuser-session/types";
+import { UserSession } from "modules/domain-services/user-session/types";
 
 const knex = db.getConnection();
 const knexLogger = require("knex-logger");
