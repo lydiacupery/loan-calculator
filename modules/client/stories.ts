@@ -9,11 +9,7 @@ import { withI18n } from "./storybook-decorators";
 // Fill in type definition for info addon
 declare module "@storybook/react" {
   interface Story {
-    addWithInfo(
-      storyName: string,
-      storyDesc: string,
-      story: RenderFunction
-    ): Story;
+    addWithInfo(storyName: string, storyDesc: string, story: any): Story;
   }
 }
 

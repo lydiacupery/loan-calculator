@@ -1,4 +1,4 @@
-import { withContext } from "__tests__/db-helpers";
+import { withContext } from "modules/__tests__/db-helpers";
 import { GetLocalName, ChangeLocalName } from "../types.gen";
 
 describe("GetLocalName and ChangeLocalName", () => {

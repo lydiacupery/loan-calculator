@@ -1,7 +1,9 @@
 import { Theme } from "@material-ui/core";
 import * as MUIStyles from "@material-ui/styles";
-import { CSSProperties } from "jss/css";
-import { WithStylesOptions } from "@material-ui/styles/withStyles";
+import {
+  CSSProperties,
+  WithStylesOptions,
+} from "@material-ui/styles/withStyles";
 
 /*
 

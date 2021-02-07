@@ -60,6 +60,7 @@ const main: NodeScript = async () => {
           interestPayment: row.interestPayment,
           principalPayment: row.principalPayment,
           paidAt: row.paymentDate,
+          forDate: DateIso.toIsoDate(row.paymentDate),
           loanId: Loan.id(loan),
           id: uuid(),
         })

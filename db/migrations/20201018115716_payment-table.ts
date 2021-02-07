@@ -7,7 +7,8 @@ export async function up(knex: Knex): Promise<any> {
       .primary()
       .defaultTo(knex.raw("uuid_generate_v4()"));
     addForeignKeyColumn(t, "loanId", "Loan");
-    t.string("paidAt").notNullable();
+    t.dateTime("paidAt").notNullable();
+    t.date("forDate").notNullable();
     t.decimal("principalPayment").notNullable();
     t.decimal("interestPayment").notNullable();
   });

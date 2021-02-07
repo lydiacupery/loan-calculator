@@ -56,6 +56,7 @@ export const payment = declareBlueprint({
       principalPayment: 100,
       interestPayment: 10,
       paidAt: DateTimeIso.now(),
+      forDate: DateIso.today(),
       id: v4(),
     }),
 });

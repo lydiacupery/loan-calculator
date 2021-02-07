@@ -1,7 +1,7 @@
 import {
   DomainEntityType,
   IAbstractDomainRepository,
-} from "modules/domain-servicestypes";
+} from "modules/domain-services/types";
 import * as Payment from "modules/core/payment/entity";
 import { PaymentData, PaymentId } from "modules/core/payment/value";
 import * as Hexagonal from "modules/atomic-object/hexagonal";
@@ -29,6 +29,7 @@ const domainToDat: Isomorphism<Payment.Type, SavedPayment> = {
       principalPayment: Payment.principalPayment(domainPayment),
       loanId: Payment.loanId(domainPayment),
       paidAt: Payment.paidAt(domainPayment),
+      forDate: Payment.forDate(domainPayment),
     };
 
     return sandboxRecord;

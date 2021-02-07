@@ -1,5 +1,4 @@
 import { MuiThemeProvider } from "@material-ui/core";
-import { RenderFunction } from "@storybook/react";
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import ApolloClient from "apollo-client";
 import { SchemaLink } from "apollo-link-schema";
@@ -229,5 +228,5 @@ export function mockProvider(opts?: MockProviderOpts) {
 
 export function mockProviderDecorator(opts?: MockProviderOpts) {
   const Provider = mockProvider(opts);
-  return (story: RenderFunction) => <Provider>{story()}</Provider>;
+  return (story: any) => <Provider>{story()}</Provider>;
 }
