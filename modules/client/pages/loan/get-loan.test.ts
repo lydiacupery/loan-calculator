@@ -65,7 +65,7 @@ describe("Get loan query", () => {
           principalPayment: 96,
           interestPayment: 4,
           totalPayment: 100,
-          dateTime: firstPaymentDate,
+          date: firstPaymentDate,
           remainingPrincipal: 1104,
         })
       );
@@ -74,7 +74,7 @@ describe("Get loan query", () => {
           principalPayment: 96,
           interestPayment: 4,
           totalPayment: 100,
-          dateTime: secondPaymentDate,
+          date: secondPaymentDate,
           remainingPrincipal: 1008,
         })
       );
@@ -85,7 +85,7 @@ describe("Get loan query", () => {
 
       // first payment
       const firstRemainingPayment = fetchedLoan.remainingPayments[0];
-      expect(firstRemainingPayment.dateTime).toEqual("2019-03-10");
+      expect(firstRemainingPayment.date).toEqual("2019-03-10");
       expect(firstRemainingPayment.interestPayment).toBeCloseTo(3.36);
       expect(firstRemainingPayment.principalPayment).toBeCloseTo(96.64);
       expect(firstRemainingPayment.totalPayment).toBeCloseTo(100.0);
@@ -93,14 +93,14 @@ describe("Get loan query", () => {
 
       // middle payment
       const sixthRemainingPayment = fetchedLoan.remainingPayments[5];
-      expect(sixthRemainingPayment.dateTime).toEqual("2019-08-10");
+      expect(sixthRemainingPayment.date).toEqual("2019-08-10");
       expect(sixthRemainingPayment.interestPayment).toBeCloseTo(1.74);
       expect(sixthRemainingPayment.principalPayment).toBeCloseTo(98.26);
       expect(sixthRemainingPayment.totalPayment).toBeCloseTo(100.0);
       expect(sixthRemainingPayment.remainingPrincipal).toBeCloseTo(423.31);
 
       const lastPayment = fetchedLoan.remainingPayments[10];
-      expect(lastPayment.dateTime).toEqual("2020-01-10");
+      expect(lastPayment.date).toEqual("2020-01-10");
       expect(lastPayment.interestPayment).toBeCloseTo(0.09);
       expect(lastPayment.principalPayment).toBeCloseTo(26.97);
       expect(lastPayment.totalPayment).toBeCloseTo(100.0);

@@ -46,6 +46,7 @@ export function today(): Type {
 
 export function toIsoDate(date: Date | string): Type {
   date = typeof date === "string" ? DateFns.parseISO(date) : date;
+  console.log(" date-iso date is....", date);
   return DateFns.format(date, "yyyy-MM-dd") as Type;
 }
 
@@ -69,7 +70,7 @@ export function toMonthAndDay(date: Type): string {
   return DateFns.format(validateAndParse(date), "M/d");
 }
 export function toDateWithMonthDay(date: Type, monthDay: number) {
-  return toIsoDate(DateFns.setDate(new Date(date), monthDay));
+  return toIsoDate(DateFns.setDate(validateAndParse(date), monthDay));
 }
 
 export function toMonthAndDate(date: Type): string {

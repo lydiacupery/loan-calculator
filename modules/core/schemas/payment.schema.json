@@ -2,10 +2,15 @@
   "title": "Payment",
   "type": "object",
   "properties": {
-    "paymentDate": {
+    "paymentDateTime": {
       "type": "string",
       "tsType": "DateTimeIsoModule.Type",
       "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})T\\d{2}:\\d{2}:\\d{2}(\\.\\d{3})?([+-]|Z)(([01]\\d|2[0-3]):([0-5]\\d))?$"
+    },
+    "forDate": {
+      "type": "string",
+      "tsType": "DateIso.Type",
+      "pattern": "^(\\d{4})-(\\d{2})-(\\d{2})$"
     },
     "principalPayment": {
       "type": "number"
@@ -14,5 +19,5 @@
       "type": "number"
     }
   },
-  "required": ["paymentDate", "principalPayment", "interestPayment"]
+  "required": ["paymentDateTime", "principalPayment", "interestPayment", "forDate"]
 }

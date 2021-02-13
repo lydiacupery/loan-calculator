@@ -8,8 +8,9 @@ import {
   TableRow,
 } from "@material-ui/core";
 import * as React from "react";
-import { CompletedLoanPayment } from "./completed-loan-payment";
+import { LoanPayment } from "./loan-payment";
 import * as DateTimeIso from "modules/core/date-time-iso";
+import * as DateIso from "modules/core/date-iso";
 
 type Props = {
   payments: {
@@ -17,12 +18,12 @@ type Props = {
     interestPayment: number;
     remainingPrincipal: number;
     totalPayment: number;
-    dateTime: DateTimeIso.Type;
+    date: DateIso.Type;
   }[];
   paymentDateText: "Paid At" | "To Be Paid At";
 };
 
-export const CompletedLoanPayments: React.FC<Props> = props => {
+export const LoanPayments: React.FC<Props> = props => {
   return (
     <Grid container style={{ background: "pink" }}>
       <Paper style={{ width: "100%" }}>
@@ -38,7 +39,7 @@ export const CompletedLoanPayments: React.FC<Props> = props => {
           </TableHead>
           <TableBody>
             {props.payments.map(payment => (
-              <CompletedLoanPayment {...payment} />
+              <LoanPayment {...payment} />
             ))}
           </TableBody>
         </Table>

@@ -44,9 +44,13 @@ const main: NodeScript = async () => {
       throw new Error(`must provide valid loan id to associate payments with`);
     }
     const workbook = new Workbook();
-    const readSpreadsheet = await workbook.xlsx.readFile(filePath);
+    const worksheet = await workbook.csv.readFile(filePath, {
+      dateFormats: ["DD/MM/YYYY"],
+      sheetName: "payment_history",
+    });
     const paymentRows: Payment[] = [];
-    const worksheet = readSpreadsheet.worksheets[0];
+
+    // const worksheet = readSpreadsheet.;
     worksheet.eachRow((row, rowNumber) => {
       if (rowNumber === 1) {
         validateColumnHeaders(row);
@@ -55,16 +59,22 @@ const main: NodeScript = async () => {
       }
     });
     await context.get(PaymentRepositoryPort).insertMany(
-      paymentRows.map(row =>
-        buildPayment({
+      paymentRows.map(row => {
+        // console.table([
+        //   ["paymentDate", row.paymentDate],
+        //   ["date", DateIso.toIsoDate(row.paymentDate)],
+        //   ["as date", new Date(row.paymentDate)],
+        //   ["as date to iso", DateIso.toIsoDate(new Date(row.paymentDate))],
+        // ]);
+        return buildPayment({
           interestPayment: row.interestPayment,
           principalPayment: row.principalPayment,
-          paidAt: row.paymentDate,
-          forDate: DateIso.toIsoDate(row.paymentDate),
+          paidAt: row.paymentDateTime,
+          forDate: row.forDate,
           loanId: Loan.id(loan),
           id: uuid(),
-        })
-      )
+        });
+      })
     );
     return scriptSuccess();
   } catch (e) {
@@ -104,7 +114,8 @@ const excelRowToPayment = (row: Row): Payment => {
     throw new Error(`This row is missing a column: ${row}`);
   }
   const payment: unknown = {
-    paymentDate: DateTimeIso.toIsoDateTime(new Date(dateTime.toString())),
+    paymentDateTime: DateTimeIso.toIsoDateTime(new Date(dateTime.toString())),
+    forDate: DateIso.toIsoDate(new Date(dateTime.toString())),
     principalPayment: parseFloat(principalPayment.toString()),
     interestPayment: parseFloat(interestPayment.toString()),
   };

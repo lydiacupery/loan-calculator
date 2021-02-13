@@ -77,6 +77,13 @@ export class PaymentRepository
     return Promise.all(dats.map(s => domainToDat.from(s)));
   }
 
+  async withMaxForDateForLoan(loanId: LoanId) {
+    const paymentForLoan = await this.ctx
+      .get(PaymentRecordRepositoryPort)
+      .withMaxForDateForLoan.load(loanId);
+    return paymentForLoan ? domainToDat.from(paymentForLoan) : null;
+  }
+
   delete(
     ...ids: { id: Flavor<Flavor<string, "A UUID">, "Payment Id"> }[]
   ): Promise<void> {

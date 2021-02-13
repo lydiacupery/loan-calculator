@@ -25,7 +25,7 @@ type Payment {
   interestPayment: Float!
   totalPayment: Float!
   remainingPrincipal: Float!
-  dateTime: IsoDateTime!
+  date: IsoDate!
 }
 
 type Mutation {

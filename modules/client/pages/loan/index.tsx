@@ -15,7 +15,7 @@ import { GetLoan, GetLoans, LocalDate } from "modules/client/graphql/types.gen";
 import { makeStyles } from "modules/client/styles";
 import { database } from "faker";
 import * as React from "react";
-import { CompletedLoanPayments } from "./completed-loan-payments";
+import { LoanPayments } from "./loan-payments";
 import { LoanInfo } from "./loan-info";
 import * as DateTimeIso from "modules/core/date-time-iso"
 import { StyledTabs } from "modules/client/components/tabs/tabs";
@@ -75,9 +75,9 @@ export const LoanPage: React.FC<Props> = props => {
             <Box m={6} />
 
             {selectedTab === "upcoming" ? 
-                <CompletedLoanPayments payments={loan.data.getLoan.remainingPayments} paymentDateText="To Be Paid At" />
+                <LoanPayments payments={loan.data.getLoan.remainingPayments} paymentDateText="To Be Paid At" />
               :
-                <CompletedLoanPayments payments={loan.data.getLoan.completedPayments} paymentDateText="Paid At" />
+                <LoanPayments payments={loan.data.getLoan.completedPayments} paymentDateText="Paid At" />
             }
           </Grid>
           <Grid item xs={1}></Grid>

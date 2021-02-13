@@ -13,14 +13,14 @@ mutation MakePayment(
       principalPayment
       interestPayment
       remainingPrincipal
-      dateTime
+      date
       totalPayment
     }
     remainingPayments {
       principalPayment
       interestPayment
       remainingPrincipal
-      dateTime
+      date
       totalPayment
     }
   }

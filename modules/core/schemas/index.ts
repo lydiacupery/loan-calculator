@@ -80,10 +80,7 @@ export class SchemaError extends Error implements Ajv.ErrorObject {
   }
 }
 export function buildAjv(opts: Ajv.Options) {
-  console.log("pre build");
-  console.log({ opts });
   const ajv = new Ajv(opts);
-  console.log("post build");
   configureAjv(ajv);
   return ajv;
 }

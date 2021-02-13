@@ -7,6 +7,7 @@ import { CurrentEffectiveDateTimePort } from "modules/domain-services/current-ef
 import * as DateTimeIso from "modules/core/date-time-iso";
 import { sortBy } from "lodash-es";
 import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
+import * as DateIso from "modules/core/date-iso";
 
 export type MinimalLoan = Loan.Type;
 
@@ -28,7 +29,7 @@ const completedPayments: LoanResolvers.CompletedPaymentsResolver = async (
   type CompletedPayment = {
     principalPayment: number;
     interestPayment: number;
-    dateTime: DateTimeIso.Type;
+    date: DateIso.Type;
     remainingPrincipal: number;
   };
 
@@ -41,7 +42,7 @@ const completedPayments: LoanResolvers.CompletedPaymentsResolver = async (
           principalPayment: curr.principalPayment,
           interestPayment: curr.interestPayment,
           totalPayment: curr.principalPayment + curr.interestPayment,
-          dateTime: curr.paidAt,
+          date: DateIso.toIsoDate(curr.paidAt),
           remainingPrincipal: Math.max(
             (acc[i - 1]
               ? acc[i - 1].remainingPrincipal

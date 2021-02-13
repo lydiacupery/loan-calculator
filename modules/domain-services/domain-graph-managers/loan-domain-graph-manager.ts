@@ -36,14 +36,27 @@ export class LoanDomainGraphManager {
 
     // for now, making the (probably incorrect) assumption that there are always 12 payments per year - on the 10th of each month
 
-    const currentDate = DateTimeIso.dateFromTimestamp(currentDateTime);
+    // const currentDate = DateTimeIso.dateFromTimestamp(currentDateTime);
+    // if no max for date, use date on loan
+    const maxForDateForPayemnt = await this.ctx
+      .get(PaymentRepositoryPort)
+      .withMaxForDateForLoan(loanId);
+
+    const maxForDateForLoan = maxForDateForPayemnt
+      ? Payment.forDate(maxForDateForPayemnt)
+      : DateIso.toIsoDate(Loan.startAt(loan));
+
+    console.log("max date for loan", maxForDateForLoan);
 
     const startDate =
-      DateIso.getMonthDayFromIsoDate(currentDate) > 10
+      DateIso.getMonthDayFromIsoDate(maxForDateForLoan) >= 10
         ? // next month the tenth
-          DateIso.toDateWithMonthDay(DateIso.addMonths(currentDate, 1), 10)
+          DateIso.toDateWithMonthDay(
+            DateIso.addMonths(maxForDateForLoan, 1),
+            10
+          )
         : // this month the tenth
-          DateIso.toDateWithMonthDay(currentDate, 10);
+          DateIso.toDateWithMonthDay(maxForDateForLoan, 10);
 
     const payments = this.generatePaymentsStartingFromDate({
       totalPayment: remainingPrincipal,
@@ -85,7 +98,7 @@ export class LoanDomainGraphManager {
     }).reduce(
       (
         acc: {
-          dateTime: DateIso.Type;
+          date: DateIso.Type;
           interestPayment: number;
           principalPayment: number;
           totalPayment: number;
@@ -102,7 +115,7 @@ export class LoanDomainGraphManager {
         return [
           ...acc,
           {
-            dateTime: DateIso.addMonths(prev.dateTime, 1),
+            date: DateIso.addMonths(prev.date, 1),
             interestPayment,
             principalPayment,
             remainingPrincipal: prev.remainingPrincipal - principalPayment,
@@ -112,7 +125,7 @@ export class LoanDomainGraphManager {
       },
       [
         {
-          dateTime: startDate,
+          date: startDate,
           interestPayment: totalPayment * interestRate,
           principalPayment: paymentAmount - totalPayment * interestRate,
           totalPayment: paymentAmount,
