@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+export STATIC_ASSET_BUCKET=loan-tf-default-static-assets
+
+# Upload all HTML files in dist. Don’t allow them to be cached
+echo "👇 Uploading these HTML files from dist with max-age=0"
+aws s3 cp dist/ "s3://$STATIC_ASSET_BUCKET" \
+  --exclude '*' \
+  --include '*.html' \
+  --recursive \
+  --cache-control "max-age=0"
+
+echo ''
+echo "👇 Uploading these other files from dist with max-age=172800"
+# All other files in dist can be cached for up to a week
+aws s3 cp dist/ "s3://$STATIC_ASSET_BUCKET" \
+  --exclude '*.html' \
+  --recursive \
+  --cache-control "max-age=172800" # 2 days, in seconds
+
+# Upload all HTML files in dist. Don’t allow them to be cached
+echo ''
+echo "👇 Uploading these HTML files from static-assets with max-age=0"
+aws s3 cp static-assets/ "s3://$STATIC_ASSET_BUCKET" \
+  --exclude '*' \
+  --include '*.html' \
+  --recursive \
+  --cache-control "max-age=0"
+
+# All other files in static-assets can be cached for up to a week
+echo ''
+echo "👇 Uploading these other files from static-assets with max-age=172800"
+aws s3 cp static-assets/ "s3://$STATIC_ASSET_BUCKET" \
+  --exclude '*.html' \
+  --recursive \
+  --cache-control "max-age=172800" # 2 days, in seconds

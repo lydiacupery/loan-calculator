@@ -57,6 +57,9 @@ typings/
 # dotenv environment variables file
 .env
 
+# terraform secrets
+*terraform.tfvars
+
 # IntelliJ
 .idea/
 msl-website.iml
@@ -97,3 +100,9 @@ junit.xml
 /modules/client/__tests__/__snapshots__/stories.test.ts.snap
 **/*.gen.ts
 **/*.gen.tsx
+
+terraform-provider*
+lock.json
+selections.json
+
+*.tfstate*

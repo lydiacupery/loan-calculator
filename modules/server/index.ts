@@ -96,7 +96,7 @@ export function buildApp(
   app.use(passport.initialize());
   app.use(passport.session());
 
-  passport.serializeUser((user: UserSession, done) => {
+  passport.serializeUser((user: any, done) => {
     done(null, user);
   });
   passport.deserializeUser((user: {}, done) => {

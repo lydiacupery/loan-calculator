@@ -25,7 +25,7 @@ export class RedisCacheStore implements CacheStore {
   async set(key: string, value: string, ttlMs: number): Promise<any> {
     key = `${this.keyPrefix}${key}`;
     const redis = getRedisConnection();
-    return new Promise<string | null>((resolve, reject) => {
+    return new Promise<string | null | void>((resolve, reject) => {
       zlib.gzip(value, async (err, compressed) => {
         if (err) {
           reject(err);

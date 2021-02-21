@@ -25,7 +25,7 @@ export function useAutosave(delay: number = 3000) {
   const submit = React.useCallback(async () => {
     if (canAutosubmit) {
       form.handleSubmit();
-      form.resetForm(form.values);
+      form.resetForm(form.values as any);
     }
     setNextAutosubmitTime(null);
   }, [canAutosubmit, form.values]);
