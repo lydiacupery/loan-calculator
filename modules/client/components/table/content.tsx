@@ -7,7 +7,7 @@ import {
   TABLE_HEIGHT,
   TABLE_WIDTH,
 } from "./constants";
-import { Item, ItemData } from "./Item";
+import { Item, ItemData } from "./item";
 import { InfiniteLoader } from "./infinite-loader";
 type Props = {
   // are there still more items to load?

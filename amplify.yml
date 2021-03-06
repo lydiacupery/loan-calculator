@@ -3,12 +3,11 @@ frontend:
   phases:
     build:
       commands:
-        - yarn install
-        - 'yarn db:migrate:latest'
+        - yarn install --production=false
         - 'yarn build:client-deployment-bundle'
   artifacts:
     # IMPORTANT - Please verify your build output directory
-    baseDirectory: /
+    baseDirectory: /dist/
     files:
       - '**/*'
   cache:

@@ -88,22 +88,11 @@ module.exports = {
       __DEV__: JSON.stringify(process.env.NODE_ENV !== "production"),
       __TEST__: "false",
 
-      // Allow checking of USE_FAKE_DATA in client (mainly for the big bad reset button)
-      "process.env.USE_FAKE_DATA": JSON.stringify(process.env.USE_FAKE_DATA),
-
       // ALlow switching on NODE_ENV in client code
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
 
-      // Expose Google Analytics ID to client
-      "process.env.TRACKING_ID": JSON.stringify(process.env.TRACKING_ID),
 
-      "process.env.ROLLBAR_CLIENT_ACCESS_TOKEN": JSON.stringify(
-        config.get("rollbar.clientAccessToken")
-      ),
-
-      "process.env.IDENTITY_PROVIDER_HOST": JSON.stringify(
-        process.env.IDENTITY_PROVIDER_HOST
-      ),
+     
 
     }),
 

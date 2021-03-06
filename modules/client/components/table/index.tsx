@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Column, useTable } from "react-table";
-import { ItemData } from "./Item";
+import { ItemData } from "./item";
 import { TableContent } from "./content";
 import * as DateTimeIso from "modules/core/date-time-iso";
 import { ItemType } from "./types";

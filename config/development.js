@@ -14,9 +14,7 @@ function envVarOrBust(s) {
 }
 
 module.exports = {
-  databaseUrl: envVarOrBust(
-    process.env.DEV_DATABASE_URL || process.env.DATABASE_URL
-  ),
+  databaseUrl: process.env.DEV_DATABASE_URL || process.env.DATABASE_URL,
   server: {
     requireSsl: false,
     enableDeveloperLogin: true,
