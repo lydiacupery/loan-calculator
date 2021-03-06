@@ -70,7 +70,7 @@ deploy_react_app: clean
 clean:
 	rm -rf $(deadwood)
 
-	deadwood := \
+deadwood := \
 	.shared-runtime-latest-arn \
 	.*-uploaded \
 	.*-deployed \

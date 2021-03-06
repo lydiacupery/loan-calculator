@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export STATIC_ASSET_BUCKET=loan-tf-default-static-assets
+export STATIC_ASSET_BUCKET=loan-tf-static-assets
 
 # Upload all HTML files in dist. Don’t allow them to be cached
 echo "👇 Uploading these HTML files from dist with max-age=0"

@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    build:
+      commands:
+        - yarn install
+        - 'yarn db:migrate:latest'
+        - 'yarn build:client-deployment-bundle'
+  artifacts:
+    # IMPORTANT - Please verify your build output directory
+    baseDirectory: /
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+
