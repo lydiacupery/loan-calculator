@@ -20,7 +20,7 @@ export function buildGraphqlClient(
       errorLink,
       stateLink,
       new BatchHttpLink({
-        uri: config.get("server.apiHost") + "/graphql",
+        uri: process.env.PUBLIC_HOST + "/graphql",
         batchInterval: 10,
         credentials: "same-origin",
       }),
