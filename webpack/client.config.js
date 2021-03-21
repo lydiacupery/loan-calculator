@@ -90,6 +90,7 @@ module.exports = {
 
       // ALlow switching on NODE_ENV in client code
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+      "process.env.PUBLIC_HOST": JSON.stringify(process.env.PUBLIC_HOST)
 
 
      
