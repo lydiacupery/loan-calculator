@@ -5,7 +5,7 @@ const config = require("config");
 module.exports = {
   test: {
     client: "pg",
-    connection: config.get("databaseUrl"),
+    connection: process.env.DATABASE_URL,
     migrations: {
       directory: __dirname + "/db/migrations",
     },
@@ -15,7 +15,7 @@ module.exports = {
   },
   development: {
     client: "pg",
-    connection: config.get("databaseUrl"),
+    connection: process.env.DATABASE_URL,
     migrations: {
       directory: __dirname + "/db/migrations",
     },
@@ -25,7 +25,7 @@ module.exports = {
   },
   production: {
     client: "pg",
-    connection: config.get("databaseUrl"),
+    connection: process.env.DATABASE_URL,
     migrations: {
       directory: __dirname + "/db/migrations",
     },

@@ -6,7 +6,7 @@ if [[ -z "${1}" ]]; then
   exit 1
 fi
 
-script_name="${PROJECT_ROOT}/scripts/shared/${1}"
+script_name="scripts/${1}"
 
 touch "${script_name}"
 chmod +x "${script_name}"

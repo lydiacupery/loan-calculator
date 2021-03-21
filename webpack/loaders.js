@@ -54,7 +54,7 @@ module.exports = {
           loader: "postcss-loader",
           options: {
             plugins: [
-              ...(config.get("minify") ? [
+              ...(process.env.MINIFY ? [
                 require("cssnano")({
                   safe: true,
                   sourcemap: true,

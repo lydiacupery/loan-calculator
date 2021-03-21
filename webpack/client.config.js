@@ -17,7 +17,7 @@ const PROXY_HOST = config.get("server.apiHost");
 // //////////////////////////////////////////////////////////////////////////////
 // per-environment plugins
 const environmentPlugins = (() => {
-  if (config.get('minify')) {
+  if (process.env.MINIFY) {
     return [
       new CompressionPlugin({
         algorithm: 'gzip',
@@ -40,7 +40,7 @@ const environmentPlugins = (() => {
 })();
 
 module.exports = {
-  mode: config.get('minify') ? 'production' : 'development',
+  mode: process.env.MINIFY ? 'production' : 'development',
   entry: {
     app: [
       'whatwg-fetch',
@@ -54,7 +54,7 @@ module.exports = {
     ],
   },
 
-  optimization: config.get('minify')
+  optimization: process.env.MINIFY
     ? {
         splitChunks: {
           chunks: 'all',
@@ -107,7 +107,7 @@ module.exports = {
 
     // Extract embedded css into a file
     new ExtractTextPlugin(
-      config.get('minify') ? '[name].[chunkhash].css' : '[name].css',
+      process.env.MINIFY ? '[name].[chunkhash].css' : '[name].css',
     ),
 
     // Show a nice progress bar on the console.
@@ -159,7 +159,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/',
-    filename: config.get('minify') ? 'client.[chunkhash].js' : 'client.js',
+    filename: process.env.MINIFY ? 'client.[chunkhash].js' : 'client.js',
   },
 
   resolve: {

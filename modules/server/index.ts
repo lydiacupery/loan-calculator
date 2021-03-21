@@ -19,7 +19,7 @@ import {
 import morgan from "morgan";
 import passport from "passport";
 import * as db from "../db";
-import { addAuthenticationEndpoints } from "./endpoints/authentication";
+// import { addAuthenticationEndpoints } from "./endpoints/authentication";
 import * as Authentication from "./endpoints/authentication";
 import {
   handleBrokenSessions,
@@ -65,30 +65,30 @@ export function buildApp(
     })
   );
 
-  app.use(
-    cookieSession({
-      name: "session",
-      secret: serverConfig.server.secret,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    })
-  );
+  // app.use(
+  //   cookieSession({
+  //     name: "session",
+  //     // secret: serverConfig.server.secret,
+  //     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  //   })
+  // );
 
   // Logging
   app.use(morgan("short"));
   app.use(knexLogger(knex));
 
   // Force SSL.
-  if (serverConfig.server.requireSsl) {
-    app.use(
-      enforce.HTTPS({
-        trustProtoHeader: true,
-      })
-    );
-  }
+  // if (serverConfig.server.requireSsl) {
+  //   app.use(
+  //     enforce.HTTPS({
+  //       trustProtoHeader: true,
+  //     })
+  //   );
+  // }
 
-  if (serverConfig.server.basicAuthPassword) {
-    app.use(enforcePasswordIfSpecified(serverConfig.server.basicAuthPassword));
-  }
+  // if (serverConfig.server.basicAuthPassword) {
+  //   app.use(enforcePasswordIfSpecified(serverConfig.server.basicAuthPassword));
+  // }
 
   // Gzip support
   // app.use(compression());
@@ -96,18 +96,18 @@ export function buildApp(
   app.use(passport.initialize());
   app.use(passport.session());
 
-  passport.serializeUser((user: any, done) => {
-    done(null, user);
-  });
-  passport.deserializeUser((user: {}, done) => {
-    // const maybeUser = userSessionValidator.from(user);
-    const maybeUser = user as any; // todo, what should the user object look like?  make validator
-    Result.isError(maybeUser)
-      ? done(invalidCookieSessionError, maybeUser)
-      : done(null, maybeUser);
-  });
+  // passport.serializeUser((user: any, done) => {
+  //   done(null, user);
+  // });
+  // passport.deserializeUser((user: {}, done) => {
+  //   // const maybeUser = userSessionValidator.from(user);
+  //   const maybeUser = user as any; // todo, what should the user object look like?  make validator
+  //   Result.isError(maybeUser)
+  //     ? done(invalidCookieSessionError, maybeUser)
+  //     : done(null, maybeUser);
+  // });
 
-  addAuthenticationEndpoints(app, passport, builder);
+  // addAuthenticationEndpoints(app, passport, builder);
 
   app.use(handleBrokenSessions);
 
@@ -136,7 +136,7 @@ export function buildApp(
   // GraphQL authentication
   app.use(
     graphqlPath,
-    buildAuthenticatedContext
+  buildAuthenticatedContext 
     // Authentication.ensureAuthenticatedAndSetStatus
   );
 

@@ -12,6 +12,18 @@ const lambdaDir = path.join(__dirname, '../entry/lambda');
 const scriptsDir = path.join(__dirname, '../entry/scripts');
 
 /** A map of of entry points for every file in scripts */
+const lambdaEntry = fs
+  .readdirSync(lambdaDir)
+  .filter((f) => /\.(t|j)sx?$/.test(f))
+  .filter((f) => fs.statSync(path.join(lambdaDir, f)).isFile())
+  .reduce((o, f) => {
+    o[`lambda/${f.replace(/\.(t|j)sx?$/, '')}`] = path.resolve(
+      path.join(lambdaDir, f),
+    );
+    return o;
+  }, {});
+
+/** A map of of entry points for every file in scripts */
 const scriptEntry = fs
   .readdirSync(scriptsDir)
   .filter((f) => /\.tsx?$/.test(f))
@@ -26,6 +38,7 @@ const scriptEntry = fs
 const entry = {
   server: './entry/server.ts',
   ...scriptEntry,
+  ...lambdaEntry
   // 'scripts/load-data-from-dbo-to-public':
   //   './entry/scripts/load-data-from-dbo-to-public.ts',
 };

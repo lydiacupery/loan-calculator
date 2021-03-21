@@ -2,8 +2,8 @@ import Knex from "knex";
 // tslint:disable-next-line:import-blacklist
 import * as _ from "lodash";
 
-const getTypeName = (baseName: string) => `${baseName}_DPType`;
-const getLensName = (baseName: string) => `${baseName}_DPLens`;
+const getTypeName = (baseName: string) => `${baseName}_Type`;
+const getLensName = (baseName: string) => `${baseName}_Lens`;
 
 export function getDropLensCode(tableName: string) {
   const typeName = getTypeName(tableName);
@@ -92,7 +92,7 @@ export function buildDataPoolLensFunctionSupportingEffectiveDatesUsingRanges(
   keyColumns: Column[],
   isDeletedSupport: boolean
 ): LensInfo {
-  const typeName = `${baseName}_DPType`;
+  const typeName = `${baseName}_Type`;
   const lensName = getLensName(baseName);
 
   const allColumns = [...keyColumns, ...headerColumns, ...versionColumns];
@@ -143,6 +143,7 @@ export function buildDataPoolLensFunctionSupportingEffectiveDatesUsingRanges(
     $$
     LANGUAGE SQL;
   `;
+  console.log("code...", code);
   const lensDropCode = getDropLensCode(baseName);
   return { lensCode: code, lensName, lensDropCode };
 }

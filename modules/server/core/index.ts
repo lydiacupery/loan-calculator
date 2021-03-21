@@ -1,6 +1,6 @@
 import * as core from "express-serve-static-core";
 import config from "config";
-const API_KEY = config.get<string>("server.apiKey");
+const API_KEY = process.env.API_KEY;
 export function handleExceptions(fn: core.RequestHandler): core.RequestHandler {
   return async (
     req: core.Request,

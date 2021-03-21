@@ -1,9 +1,12 @@
-dist/lambda/*.js: package.json yarn.lock entry/server.ts 
+typescript_files := $(shell scripts/find-all-typescript-files)
+
+dist/lambda/*.js: package.json yarn.lock $(typescript_files)
+	yarn build:pre && \
 	yarn build:server
 
 deployment_bucket := loan-tf-lydia-lambda-bundles
 deployment_key := loan-tf-lydia-loan-endpoint.zip
-lambda_location := dist/deploy/lambda/lambda.zip
+lambda_location := dist/deploy/archive.zip
 lambda_function_name := loan-tf-loan-endpoint
 
 all: $(lambda_location) dist/deploy/shared-node-runtime.zip dist/shared-node-runtime/nodejs/node_modules 
@@ -12,21 +15,25 @@ all: $(lambda_location) dist/deploy/shared-node-runtime.zip dist/shared-node-run
 all_lambda: upload_lambda deploy_lambda publish_layer
 .PHONY: all_lambda
 
-$(lambda_location): dist/server.js
+$(lambda_location): dist/lambda/lambda.js
 	zip -Xj $@ $<
 	
 # #shared lambda layer
 # # Build the Lambda layer by bundling node_modules into a zip
-dist/deploy/shared-node-runtime.zip: dist/shared-node-runtime/nodejs/node_modules | dist/server.js
+dist/deploy/shared-node-runtime.zip: dist/shared-node-runtime/nodejs/node_modules | dist/lambda/lambda.js
 	cd dist/shared-node-runtime; \
 	zip -Xr ../deploy/shared-node-runtime.zip *
+
+# Make directories when necessary
+dist/deploy dist/shared-node-runtime/nodejs dist/deploy/lambda dist/lambda:
+	mkdir -p $@
 
 dist/shared-node-runtime/nodejs/node_modules: package.json yarn.lock | dist/shared-node-runtime/nodejs
 # dist/shared-node-runtime/nodejs/node_modules: package.json yarn.lock 
 	cp package.json yarn.lock dist/shared-node-runtime/nodejs/; \
 	cd dist/shared-node-runtime/nodejs; \
 	yarn install --production=true; \
-	rm package.json yarn.lock
+	rm -f package.json yarn.lock
 
 
 .PHONY: publish_layer

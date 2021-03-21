@@ -5,7 +5,7 @@ import express from "express";
 
 const expressStaticGzip = require("express-static-gzip");
 
-export const port = config.get<number>("server.port");
+export const port = process.env.PORT || 3001;
 
 export function startServer(app: express.Express) {
   return app.listen(port, () => {
@@ -31,9 +31,9 @@ app.get(
   }
 );
 
-if (config.get<boolean>("server.cluster")) {
-  console.info(`Starting ${config.get<number>("server.workers")} workers`);
-  throng(config.get<number>("server.workers"), () => startServer(app));
+if (parseInt(process.env.CONCURRENCY || '0') > 1) {
+  console.info(`Starting ${parseInt(process.env.CONCURRENCY || '0')} workers`);
+  throng(parseInt(process.env.CONCURRENCY || '0'), () => startServer(app));
 } else {
   startServer(app);
 }
