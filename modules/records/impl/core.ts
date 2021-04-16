@@ -6,7 +6,7 @@ import { SavedLoan, UnsavedLoan } from "../loan";
 export const LoanRecord = effectiveDateTimeRecordInfo<SavedLoan>(
   "LoanVersion",
   "Loan",
-  "Loan_DPLens"
+  "Loan_Lens"
 );
 
 export const PaymentRecord = recordInfo<UnsavedPayment, SavedPayment>(

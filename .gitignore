@@ -106,3 +106,5 @@ lock.json
 selections.json
 
 *.tfstate*
+
+.envrc

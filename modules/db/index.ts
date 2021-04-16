@@ -2,7 +2,7 @@ import config from "config";
 import * as DateTimeIso from "modules/core/date-time-iso";
 const env = process.env.NODE_ENV;
 if(!env) {
-  throw new Error("aaaa no node env!")
+  throw new Error("aaaa no node env!" + JSON.stringify(process.env, null, 2))
 }
 
 const knexConfig: any = require("../../knexfile")[env];
