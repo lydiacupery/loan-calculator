@@ -16,6 +16,7 @@ const makePayment: MutationResolvers.MakePaymentResolver = async (
     type: makePaymentToLoanEventType,
     payload: {
       loanId: args.loanId,
+      paymentAmount: args.paymentAmount,
     },
   });
 

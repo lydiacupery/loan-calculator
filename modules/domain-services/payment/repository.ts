@@ -59,10 +59,13 @@ export class PaymentRepository
   ): Promise<(OpaqueTypeOf<Opaque<"Payment", PaymentData>> | null)[]> {
     throw new Error("Method not implemented.");
   }
-  insert(
+  async insert(
     unsavedRecord: OpaqueTypeOf<Opaque<"Payment", PaymentData>>
   ): Promise<OpaqueTypeOf<Opaque<"Payment", PaymentData>>> {
-    throw new Error("Method not implemented.");
+    const inserted = await this.ctx
+      .get(PaymentRecordRepositoryPort)
+      .insert(domainToDat.to(unsavedRecord));
+    return domainToDat.from(inserted);
   }
 
   async forLoan(loanId: LoanId) {

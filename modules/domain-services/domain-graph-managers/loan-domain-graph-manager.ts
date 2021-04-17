@@ -107,11 +107,14 @@ export class LoanDomainGraphManager {
         curr
       ) => {
         const prev = acc[acc.length - 1];
-        const interestPayment = prev.remainingPrincipal * interestRate;
-        const principalPayment = Math.min(
-          paymentAmount - interestPayment,
-          prev.remainingPrincipal
-        );
+        const {
+          interestPayment,
+          principalPayment,
+        } = Finance.getInterestAndPrincipalPortionsOfPayment({
+          payment: paymentAmount,
+          principal: prev.remainingPrincipal,
+          interestRate,
+        });
         return [
           ...acc,
           {

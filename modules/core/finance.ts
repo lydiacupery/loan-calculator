@@ -55,3 +55,16 @@ export const numberOfPayments = function(
 
   return (Math.log(finalFvCalc) - Math.log(finalPVCalc)) / Math.log(rate + 1);
 };
+
+export const getInterestAndPrincipalPortionsOfPayment = (args: {
+  payment: number;
+  principal: number;
+  interestRate: number;
+}) => {
+  const interestPayment = args.principal * args.interestRate;
+  const principalPayment = Math.min(
+    args.payment - interestPayment,
+    args.principal
+  );
+  return { interestPayment, principalPayment };
+};

@@ -4,7 +4,10 @@
   "properties": {
     "loanId": {
       "$ref": "int:uuid"
+    },
+    "paymentAmount": {
+      "type":"number"
     }
   },
-  "required": ["loanId"]
+  "required": ["loanId", "paymentAmount"]
 }

@@ -29,17 +29,29 @@ describe("Make payment mutation", () => {
         paidAt: firstPaymentDate,
       });
 
+      const currentPaymentDate = DateTimeIso.toIsoDateTime(
+        new Date(2019, 2, 10)
+      );
       const updatedLoan = await ctx.apolloClient.mutate<MakePayment.Mutation>({
         mutation: MakePayment.Document,
         variables: {
           loanId: loan.id,
-          effectiveDateTime: DateTimeIso.toIsoDateTime(new Date(2019, 2, 10)),
+          effectiveDateTime: currentPaymentDate,
           paymentAmount: 200,
         },
       });
-      console.log("res", updatedLoan.data?.makePayment?.id)
+      expect(updatedLoan.data?.makePayment?.completedPayments).toHaveLength(2);
+      const firstPayment = updatedLoan.data?.makePayment?.completedPayments[0]!;
+      expect(firstPayment.interestPayment).toEqual(4);
+      expect(firstPayment.principalPayment).toEqual(96);
+      const secondPayment = updatedLoan.data?.makePayment
+        ?.completedPayments[1]!;
+      expect(secondPayment.interestPayment).toEqual(3.68);
+      expect(secondPayment.principalPayment).toEqual(196.32);
 
-      expect(updatedLoan.data?.makePayment?.id).toBeDefined()
+      // remainingPrincipal = 1200 - 96 - 200 = 904
+      // remaining payments = 904 / 100 rounded up = 10
+      expect(updatedLoan.data?.makePayment?.remainingPayments).toHaveLength(10);
     })
   );
 });

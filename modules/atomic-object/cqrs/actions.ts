@@ -4,6 +4,8 @@ import { Context } from "modules/atomic-object/hexagonal";
 import { JsonMap } from "modules/helpers/json";
 import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
 import { EventLogRecordRepositoryPort } from "modules/records/event-log";
+import { PaymentRepositoryPort } from "modules/domain-services/payment/repository";
+import { CurrentEffectiveDateTimePort } from "modules/domain-services/current-effective-date-time";
 
 export type ActionCommon<TPayload, TJobPayload extends TPayload = TPayload> = {
   schema: JsonMap;
@@ -19,7 +21,10 @@ export type ActionCommon<TPayload, TJobPayload extends TPayload = TPayload> = {
 };
 
 export type ActionContext = Context<
-  LoanRepositoryPort | EventLogRecordRepositoryPort
+  | LoanRepositoryPort
+  | EventLogRecordRepositoryPort
+  | PaymentRepositoryPort
+  | CurrentEffectiveDateTimePort
 >;
 /** TODO: clean up permissions, then remove? */
 
