@@ -108,3 +108,5 @@ selections.json
 *.tfstate*
 
 .envrc
+
+built

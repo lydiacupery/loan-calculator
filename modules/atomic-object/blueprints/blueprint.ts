@@ -1,9 +1,12 @@
 import { identity } from "lodash-es";
+import { newHelloFunction } from "packages/entropy";
 import { Entropy, hashInt } from "modules/entropy";
+
+const blah = newHelloFunction();
 
 type DesignFn<T, P extends keyof T> = (x: Entropy) => PromiseLike<T[P]> | T[P];
 type BlueprintDesign<T> = {
-  [P in keyof T]: T[P] | Promise<T[P]> | DesignFn<T, P>
+  [P in keyof T]: T[P] | Promise<T[P]> | DesignFn<T, P>;
 };
 type PartialBlueprint<T> = { [P in keyof T]?: PartialBlueprint<T[P]> };
 

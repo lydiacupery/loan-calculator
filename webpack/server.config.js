@@ -5,6 +5,7 @@ const fs = require('fs');
 
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const loaders = require('./loaders');
+const { __Directive } = require('graphql');
 
 const lambdaDir = path.join(__dirname, '../entry/lambda');
 
@@ -71,6 +72,9 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     modules: [path.resolve(__dirname, '..'), 'node_modules'],
+    alias: {
+      packages: path.resolve(__dirname, 'packages/')
+    }
   },
 
   externals: [
