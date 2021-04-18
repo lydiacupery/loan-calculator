@@ -5,9 +5,7 @@ import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
 import { CurrentEffectiveDateTimePort } from "modules/domain-services/current-effective-date-time";
 
 const getLoans: QueryResolvers.GetLoansResolver = async (parent, args, ctx) => {
-  console.log("---about to get the loans");
   const loans = await ctx.get(LoanRepositoryPort).all();
-  console.log("got the loans....", { loans });
   return loans;
 };
 

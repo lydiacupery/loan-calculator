@@ -257,19 +257,14 @@ export class LoaderFactory<
     return new DataLoader<IdType, SavedDestType[]>(
       async args => {
         const ids: IdType[] = args.map(arg => (arg as any)[record.idKeys[0]]);
-        console.log("looking up for", { foreignKey, ids });
         const records = await this._primeAll(
           await this.repo.table().whereIn(foreignKey as any, ids as any[])
         );
-        console.log("records...", records);
 
         const table = groupBy<SavedDestType>(records, foreignKey);
-        console.log({ table });
         const ordered = ids.map(id => {
-          console.log("find id...", id);
           return table[(id as any).toString()] || [];
         });
-        console.log({ ordered });
         return ordered;
       },
       { cacheKeyFn }

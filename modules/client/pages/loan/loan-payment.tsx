@@ -91,8 +91,6 @@ const PaymentButton: React.FC<{
     [props]
   );
 
-  console.log({ formValues });
-
   const responseLens = React.useCallback((x: MakePayment.Mutation) => {
     return x.makePayment;
   }, []);
