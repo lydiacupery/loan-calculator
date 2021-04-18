@@ -21,6 +21,8 @@ type Props = {
     date: DateIso.Type;
   }[];
   paymentDateText: "Paid At" | "To Be Paid At";
+  loanId: string;
+  showPaymentButton?: boolean;
 };
 
 export const LoanPayments: React.FC<Props> = props => {
@@ -35,11 +37,16 @@ export const LoanPayments: React.FC<Props> = props => {
               <TableCell>Principal Payment</TableCell>
               <TableCell>Total Payment</TableCell>
               <TableCell>Remaining Principal</TableCell>
+              {props.showPaymentButton && <TableCell></TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
             {props.payments.map(payment => (
-              <LoanPayment {...payment} />
+              <LoanPayment
+                {...payment}
+                loanId={props.loanId}
+                showPaymentButton={props.showPaymentButton}
+              />
             ))}
           </TableBody>
         </Table>

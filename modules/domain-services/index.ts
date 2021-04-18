@@ -8,6 +8,8 @@ import * as PaymentService from "modules/domain-services/payment/event";
 import * as Hexagonal from "modules/atomic-object/hexagonal";
 import { EventLogRecordRepositoryPort } from "modules/records/event-log";
 import { LoanRepositoryPort } from "./loan/repository";
+import { CurrentEffectiveDateTimePort } from "./current-effective-date-time";
+import { PaymentRepositoryPort } from "./payment/repository";
 
 export const ALL_SERVICE_ACTIONS = new Actions().withAll(
   PaymentService.ACTIONS
@@ -27,7 +29,12 @@ export type EventDispatchPort = typeof EventDispatchPort;
 
 export const eventDispatchAdapter = Hexagonal.adapter({
   port: EventDispatchPort,
-  requires: [LoanRepositoryPort, EventLogRecordRepositoryPort],
+  requires: [
+    LoanRepositoryPort,
+    EventLogRecordRepositoryPort,
+    CurrentEffectiveDateTimePort,
+    PaymentRepositoryPort,
+  ],
   build: ctx => {
     return new Dispatcher(ctx, ALL_SERVICE_ACTIONS);
   },

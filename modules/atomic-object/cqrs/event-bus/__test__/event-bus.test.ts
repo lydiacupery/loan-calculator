@@ -11,7 +11,7 @@ describe("Action Dispatch Event Bus", () => {
     });
     await eventBus.sendEvent({
       type: PaymentEventTypes.makePaymentToLoanEventType,
-      payload: { loanId: "asdf" },
+      payload: { loanId: "asdf", paymentAmount: 100 },
     });
 
     expect(mockOrThrow).toBeCalledTimes(1);
@@ -27,7 +27,7 @@ describe("Action Dispatch Event Bus", () => {
     await expect(
       eventBus.sendEvent({
         type: PaymentEventTypes.makePaymentToLoanEventType,
-        payload: { loanId: "asdf" },
+        payload: { loanId: "asdf", paymentAmount: 100 },
       })
     ).rejects.toThrow();
   });

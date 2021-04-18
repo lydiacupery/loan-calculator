@@ -1,6 +1,6 @@
 mutation MakePayment(
   $loanId: ID!
-  $paymentAmount: Int!
+  $paymentAmount: Float!
   $effectiveDateTime: IsoDateTime!
 ) {
   makePayment(

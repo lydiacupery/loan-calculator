@@ -13,8 +13,8 @@ type Loan {
   startAt: IsoDateTime!
   paymentsPerYear: Int!
   paymentAmount: Float!
-  principal: Int!
-  extraPayment: Int!
+  principal: Float!
+  extraPayment: Float!
   completedPayments: [Payment!]!
   remainingPayments: [Payment!]!
 }
@@ -31,7 +31,7 @@ type Payment {
 type Mutation {
   makePayment(
     loanId: ID!
-    paymentAmount: Int!
+    paymentAmount: Float!
     effectiveDateTime: IsoDateTime!
   ): Loan
 }

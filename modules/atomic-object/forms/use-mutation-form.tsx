@@ -1,11 +1,10 @@
-import { Isomorphism } from "@atomic-object/lenses";
 import { PureQueryOptions } from "apollo-client";
+import { Isomorphism } from "modules/atomic-object/lenses";
+import { GraphqlBundle } from "modules/client/graphql/core";
 import { GraphQLError } from "graphql";
 import { useCallback, useState } from "react";
-import { RefetchQueriesProviderFn } from "react-apollo";
-import { useMutation } from "react-apollo-hooks";
 import { SubmitFn } from "./core";
-import { GraphqlBundle } from "modules/client/graphql/core";
+import { useMutation } from "@apollo/react-hooks";
 
 export type MutationFormState =
   | { key: "INITIAL" }
@@ -24,10 +23,10 @@ export type MutationWrapperProps<TState, TVars, TResult, TFormData> = {
 
   /** Error handler */
   onError?: (result: ReadonlyArray<Error>) => void;
-  formDataToVars: (state: TState) => TVars;
+  formDataToVars: (state: TState, initialState: TState) => TVars;
 
   // Apollo options
-  refetchQueries?: Array<string | PureQueryOptions> | RefetchQueriesProviderFn;
+  refetchQueries?: Array<string | PureQueryOptions>;
   awaitRefetchQueries?: boolean;
 };
 
@@ -39,42 +38,45 @@ export function useMutationForm<TData, TVars, TResult = any, TFormData = any>(
     key: "INITIAL",
   });
 
-  const { formDataToVars, refetchQueries, awaitRefetchQueries } = props;
+  const {
+    onMutate,
+    onError,
+    formDataToVars,
+    refetchQueries,
+    awaitRefetchQueries,
+  } = props;
 
-  const mutate = useMutation<TResult, TVars>(props.mutation.Document);
+  const [mutate] = useMutation<TResult, TVars>(props.mutation.Document);
 
-  const onSubmit = useCallback<SubmitFn<TData>, any>(
-    async (data, formik) => {
+  const onSubmit = useCallback<(initialState: any) => SubmitFn<TData>>(
+    initial => async (data, formik) => {
       try {
         setState({ key: "SUBMITTING" });
-
         const result = await mutate({
-          variables: formDataToVars(data),
+          variables: formDataToVars(data, initial),
           refetchQueries,
           awaitRefetchQueries,
         });
-
         setState({ key: "SUBMITTED" });
-
         if (result.errors && result.errors.length > 0) {
           setState({
             key: "ERROR",
             errors: result.errors,
           });
-          if (props.onError) {
-            props.onError(result.errors);
+          console.info("ERROR", result.errors);
+          if (onError) {
+            onError(result.errors);
           }
           return;
         }
-
         if (!result.data) {
           throw new Error("Didn't get data?");
         }
-
-        if (props.onMutate) await props.onMutate(result.data);
+        if (onMutate) onMutate(result.data);
       } catch (e) {
-        if (props.onError) {
-          props.onError(e.graphQLErrors || [e]);
+        console.info("ERROR", e.graphQLErrors || [e]);
+        if (onError) {
+          onError(e.graphQLErrors || [e]);
         } else {
           setState({
             key: "ERROR",
@@ -82,14 +84,13 @@ export function useMutationForm<TData, TVars, TResult = any, TFormData = any>(
           });
           formik.setSubmitting(false);
         }
-
-        return;
       }
     },
     [
+      mutate,
       formDataToVars,
-      props.onMutate,
-      props.mutation,
+      onMutate,
+      onError,
       refetchQueries,
       awaitRefetchQueries,
     ]

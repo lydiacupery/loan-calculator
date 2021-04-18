@@ -5,11 +5,11 @@ import { buildGraphqlClient } from "modules/client/graphql/client";
 import * as ErrorNotifier from "modules/atomic-object/error-notifier";
 import { createBrowserHistory } from "history";
 import * as React from "react";
-import { ApolloProvider } from "react-apollo";
-import { ApolloProvider as ApolloHooksProvider } from "react-apollo-hooks";
+
 import * as ReactDom from "react-dom";
 import { Router } from "react-router-dom";
 import { App } from "../modules/client";
+import { ApolloProvider } from "@apollo/react-common";
 
 const history = createBrowserHistory();
 history.listen((location, action) => {
@@ -45,19 +45,17 @@ const bootstrapClient = () => {
 
   const rootEl = (
     <ApolloProvider client={graphqlClient}>
-      <ApolloHooksProvider client={graphqlClient}>
-        <AnalyticsProvider
-          value={{
-            engine: function() {
-              return window.ga.apply(window, arguments);
-            },
-          }}
-        >
-          <Router history={history}>
-            <App />
-          </Router>
-        </AnalyticsProvider>
-      </ApolloHooksProvider>
+      <AnalyticsProvider
+        value={{
+          engine: function() {
+            return window.ga.apply(window, arguments);
+          },
+        }}
+      >
+        <Router history={history}>
+          <App />
+        </Router>
+      </AnalyticsProvider>
     </ApolloProvider>
   );
   ReactDom.render(

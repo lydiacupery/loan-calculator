@@ -1,17 +1,17 @@
-import * as ApolloHooks from "react-apollo-hooks";
-import { GraphqlBundle } from "./core";
+import { QueryResult } from "@apollo/react-common";
+import * as ApolloHooks from "@apollo/react-hooks";
+import { useMutation, useQuery } from "@apollo/react-hooks";
 import {
   ApolloQueryResult,
-  ObservableQuery,
-  FetchMoreQueryOptions,
   FetchMoreOptions,
+  FetchMoreQueryOptions,
+  ObservableQuery,
 } from "apollo-client";
-import { useMemo, useRef } from "react";
-import { MutationFn } from "react-apollo";
 import { Omit } from "modules/helpers";
 import { flow } from "lodash-es";
-
-type NonOptional<O> = O extends null | undefined | (infer T) ? T : O;
+import * as React from "react";
+import { useMemo } from "react";
+import { GraphqlBundle } from "./core";
 
 /** Extra query stuff we get from apollo hooks. */
 type QueryExtras<TData, TVariables> = Pick<
@@ -25,31 +25,30 @@ type QueryExtras<TData, TVariables> = Pick<
 };
 
 type QueryBaseResult<TData, TVariables> = Omit<
-  ApolloHooks.QueryHookResult<TData, TVariables>,
+  QueryResult<TData, TVariables>,
   "data"
 > & {
   data: TData;
 } & QueryExtras<TData, TVariables>;
 
-export type PlacementQueryHookResult<TResult, TVars> =
+export type QueryHookResult<TResult, TVars> =
   // Initial loading state. No data to show
-  | { state: "LOADING" } & QueryExtras<TResult, TVars>
+  | ({ state: "LOADING" } & QueryExtras<TResult, TVars>)
   // Updating, but we have data to show. Usually render this.
-  | { state: "UPDATING" } & QueryBaseResult<TResult, TVars>
+  | ({ state: "UPDATING" } & QueryBaseResult<TResult, TVars>)
   // Loaded. We have data to show
-  | { state: "DONE" } & QueryBaseResult<TResult, TVars>;
+  | ({ state: "DONE" } & QueryBaseResult<TResult, TVars>);
 
 export function useQueryBundle<Result, Vars>(
   query: GraphqlBundle<Result, Vars>,
-  options?: ApolloHooks.QueryHookOptions<Vars>
-): PlacementQueryHookResult<Result, Vars> {
-  const rawResult = ApolloHooks.useQuery<Result, Vars>(query.Document, {
-    suspend: false,
+  options?: ApolloHooks.QueryHookOptions<Result, Vars>
+): QueryHookResult<Result, Vars> {
+  const rawResult = useQuery<Result, Vars>(query.Document, {
     ...options,
   });
 
-  const ourResult = useMemo<PlacementQueryHookResult<Result, Vars>>((): any => {
-    if (!rawResult.data || Object.keys(rawResult.data).length == 0) {
+  const ourResult = useMemo<QueryHookResult<Result, Vars>>((): any => {
+    if (!rawResult.data || Object.keys(rawResult.data).length === 0) {
       return { state: "LOADING", ...rawResult };
     } else if (rawResult.loading) {
       return { state: "UPDATING", ...rawResult };
@@ -61,10 +60,17 @@ export function useQueryBundle<Result, Vars>(
   return ourResult;
 }
 
+export function useMutationBundle<T, TVariables>(
+  mutation: GraphqlBundle<T, TVariables>,
+  options?: ApolloHooks.MutationHookOptions<T, TVariables>
+): ApolloHooks.MutationTuple<T, TVariables> {
+  return useMutation(mutation.Document, options);
+}
+
 export function usePreviousResultWhileLoading<R, V>(
-  queryResult: PlacementQueryHookResult<R, V>
-): PlacementQueryHookResult<R, V> {
-  const data = useRef<null | typeof queryResult>(null);
+  queryResult: QueryHookResult<R, V>
+): QueryHookResult<R, V> {
+  const data = React.useRef<null | typeof queryResult>(null);
   if (queryResult.state === "LOADING" && !data.current) {
     return queryResult;
   }
@@ -72,7 +78,7 @@ export function usePreviousResultWhileLoading<R, V>(
     data.current = queryResult;
   }
   if (data.current.state === "LOADING") {
-    // https://github.com/AmwayCorp/fusion-platform/issues/168
+    // https://github.com/AmwayEFS/fusion-platform/issues/168
     // This should work, but the types are unhappy...
     // Ideally, this state should change to "Updating" to better represent the state of having cached values but getting new up to date values
     // return {
@@ -88,14 +94,3 @@ export const useQueryWithPreviousResultsWhileLoading = flow(
   useQueryBundle,
   usePreviousResultWhileLoading
 );
-
-export function useMutationBundle<T, TVariables>(
-  mutation: GraphqlBundle<T, TVariables>,
-  options?: ApolloHooks.MutationHookOptions<T, TVariables>
-): MutationFn<T, TVariables> {
-  const func = ApolloHooks.useMutation(
-    mutation.Document,
-    options
-  ) as MutationFn<T, TVariables>; // using the type from react-apollo instead of react-apollo-hooks for better compatibility with remaining non-hook apollo use. (change this later?)
-  return func;
-}

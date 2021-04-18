@@ -12,7 +12,7 @@ import * as DateTimeIso from "modules/core/date-time-iso";
 import * as DateIso from "modules/core/date-iso";
 import * as Finance from "modules/core/finance";
 import { CurrentEffectiveDateTimePort } from "../current-effective-date-time";
-import { v4 as uuidv4, v4 } from "uuid";
+import { v4 } from "uuid";
 import { createTextChangeRange } from "typescript";
 
 export const makePaymentToLoanEventType = "domain-event/make-payment-to-loan";
@@ -64,14 +64,16 @@ const makePaymentToLoan = declareAction({
         : // this month the tenth
           DateIso.toDateWithMonthDay(maxForDateForLoan, 10);
 
+    const currentEffectiveDateTimePort = context.get(
+      CurrentEffectiveDateTimePort
+    );
     const paymentToInsert = Payment.buildPayment({
       interestPayment,
       principalPayment,
       loanId: Loan.id(loan),
-      paidAt:
-        context
-          .get(CurrentEffectiveDateTimePort)
-          ?.getCurrentEffectiveDateTime() || DateTimeIso.now(), // todo, move this to mutation level
+      paidAt: currentEffectiveDateTimePort
+        ? currentEffectiveDateTimePort.getCurrentEffectiveDateTime()
+        : DateTimeIso.now(), // todo, move this to mutation level
       id: v4(),
       forDate: nextDate,
     });
