@@ -37,15 +37,15 @@ export const LoanPayments: React.FC<Props> = props => {
               <TableCell>Principal Payment</TableCell>
               <TableCell>Total Payment</TableCell>
               <TableCell>Remaining Principal</TableCell>
-              {props.showPaymentButton && <TableCell></TableCell>}
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.payments.map(payment => (
+            {props.payments.map((payment, index) => (
               <LoanPayment
                 {...payment}
                 loanId={props.loanId}
-                showPaymentButton={props.showPaymentButton}
+                showPaymentButton={props.showPaymentButton && index === 0}
               />
             ))}
           </TableBody>

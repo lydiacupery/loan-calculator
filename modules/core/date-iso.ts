@@ -46,7 +46,6 @@ export function today(): Type {
 
 export function toIsoDate(date: Date | string): Type {
   date = typeof date === "string" ? DateFns.parseISO(date) : date;
-  console.log(" date-iso date is....", date);
   return DateFns.format(date, "yyyy-MM-dd") as Type;
 }
 

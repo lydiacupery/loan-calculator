@@ -22,7 +22,6 @@ export function toIsoDateTime(dateTime: Date | string): Type {
   dateTime =
     typeof dateTime === "string" ? DateFns.parseISO(dateTime) : dateTime;
   // return in utc
-  console.log("date time is date is...", dateTime);
   return dateTime.toISOString() as Type;
 }
 

@@ -15,6 +15,7 @@ import { MakePayment, Payment } from "modules/client/graphql/types.gen";
 import * as IsoDateTime from "modules/core/date-time-iso";
 import { useForm } from "modules/atomic-object/forms/use-form";
 import * as FMUI from "formik-material-ui";
+import { toNumber } from "lodash";
 
 type Props = {
   principalPayment: number;
@@ -43,14 +44,14 @@ export const LoanPayment: React.FC<Props> = props => {
       <TableCell>
         <Typography>{formatUSD(props.remainingPrincipal)}</Typography>
       </TableCell>
-      {props.showPaymentButton && (
-        <TableCell>
+      <TableCell>
+        {props.showPaymentButton && (
           <PaymentButton
             initialPaymentAmount={props.totalPayment}
             loanId={props.loanId}
           />
-        </TableCell>
-      )}
+        )}
+      </TableCell>
     </TableRow>
   );
 };
@@ -67,13 +68,17 @@ const PaymentButton: React.FC<{
     "showButton" | "showInput"
   >("showButton");
 
+  React.useEffect(() => {
+    setPaymentState("showButton");
+  }, [props]);
+
   const showInput = React.useCallback(() => setPaymentState("showInput"), []);
 
   const mutationBuilder = React.useCallback(
     (currentValue: FormValues, initialValues: FormValues) => {
       return {
         loanId: props.loanId,
-        paymentAmount: currentValue.amount,
+        paymentAmount: toNumber(currentValue.amount),
         effectiveDateTime: IsoDateTime.now(),
       };
     }
@@ -86,10 +91,11 @@ const PaymentButton: React.FC<{
     [props]
   );
 
-  const responseLens = React.useCallback(
-    (x: MakePayment.Mutation) => x.makePayment,
-    []
-  );
+  console.log({ formValues });
+
+  const responseLens = React.useCallback((x: MakePayment.Mutation) => {
+    return x.makePayment;
+  }, []);
   const errorLens = React.useCallback((x: MakePayment.MakePayment) => [], []);
 
   const { onSubmit } = useForm(
@@ -110,7 +116,10 @@ const PaymentButton: React.FC<{
       {({ values, handleSubmit, handleChange, handleBlur }) => (
         <Form>
           <FormControl>
-            <Field component={FMUI.TextField} name="amount"></Field>
+            <Grid container direction="column">
+              <Typography variant="caption">Payment Amount</Typography>
+              <Field component={FMUI.TextField} name="amount"></Field>
+            </Grid>
           </FormControl>
         </Form>
       )}
