@@ -34,26 +34,23 @@ const completedPayments: LoanResolvers.CompletedPaymentsResolver = async (
   };
 
   const sorted = sortBy(res, "paidAt");
-  return sorted.reduce(
-    (acc, curr, i) => {
-      return [
-        ...acc,
-        {
-          principalPayment: curr.principalPayment,
-          interestPayment: curr.interestPayment,
-          totalPayment: curr.principalPayment + curr.interestPayment,
-          date: DateIso.toIsoDate(curr.paidAt),
-          remainingPrincipal: Math.max(
-            (acc[i - 1]
-              ? acc[i - 1].remainingPrincipal
-              : Loan.principal(loan)) - curr.principalPayment,
-            0
-          ),
-        },
-      ];
-    },
-    [] as CompletedPayment[]
-  );
+  return sorted.reduce((acc, curr, i) => {
+    return [
+      ...acc,
+      {
+        id: curr.id,
+        principalPayment: curr.principalPayment,
+        interestPayment: curr.interestPayment,
+        totalPayment: curr.principalPayment + curr.interestPayment,
+        date: DateIso.toIsoDate(curr.paidAt),
+        remainingPrincipal: Math.max(
+          (acc[i - 1] ? acc[i - 1].remainingPrincipal : Loan.principal(loan)) -
+            curr.principalPayment,
+          0
+        ),
+      },
+    ];
+  }, [] as CompletedPayment[]);
 };
 
 const remainingPayments: LoanResolvers.CompletedPaymentsResolver = async (
@@ -66,7 +63,6 @@ const remainingPayments: LoanResolvers.CompletedPaymentsResolver = async (
   const effectiveDateTime = effectiveDateTimePort
     ? effectiveDateTimePort.getCurrentEffectiveDateTime()
     : DateTimeIso.now();
-  console.log("effective date time...", effectiveDateTime);
   const loanDomainGraphManager = await ctx.get(LoanDomainGraphManagerPort);
   return loanDomainGraphManager.getRemainingPaymentsForLoan(
     Loan.id(parent),

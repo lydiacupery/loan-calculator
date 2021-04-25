@@ -9,6 +9,7 @@ import * as DateTimeIso from "modules/core/date-time-iso";
 import * as DateIso from "modules/core/date-iso";
 import * as Finance from "modules/core/finance";
 import { length } from "../../../__mocks__/fileMock";
+import { date } from "yup";
 
 export type ServiceContext = Hexagonal.Context<
   LoanRepositoryPort | PaymentRepositoryPort
@@ -115,20 +116,23 @@ export class LoanDomainGraphManager {
           principal: prev.remainingPrincipal,
           interestRate,
         });
+        const date = DateIso.addMonths(prev.date, 1);
         return [
           ...acc,
           {
-            date: DateIso.addMonths(prev.date, 1),
+            date,
             interestPayment,
             principalPayment,
             remainingPrincipal: prev.remainingPrincipal - principalPayment,
             totalPayment: paymentAmount,
+            id: date.toString(),
           },
         ];
       },
       [
         {
           date: startDate,
+          id: startDate.toString(),
           interestPayment: totalPayment * interestRate,
           principalPayment: paymentAmount - totalPayment * interestRate,
           totalPayment: paymentAmount,
@@ -137,8 +141,6 @@ export class LoanDomainGraphManager {
         },
       ]
     );
-
-    console.log("...reduced array", reducedArray);
 
     return reducedArray;
   }

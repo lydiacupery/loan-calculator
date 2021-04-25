@@ -55,7 +55,7 @@ export class Dispatcher<TActions extends Action<any, any, any>> {
   > => {
     let { payload } = arg;
 
-    if (config.get("test")) {
+    if (process.env.NODE_ENV === "test") {
       payload = JSON.parse(JSON.stringify(payload));
     }
 

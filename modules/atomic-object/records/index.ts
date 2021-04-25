@@ -519,7 +519,10 @@ export abstract class TableHelpers<
   async delete(...ids: KeyType<KnexRecordInfo<TUnsavedR, TSavedR, IdKeyT>>[]) {
     try {
       await this.table()
-        .whereIn(idKeysOf(this.recordType as any), ids as any)
+        .whereIn(
+          idKeysOf(this.recordType as any),
+          ids.map(id => collectIdValues(id, this.recordType))
+        )
         .delete();
     } catch (err) {
       throw new Error(err.message);

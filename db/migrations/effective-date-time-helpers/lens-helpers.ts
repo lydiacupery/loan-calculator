@@ -143,7 +143,6 @@ export function buildDataPoolLensFunctionSupportingEffectiveDatesUsingRanges(
     $$
     LANGUAGE SQL;
   `;
-  console.log("code...", code);
   const lensDropCode = getDropLensCode(baseName);
   return { lensCode: code, lensName, lensDropCode };
 }

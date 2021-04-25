@@ -85,3 +85,5 @@ deadwood := \
 	.generated-json-schema-types \
 	.generated-graphql-types \
 	dist
+
+	# todo, this whole file needs some work, right now run this command to do all the things: make && make dist/deploy && make dist/shared-node-runtime/nodejs/node_modules && make dist/lambda/lambda.js && make dist/deploy/archive.zip && make dist/deploy/shared-node-runtime.zip && make dist/deploy/archive.zip && make all_lambda

@@ -1,0 +1,19 @@
+mutation DeletePayment($paymentId: ID!) {
+  deletePayment(paymentId: $paymentId) {
+    id
+    completedPayments {
+      principalPayment
+      interestPayment
+      remainingPrincipal
+      date
+      totalPayment
+    }
+    remainingPayments {
+      principalPayment
+      interestPayment
+      remainingPrincipal
+      date
+      totalPayment
+    }
+  }
+}

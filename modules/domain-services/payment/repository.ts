@@ -18,6 +18,7 @@ import { Flavor } from "modules/helpers";
 import { Isomorphism } from "@atomic-object/lenses";
 import * as Result from "modules/atomic-object/result";
 import { LoanId } from "modules/core/loan/value";
+import { PaymentRecord } from "modules/records/impl/core";
 
 type ServiceContext = Hexagonal.Context<KnexPort | PaymentRecordRepositoryPort>;
 
@@ -87,10 +88,13 @@ export class PaymentRepository
     return paymentForLoan ? domainToDat.from(paymentForLoan) : null;
   }
 
-  delete(
+  async delete(
     ...ids: { id: Flavor<Flavor<string, "A UUID">, "Payment Id"> }[]
   ): Promise<void> {
-    throw new Error("Method not implemented.");
+    // todo, could be better grouped up by taking an array of ids to delete at the record level
+    await Promise.all(
+      ids.map(id => this.ctx.get(PaymentRecordRepositoryPort).delete(id))
+    );
   }
   async find(id: { id: PaymentId }): Promise<Payment.Type | null> {
     const payment = await this.ctx

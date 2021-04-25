@@ -20,6 +20,7 @@ type Loan {
 }
 
 type Payment {
+  id: String!
   forLoan: Loan!
   principalPayment: Float!
   interestPayment: Float!
@@ -34,4 +35,5 @@ type Mutation {
     paymentAmount: Float!
     effectiveDateTime: IsoDateTime!
   ): Loan
+  deletePayment(paymentId: ID!): Loan
 }
