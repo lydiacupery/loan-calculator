@@ -8,6 +8,7 @@ query GetLoan($loanId: ID!, $effectiveDateTime: IsoDateTime!) {
     principal
     extraPayment
     completedPayments {
+      id
       principalPayment
       interestPayment
       remainingPrincipal
@@ -15,6 +16,7 @@ query GetLoan($loanId: ID!, $effectiveDateTime: IsoDateTime!) {
       totalPayment
     }
     remainingPayments {
+      id
       principalPayment
       interestPayment
       remainingPrincipal

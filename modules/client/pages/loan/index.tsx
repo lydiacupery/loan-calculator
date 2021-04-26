@@ -105,6 +105,7 @@ export const LoanPage: React.FC<Props> = props => {
                 payments={loan.data.getLoan.completedPayments}
                 paymentDateText="Paid At"
                 loanId={props.loanId}
+                showRemoveButton={true}
               />
             )}
           </Grid>

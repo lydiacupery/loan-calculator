@@ -16,6 +16,9 @@ import * as IsoDateTime from "modules/core/date-time-iso";
 import { useForm } from "modules/atomic-object/forms/use-form";
 import * as FMUI from "formik-material-ui";
 import { toNumber } from "lodash";
+import { StringFormatDefinition } from "ajv";
+import { PaymentButton } from "./components/payment-button";
+import { RemoveButton } from "./components/remove-button";
 
 type Props = {
   principalPayment: number;
@@ -24,7 +27,9 @@ type Props = {
   totalPayment: number;
   date: DateIso.Type;
   showPaymentButton?: boolean;
+  showRemoveButton?: boolean;
   loanId: string;
+  paymentId: string;
 };
 export const LoanPayment: React.FC<Props> = props => {
   return (
@@ -45,6 +50,9 @@ export const LoanPayment: React.FC<Props> = props => {
         <Typography>{formatUSD(props.remainingPrincipal)}</Typography>
       </TableCell>
       <TableCell>
+        {props.showRemoveButton && <RemoveButton paymentId={props.paymentId} />}
+      </TableCell>
+      <TableCell>
         {props.showPaymentButton && (
           <PaymentButton
             initialPaymentAmount={props.totalPayment}
@@ -53,74 +61,5 @@ export const LoanPayment: React.FC<Props> = props => {
         )}
       </TableCell>
     </TableRow>
-  );
-};
-
-type FormValues = {
-  amount: number;
-};
-
-const PaymentButton: React.FC<{
-  initialPaymentAmount: number;
-  loanId: string;
-}> = props => {
-  const [paymentState, setPaymentState] = React.useState<
-    "showButton" | "showInput"
-  >("showButton");
-
-  React.useEffect(() => {
-    setPaymentState("showButton");
-  }, [props]);
-
-  const showInput = React.useCallback(() => setPaymentState("showInput"), []);
-
-  const mutationBuilder = React.useCallback(
-    (currentValue: FormValues, initialValues: FormValues) => {
-      return {
-        loanId: props.loanId,
-        paymentAmount: toNumber(currentValue.amount),
-        effectiveDateTime: IsoDateTime.now(),
-      };
-    }
-  );
-
-  const formValues: FormValues = React.useMemo(
-    () => ({
-      amount: props.initialPaymentAmount,
-    }),
-    [props]
-  );
-
-  const responseLens = React.useCallback((x: MakePayment.Mutation) => {
-    return x.makePayment;
-  }, []);
-  const errorLens = React.useCallback((x: MakePayment.MakePayment) => [], []);
-
-  const { onSubmit } = useForm(
-    MakePayment,
-    mutationBuilder,
-    responseLens,
-    errorLens
-  );
-
-  return paymentState === "showButton" ? (
-    <Button onClick={showInput}>Make Payment</Button>
-  ) : (
-    <Formik<FormValues>
-      initialValues={formValues}
-      onSubmit={onSubmit(formValues)}
-      enableReinitialize
-    >
-      {({ values, handleSubmit, handleChange, handleBlur }) => (
-        <Form>
-          <FormControl>
-            <Grid container direction="column">
-              <Typography variant="caption">Payment Amount</Typography>
-              <Field component={FMUI.TextField} name="amount"></Field>
-            </Grid>
-          </FormControl>
-        </Form>
-      )}
-    </Formik>
   );
 };

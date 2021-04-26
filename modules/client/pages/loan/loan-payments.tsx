@@ -23,6 +23,7 @@ type Props = {
   paymentDateText: "Paid At" | "To Be Paid At";
   loanId: string;
   showPaymentButton?: boolean;
+  showRemoveButton?: boolean;
 };
 
 export const LoanPayments: React.FC<Props> = props => {
@@ -38,6 +39,7 @@ export const LoanPayments: React.FC<Props> = props => {
               <TableCell>Total Payment</TableCell>
               <TableCell>Remaining Principal</TableCell>
               <TableCell></TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -45,7 +47,9 @@ export const LoanPayments: React.FC<Props> = props => {
               <LoanPayment
                 {...payment}
                 loanId={props.loanId}
+                paymentId={payment.id}
                 showPaymentButton={props.showPaymentButton && index === 0}
+                showRemoveButton={props.showRemoveButton}
               />
             ))}
           </TableBody>

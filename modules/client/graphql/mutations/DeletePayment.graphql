@@ -2,6 +2,7 @@ mutation DeletePayment($paymentId: ID!) {
   deletePayment(paymentId: $paymentId) {
     id
     completedPayments {
+      id
       principalPayment
       interestPayment
       remainingPrincipal
@@ -9,6 +10,7 @@ mutation DeletePayment($paymentId: ID!) {
       totalPayment
     }
     remainingPayments {
+      id
       principalPayment
       interestPayment
       remainingPrincipal

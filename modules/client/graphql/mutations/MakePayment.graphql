@@ -10,6 +10,7 @@ mutation MakePayment(
   ) {
     id
     completedPayments {
+      id
       principalPayment
       interestPayment
       remainingPrincipal
@@ -17,6 +18,7 @@ mutation MakePayment(
       totalPayment
     }
     remainingPayments {
+      id
       principalPayment
       interestPayment
       remainingPrincipal
