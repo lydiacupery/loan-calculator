@@ -1,22 +1,7 @@
-import {
-  Button,
-  FormControl,
-  Grid,
-  TableCell,
-  TableRow,
-  Typography,
-} from "@material-ui/core";
-import * as React from "react";
-import * as DateTimeIso from "modules/core/date-time-iso";
+import { TableCell, TableRow, Typography } from "@material-ui/core";
 import * as DateIso from "modules/core/date-iso";
 import { formatUSD } from "modules/core/formatter";
-import { Field, Form, Formik } from "formik";
-import { MakePayment, Payment } from "modules/client/graphql/types.gen";
-import * as IsoDateTime from "modules/core/date-time-iso";
-import { useForm } from "modules/atomic-object/forms/use-form";
-import * as FMUI from "formik-material-ui";
-import { toNumber } from "lodash";
-import { StringFormatDefinition } from "ajv";
+import * as React from "react";
 import { PaymentButton } from "./components/payment-button";
 import { RemoveButton } from "./components/remove-button";
 

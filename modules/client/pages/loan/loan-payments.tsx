@@ -19,6 +19,7 @@ type Props = {
     remainingPrincipal: number;
     totalPayment: number;
     date: DateIso.Type;
+    id: string;
   }[];
   paymentDateText: "Paid At" | "To Be Paid At";
   loanId: string;
