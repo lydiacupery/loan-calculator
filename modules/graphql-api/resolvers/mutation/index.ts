@@ -25,6 +25,8 @@ const makePayment: MutationResolvers.MakePaymentResolver = async (
   if (!loan) {
     throw new Error(`Could not find loan for id ${args.loanId}`);
   }
+
+  // console.log("hello....", newHelloFunction());
   return loan;
 };
 

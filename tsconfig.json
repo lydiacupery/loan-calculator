@@ -5,8 +5,16 @@
     "lib": ["dom", "es2018", "esnext.asynciterable"],
     "module": "commonjs",
     "target": "es2018",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "skipLibCheck": true,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "paths": {
+      "@myscope/entropy": ["packages/entropy/*"]
+    }
+  },
+  "references": [
+    {"path": "./packages/entropy"}
+  ],
+  "exclude": ["built", "./packages/entropy"]
+
 }

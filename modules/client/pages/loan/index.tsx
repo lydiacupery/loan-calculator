@@ -21,6 +21,7 @@ import * as DateTimeIso from "modules/core/date-time-iso";
 import { StyledTabs } from "modules/client/components/tabs/tabs";
 import { StyledTab } from "modules/client/components/tabs/tab";
 import { isNil } from "lodash-es";
+import * as A from "@myscope/entropy";
 
 type Props = {
   loanId: string;
@@ -43,7 +44,8 @@ export const LoanPage: React.FC<Props> = props => {
       if (!isNil(newValue)) {
         setSelectedTab(newValue);
       }
-    }
+    },
+    []
   );
 
   if (loan.state !== "DONE" || !loan.data.getLoan) {
@@ -55,6 +57,7 @@ export const LoanPage: React.FC<Props> = props => {
     <Grid>
       <Paper className={classes.paper}>
         <Typography variant="h3">{loan.data.getLoan?.name}</Typography>
+        <Typography>new function output: {A.newHelloFunction()}</Typography>
       </Paper>
       <Box m={6} />
       <Grid

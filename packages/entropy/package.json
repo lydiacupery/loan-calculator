@@ -1,0 +1,11 @@
+{
+  "name": "@myscope/entropy",
+  "version": "1.0.0",
+  "description": "Entropy package",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "license": "ISC"
+}

@@ -29,5 +29,6 @@
   "jsRules": {
     "curly": true
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+
 }

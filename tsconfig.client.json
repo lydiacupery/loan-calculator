@@ -3,6 +3,17 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "es6", "es2015", "esnext.asynciterable"],
-    "downlevelIteration": true
-  }
+    "downlevelIteration": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@myscope/entropy": ["packages/entropy/*"]
+    }
+  },
+
+  "references": [
+    {"path": "./packages/entropy"}
+  ],
+
+  "exclude": ["dist", "./packages/entropy"]
 }

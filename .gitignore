@@ -108,3 +108,9 @@ selections.json
 *.tfstate*
 
 .envrc
+
+*.d.ts
+*.d.ts.map
+**/lib/*.js
+**/lib/*.js.map
+*.tsbuildinfo

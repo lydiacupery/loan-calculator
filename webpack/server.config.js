@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const fs = require('fs');
 
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const loaders = require('./loaders');
 
 const lambdaDir = path.join(__dirname, '../entry/lambda');
@@ -71,6 +72,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     modules: [path.resolve(__dirname, '..'), 'node_modules'],
+    plugins: [new TsconfigPathsPlugin({})]
   },
 
   externals: [
