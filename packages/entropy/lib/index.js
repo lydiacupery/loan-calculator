@@ -1,4 +1,4 @@
 export var newHelloFunction = function () {
-    console.log("hi!!!");
+    return "module function";
 };
 //# sourceMappingURL=index.js.map

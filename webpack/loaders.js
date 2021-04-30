@@ -10,6 +10,7 @@ module.exports = {
       options: {
         // https://webpack.js.org/guides/build-performance/#typescript-loader
         transpileOnly: true,
+        projectReferences: true,
         experimentalWatchApi: true,
         configFile: "tsconfig.server.json",
       },
@@ -24,6 +25,7 @@ module.exports = {
       options: {
         // https://webpack.js.org/guides/build-performance/#typescript-loader
         transpileOnly: true,
+        projectReferences: true,
         experimentalWatchApi: true,
         configFile: "tsconfig.client.json",
       },

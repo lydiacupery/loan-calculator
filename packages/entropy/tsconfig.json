@@ -3,11 +3,11 @@
   "compilerOptions": {
   "composite": true,
     "outDir": "lib",
-    "rootDir": "../",
+     "rootDir": ".",
     "declaration": true,
     "declarationMap": true
   },
   "files": [],
   "include": ["."],
-  "exclude": ["lib"]
+  "exclude": ["./lib"]
 }

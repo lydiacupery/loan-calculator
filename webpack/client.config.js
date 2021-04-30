@@ -6,6 +6,7 @@ const ProgressBarPlugin = require("progress-bar-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 // const CircularDependencyPlugin = require('circular-dependency-plugin');
 
 const loaders = require("./loaders");
@@ -162,14 +163,12 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
     modules: [path.resolve(__dirname, ".."), "node_modules"],
-    alias: [
+    alias: 
       {
         "@material-ui/core": "@material-ui/core/es",
-      },
-      {
-        packages: path.resolve(__dirname, "packages/"),
-      },
-    ],
+      }
+    ,
+    plugins: [new TsconfigPathsPlugin({})]
   },
 
   module: {

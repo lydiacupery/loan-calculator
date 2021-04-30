@@ -21,7 +21,7 @@ import * as DateTimeIso from "modules/core/date-time-iso";
 import { StyledTabs } from "modules/client/components/tabs/tabs";
 import { StyledTab } from "modules/client/components/tabs/tab";
 import { isNil } from "lodash-es";
-import { newHelloFunction } from "packages/entropy";
+import { newHelloFunction } from "@myscope/entropy";
 
 type Props = {
   loanId: string;
@@ -59,7 +59,8 @@ export const LoanPage: React.FC<Props> = props => {
       <Paper className={classes.paper}>
         <Typography variant="h3">{loan.data.getLoan?.name}</Typography>
         <Typography variant="h3">
-          It's connected!! {newHelloFunction()}
+          It's connected!!
+          {newHelloFunction()}
         </Typography>
       </Paper>
       <Box m={6} />

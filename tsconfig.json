@@ -9,13 +9,10 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     
-    "paths": {
-      "packages/*" : ["packages/*"]
-    }
   },
   "references": [
     {"path": "./packages/entropy"}
   ],
-  "exclude": ["built"]
+  "exclude": ["built", "./packages/entropy"]
 
 }
