@@ -136,7 +136,7 @@ export function buildApp(
   // GraphQL authentication
   app.use(
     graphqlPath,
-  buildAuthenticatedContext 
+    buildAuthenticatedContext
     // Authentication.ensureAuthenticatedAndSetStatus
   );
 

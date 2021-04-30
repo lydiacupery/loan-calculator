@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const fs = require('fs');
 
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const loaders = require('./loaders');
 const { __Directive } = require('graphql');
 
@@ -72,9 +73,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
     modules: [path.resolve(__dirname, '..'), 'node_modules'],
-    alias: {
-      packages: path.resolve(__dirname, 'packages/')
-    }
+    plugins: [new TsconfigPathsPlugin({})]
   },
 
   externals: [
