@@ -54,3 +54,7 @@ export function dateTimeIso(
   }
   return dateTime as Type;
 }
+
+export function addDays(dateTime: Type, daysToAdd: number): Type {
+  return toIsoDateTime(DateFns.addDays(validateAndParse(dateTime), daysToAdd));
+}

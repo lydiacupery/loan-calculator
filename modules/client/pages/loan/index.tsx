@@ -21,6 +21,7 @@ import * as DateTimeIso from "modules/core/date-time-iso";
 import { StyledTabs } from "modules/client/components/tabs/tabs";
 import { StyledTab } from "modules/client/components/tabs/tab";
 import { isNil } from "lodash-es";
+import { LoanTimeline } from "./loan-timeline";
 
 type Props = {
   loanId: string;
@@ -75,6 +76,7 @@ export const LoanPage: React.FC<Props> = props => {
                 startAt={loanInfo.startAt}
                 extraPayment={loanInfo.extraPayment}
               />
+              <LoanTimeline loanId={props.loanId} />
             </Grid>
 
             <Box m={3} />

@@ -5,6 +5,7 @@ scalar IsoTime
 type Query {
   getLoans: [Loan!]!
   getLoan(loanId: ID!, effectiveDateTime: IsoDateTime!): Loan
+  getLoanVersions(loanId: ID!): [LoanVersion!]!
 }
 
 type Loan {
@@ -17,6 +18,18 @@ type Loan {
   extraPayment: Float!
   completedPayments: [Payment!]!
   remainingPayments: [Payment!]!
+}
+
+type LoanVersion {
+  id: String!
+  rate: Float!
+  extraPayment: Float!
+  effectiveDateRange: EffectiveDateRange!
+}
+
+type EffectiveDateRange {
+  start: IsoDateTime!
+  end: IsoDateTime!
 }
 
 type Payment {

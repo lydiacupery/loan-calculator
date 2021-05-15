@@ -1,7 +1,7 @@
-import { keyBy, keys, pick, pickBy } from "lodash-es";
+import { groupBy, keyBy, keys, omit, pick, pickBy } from "lodash-es";
 import * as DateTimeIso from "modules/core/date-time-iso";
 import { EntityType, ITableHelpers, SavedR, UnsavedR } from "./abstract";
-import Knex from "knex";
+import Knex, { QueryBuilder } from "knex";
 import { Context } from "modules/atomic-object/hexagonal/context";
 import { KnexPort } from "./knex-port";
 import { BaseHelpers } from ".";
@@ -11,12 +11,15 @@ import { batchDataLoaderFunction } from "./utils";
 import stringify from "json-stable-stringify";
 import { v4 } from "uuid";
 import DataLoader from "dataloader";
+import { TSTZRange } from "modules/db/tstzrange";
+import * as _ from "lodash-es";
 
 type ReadOnlyDataLoader<TKey, TValue> = {
   load: (key: TKey) => Promise<TValue>;
   loadMany: (keys: TKey[]) => Promise<TValue[]>;
 };
 
+let columnTypes: { [k: string]: { [col: string]: string } } | undefined;
 export interface EffectiveDateTimeKnexRecordInfo<
   Saved extends { id: string } = any
 > extends EntityType<Saved, Saved, { id: string }> {
@@ -87,6 +90,30 @@ export abstract class EffectiveDateTimeDataPoolTableHelper<
       );
       const byId = keyBy(rows, "id");
       return idRecords.map(rec => byId[rec.id]);
+    },
+    {
+      cacheKeyFn: input => input.id + this.getCurrentEffectiveDateTime(),
+    }
+  );
+
+  findAllVersions = new DataLoader<{ id: string }, TSavedR[]>(
+    async idRecords => {
+      const baseRecords = await this.find.loadMany(idRecords);
+      console.log("base records?", baseRecords);
+      const versionedRecords: TSavedR[] = await this.db
+        .table(this.recordType.versionTableName)
+        .whereIn(
+          "headerId",
+          idRecords.map(rec => rec.id)
+        );
+      const groupedVersioned = groupBy(versionedRecords, "headerId");
+      const keyedBase = keyBy(baseRecords, "id");
+      return idRecords.map(rec => {
+        return groupedVersioned[rec.id].map(versioned => ({
+          ...keyedBase[rec.id],
+          ...versioned,
+        }));
+      });
     },
     {
       cacheKeyFn: input => input.id + this.getCurrentEffectiveDateTime(),
@@ -164,6 +191,528 @@ export abstract class EffectiveDateTimeDataPoolTableHelper<
     return record;
   }
 
+  prepToUpdateOnMaster(record: TSavedR): { effectiveDateTimeRange: TSTZRange } {
+    return {
+      ...omit(record, "dataPoolId"),
+      effectiveDateTimeRange: record.effectiveDateTimeRange,
+    };
+  }
+
+  async loadPostgresColumnTypesIfNecessary() {
+    if (!columnTypes) {
+      const r = await this.db.raw(
+        `select table_name, column_name, data_type from information_schema.columns where table_schema = 'public';`
+      );
+      if (!columnTypes) {
+        columnTypes = {};
+        for (const row of r.rows) {
+          const fields = columnTypes[row.table_name] || {};
+          fields[row.column_name] = row.data_type;
+          columnTypes[row.table_name] = fields;
+        }
+      }
+    }
+  }
+
+  updateDataLoaderFunction = (
+    tableType: "header" | "version" | "overlay"
+  ) => async (args: Array<{ input: Pick<TSavedR, string>; id: UUID }>) => {
+    await this.loadPostgresColumnTypesIfNecessary();
+
+    if (!columnTypes) {
+      throw new Error("Update failure - Unable to load column types!!");
+    }
+
+    const idColumn = "id";
+    const tableName =
+      tableType === "header"
+        ? this.recordType.tableName
+        : this.recordType.versionTableName;
+
+    const fieldsToUpdate = _.uniq(
+      _.flatten(_.map(args, arg => _.keys(arg.input)))
+    );
+    const idsToUpdate = _.uniq(args.map(x => x.id));
+
+    const setStatementsWithBindings = _.map(fieldsToUpdate, fieldToUpdate => {
+      const argsWithThisField = _.filter(args, arg =>
+        _.has(arg.input, fieldToUpdate)
+      );
+      const whenStatements = _.map(argsWithThisField, arg => {
+        return `WHEN "${idColumn}" = ? THEN ?`;
+      });
+      const bindings = _.flatten(
+        _.map(argsWithThisField, arg => {
+          const value = (arg.input as any)[fieldToUpdate];
+
+          let transformedValue;
+
+          if (value === null) {
+            transformedValue = null;
+          } else {
+            const tableColumns = columnTypes![tableName]; // We check for null/undefined above. Because its a "let" it's technically possible it could get set back to null/undefined through, hence the !
+            if (!tableColumns) {
+              throw new Error(
+                `Update failure - Unexpected table name: ${tableName}`
+              );
+            }
+            const columnType = tableColumns[fieldToUpdate];
+            if (!columnType) {
+              throw new Error(
+                `Update failure - Unknown column '${fieldToUpdate}' for table '${tableName}'`
+              );
+            }
+
+            // Tell postgres how to cast this thing (based on the column type pulled from the schema)
+            if (typeof value === "object") {
+              // we need to serialize objects to store them as . This is used in report params
+              transformedValue = this.db.raw(
+                `?::${columnType}`,
+                JSON.stringify(value)
+              );
+            } else {
+              transformedValue = this.db.raw(`?::${columnType}`, `${value}`);
+            }
+          }
+
+          return [arg.id, transformedValue]; // For each case there will be two binding variables: the id and the value to set
+        })
+      );
+
+      const sqlString = `
+      ?? = CASE
+        ${whenStatements.join("\n")}
+        ELSE ??
+      END`;
+
+      return {
+        sqlString,
+        bindings: [fieldToUpdate, ...bindings, fieldToUpdate],
+      };
+    });
+
+    const setStatements = setStatementsWithBindings.map(s => s.sqlString);
+    const allBindings = [
+      tableName,
+      ..._.flatten(setStatementsWithBindings.map(s => s.bindings)),
+      idsToUpdate,
+    ];
+    const finalSqlString = `UPDATE ?? SET ${setStatements.join(
+      ","
+    )} WHERE "${idColumn}" = ANY(?) RETURNING "${idColumn}"`;
+
+    console.log(
+      "what is it tyring to do??",
+      this.db.raw(finalSqlString, allBindings as any).toSQL().sql,
+      this.db.raw(finalSqlString, allBindings as any).toSQL().bindings
+    );
+    const result = await this.db.raw(finalSqlString, allBindings as any);
+
+    return args.map(arg => {
+      if (result.rows.includes(arg.id)) {
+        return arg.id;
+      } else {
+        return undefined;
+      }
+    });
+  };
+
+  private findVersionWithOverlappingRanges = new DataLoader<
+    { id: UUID; effectiveDateTimeRange: TSTZRange },
+    unknown[]
+  >(
+    batchDataLoaderFunction(1000, async inputs => {
+      const query = this.versionTable();
+      for (const input of inputs) {
+        void query.orWhere(q => {
+          void q
+            .where("headerId", input.id)
+            .andWhere(
+              "effectiveDateTimeRange",
+              "&&",
+              input.effectiveDateTimeRange as any
+            );
+        });
+      }
+      const res = await query;
+      const grouped = _.groupBy(res, x => x.headerId);
+      return inputs.map(input => grouped[input.id] || []);
+    }),
+    {
+      cacheKeyFn: key =>
+        `${key.headerId}${key.effectiveDateTimeRange.toPostgres()}`,
+    }
+  );
+
+  private deleteVersionConsumedByDateRange = new DataLoader<
+    {
+      id: UUID;
+      effectiveDateTimeRange: TSTZRange;
+    },
+    unknown
+  >(
+    batchDataLoaderFunction(1000, async inputs => {
+      const query = this.versionTable().delete();
+      for (const input of inputs) {
+        void query.orWhere(q => {
+          void q
+            .where("headerId", input.id)
+            .andWhere(
+              "effectiveDateTimeRange",
+              "<@",
+              input.effectiveDateTimeRange as any
+            );
+        });
+      }
+      await query;
+      return inputs;
+    }),
+    {
+      cache: false,
+      cacheKeyFn: key => v4(),
+    }
+  );
+
+  private findVersionToSplit = new DataLoader<
+    { id: UUID; aroundDateRange: TSTZRange },
+    { id: UUID; effectiveDateTimeRange: TSTZRange } | null
+  >(
+    batchDataLoaderFunction(1000, async inputs => {
+      const query = this.versionTable();
+      for (const input of inputs) {
+        void query.orWhere(q => {
+          void q
+            .whereRaw(
+              this.db.raw(
+                `lower("effectiveDateTimeRange") < '${input.aroundDateRange.start}'`
+              )
+            )
+            .whereRaw(
+              this.db.raw(
+                `upper("effectiveDateTimeRange") > upper(tstzrange('${input.aroundDateRange.toPostgres()}'))::timestamptz`
+              )
+            )
+            .andWhere("headerId", input.id);
+        });
+      }
+      const res = await query;
+      const grouped = _.groupBy(res, r => r.headerId);
+      return inputs.map(input => {
+        const x = grouped[input.id];
+        if (!x) {
+          return null;
+        }
+        return x[0];
+      });
+    }),
+    {
+      cacheKeyFn: key => `${key.id}${key.aroundDateRange.toPostgres()}`,
+    }
+  );
+
+  private updateVersion = new DataLoader<
+    { id: UUID; input: Pick<TSavedR, string> },
+    unknown
+  >(batchDataLoaderFunction(100, this.updateDataLoaderFunction("version")), {
+    cache: false,
+    cacheKeyFn: () => v4(),
+  });
+
+  private splitRecordForRange = async (
+    aroundDateRange: TSTZRange,
+    db: Knex,
+    table: QueryBuilder<any, any[]>,
+    foreignKey: "id" | "headerId",
+    id: string
+  ) => {
+    const recToSplit = await this.findVersionToSplit.load({
+      id,
+      aroundDateRange,
+    });
+    if (recToSplit) {
+      await this.updateVersion.load({
+        id: recToSplit.id,
+        input: {
+          effectiveDateTimeRange: `['${recToSplit.effectiveDateTimeRange.start}', '${aroundDateRange.start}')`,
+        } as any,
+      });
+      await this.insertVersion.load({
+        ...recToSplit,
+        id: v4(),
+        effectiveDateTimeRange: new TSTZRange({
+          start: aroundDateRange.end!,
+          end: recToSplit.effectiveDateTimeRange.end,
+        }),
+      } as any);
+    }
+  };
+  private findVersionRecordWithStartDateIntersectingGivenHeaderAndRange = new DataLoader<
+    { headerId: UUID; effectiveDateTimeRange: TSTZRange },
+    { id: UUID; effectiveDateTimeRange: TSTZRange }
+  >(
+    batchDataLoaderFunction(1000, async inputs => {
+      const base = this.versionTable().select(
+        "id",
+        "effectiveDateTimeRange",
+        "headerId"
+      );
+      for (const input of inputs) {
+        void base.orWhere(q => {
+          void q
+            .where("headerId", input.headerId)
+            .andWhere(
+              this.db.raw('lower("effectiveDateTimeRange")'),
+              ">=",
+              input.effectiveDateTimeRange.start
+            )
+            .andWhere(
+              "effectiveDateTimeRange",
+              "&&",
+              input.effectiveDateTimeRange as any
+            );
+        });
+      }
+      const rawResults = await base;
+
+      const grouped = _.groupBy(rawResults, x => x.headerId);
+      return inputs.map(input => {
+        const x = grouped[input.headerId];
+        if (!x) {
+          return null;
+        }
+        return x[0];
+      });
+    }),
+    {
+      cacheKeyFn: key =>
+        `${key.headerId}${key.effectiveDateTimeRange.toPostgres()}`,
+    }
+  );
+
+  private updateStartDateForIntersectingRanges = async (args: {
+    id: string;
+    record: { effectiveDateTimeRange: TSTZRange };
+    db: Knex;
+    table: QueryBuilder<any, any[]>;
+    foreignKey: "id" | "headerId";
+  }) => {
+    const { id, record, db, table, foreignKey } = args;
+
+    // Version table
+    const res = await this.findVersionRecordWithStartDateIntersectingGivenHeaderAndRange.load(
+      {
+        headerId: id,
+        effectiveDateTimeRange: record.effectiveDateTimeRange,
+      }
+    );
+    if (res) {
+      await this.updateVersion.load({
+        id: res.id,
+        input: {
+          effectiveDateTimeRange: `['${record.effectiveDateTimeRange.end}', '${
+            _.isNil(res.effectiveDateTimeRange.end)
+              ? "infinity"
+              : `${res.effectiveDateTimeRange.end}`
+          }')`,
+        } as any,
+      });
+    }
+  };
+
+  private getDateTimeRangeEndForPostgres = (range: TSTZRange) =>
+    `upper(tstzrange('${range.toPostgres()}'))::timestamptz`;
+
+  private updateEffectiveDatesForSurroundingRecords = async (args: {
+    id: string;
+    record: { effectiveDateTimeRange: TSTZRange };
+    db: Knex;
+    table: QueryBuilder<any, any[]>;
+    foreignKey: "id" | "headerId";
+  }) => {
+    await Promise.all([
+      this.updateStartDateForIntersectingRanges(args),
+      this.updateEndDateForIntersectingRanges(args),
+    ]);
+  };
+
+  private findVersionRecordWithEndDateIntersectingGivenHeaderAndRange = new DataLoader<
+    { headerId: UUID; effectiveDateTimeRange: TSTZRange },
+    { id: UUID; effectiveDateTimeRange: TSTZRange }
+  >(
+    batchDataLoaderFunction(1000, async inputs => {
+      const base = this.versionTable().select(
+        "id",
+        "effectiveDateTimeRange",
+        "headerId"
+      );
+      for (const input of inputs) {
+        void base.orWhere(q => {
+          void q
+            .where("headerId", input.headerId)
+            .andWhere(
+              this.db.raw('upper("effectiveDateTimeRange")'),
+              "<=",
+              this.db.raw(
+                this.getDateTimeRangeEndForPostgres(
+                  input.effectiveDateTimeRange
+                )
+              )
+            )
+            .andWhere(
+              "effectiveDateTimeRange",
+              "&&",
+              input.effectiveDateTimeRange as any
+            );
+        });
+      }
+      const rawResults = await base;
+
+      const grouped = _.groupBy(rawResults, x => x.headerId);
+      return inputs.map(input => {
+        const x = grouped[input.headerId];
+        if (!x) {
+          return null;
+        }
+        return x[0];
+      });
+    }),
+    {
+      cacheKeyFn: key =>
+        `${key.headerId}${key.effectiveDateTimeRange.toPostgres()}`,
+    }
+  );
+
+  private updateEndDateForIntersectingRanges = async (args: {
+    id: string;
+    record: { effectiveDateTimeRange: TSTZRange };
+    db: Knex;
+    table: QueryBuilder<any, any[]>;
+    foreignKey: "id" | "headerId";
+  }) => {
+    const { id, record, db, table, foreignKey } = args;
+
+    // Version table
+    const res = await this.findVersionRecordWithEndDateIntersectingGivenHeaderAndRange.load(
+      {
+        headerId: id,
+        effectiveDateTimeRange: record.effectiveDateTimeRange,
+      }
+    );
+    if (res) {
+      await this.updateVersion.load({
+        id: res.id,
+        input: {
+          effectiveDateTimeRange: `['${res.effectiveDateTimeRange.start}', '${record.effectiveDateTimeRange.start}')`,
+        } as any,
+      });
+    }
+  };
+
+  private updateConflictingVersions = async (
+    id: string,
+    record: { effectiveDateTimeRange: TSTZRange },
+    db: Knex,
+    table: QueryBuilder<any, any[]>,
+    foreignKey: "id" | "headerId"
+  ) => {
+    const overlappingRanges =
+      foreignKey === "id"
+        ? await table
+            .clone()
+            .where(foreignKey, id)
+            .andWhere(
+              "effectiveDateTimeRange",
+              "&&",
+              record.effectiveDateTimeRange as any
+            )
+        : await this.findVersionWithOverlappingRanges.load({
+            id,
+            effectiveDateTimeRange: record.effectiveDateTimeRange,
+          });
+    if (overlappingRanges.length > 0) {
+      // Delete any consummed
+      if (foreignKey === "id") {
+        await table
+          .clone()
+          .delete()
+          .where(foreignKey, id)
+          .andWhere(
+            "effectiveDateTimeRange",
+            "<@",
+            record.effectiveDateTimeRange as any
+          );
+      } else {
+        await this.deleteVersionConsumedByDateRange.load({
+          id,
+          effectiveDateTimeRange: record.effectiveDateTimeRange,
+        });
+      }
+
+      // Split the versions if inserting in the middle
+      await this.splitRecordForRange(
+        record.effectiveDateTimeRange,
+        db,
+        table,
+        foreignKey,
+        id
+      );
+
+      await this.updateEffectiveDatesForSurroundingRecords({
+        id,
+        record,
+        db,
+        table,
+        foreignKey,
+      });
+    }
+  };
+
+  private updateHeader = new DataLoader<
+    { id: UUID; input: Pick<TSavedR, string> },
+    unknown
+  >(batchDataLoaderFunction(100, this.updateDataLoaderFunction("header")), {
+    cache: false,
+    cacheKeyFn: () => v4(),
+  });
+
+  private findHeaderById = new DataLoader<UUID, unknown>(async ids => {
+    const res = await this.headerTable().whereIn("id", ids);
+    const grouped = groupBy(res, x => x.id);
+    return ids.map(id => {
+      const maybe = grouped[id];
+      if (!maybe) {
+        throw new Error(`Header Id not found for ${id}`);
+      }
+      return maybe[0];
+    });
+  }, {});
+
+  public async update(record: TSavedR): Promise<TSavedR> {
+    const masterRecord = this.prepToUpdateOnMaster(record);
+    if (!(await this.findHeaderById.load(record.id))) {
+      throw new Error("could not find record with matching id");
+    }
+    const headerValues = pick(record, [...this.headerColumns]);
+    // TODO: Don't run this if needed, do the check here, not domain
+    await this.updateHeader.load({
+      id: record.id,
+      input: headerValues,
+    });
+    await this.updateConflictingVersions(
+      record.id,
+      masterRecord,
+      this.db,
+      this.versionTable(),
+      "headerId"
+    );
+
+    await this.insertVersion.load({
+      headerId: record.id,
+      ...pick(masterRecord, this.versionColumns),
+    });
+    return record;
+  }
+
   async all(): Promise<TSavedR[]> {
     const result = await this.table();
     return result;
@@ -193,7 +742,7 @@ export function EffectiveDateTimeUnboundRepositoryBase<
 >(
   aRecordType: TRecordInfo,
   columnInfo: {
-    [key in Exclude<keyof SavedR<TRecordInfo>, "id">]: "version" | "header"
+    [key in Exclude<keyof SavedR<TRecordInfo>, "id">]: "version" | "header";
   }
 ) {
   return class Repository

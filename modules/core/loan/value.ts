@@ -11,8 +11,16 @@ export interface LoanData {
   startAt: DateTimeIso.Type;
   paymentsPerYear: number;
   paymentAmount: number;
-  rate: number;
-  extraPayment: number;
   name: string;
+  // todo, eventually move these out to a versioned object
+  extraPayment: number;
+  rate: number;
+  effectiveDateTimeRange: TSTZRange;
+}
+
+export interface VersionedLoanData {
+  id: string;
+  extraPayment: number;
+  rate: number;
   effectiveDateTimeRange: TSTZRange;
 }

@@ -14,6 +14,7 @@ import {
 import { Flavor } from "modules/helpers";
 import { Isomorphism } from "@atomic-object/lenses";
 import * as Result from "modules/atomic-object/result";
+import { argsToArgsConfig } from "graphql/type/definition";
 
 type ServiceContext = Hexagonal.Context<KnexPort | LoanRecordRepositoryPort>;
 
@@ -82,6 +83,12 @@ export class LoanRepository
       .get(LoanRecordRepositoryPort)
       .insert(domainToDat.to(unsavedRecord));
     return domainToDat.from(inserted);
+  }
+
+  async versions(arg: { id: Flavor<Flavor<string, "A UUID">, "Loan Id"> }) {
+    const versionedRecords = await this.ctx
+      .get(LoanRecordRepositoryPort)
+      .findAllVersions.load({ id: argsToArgsConfig.id });
   }
 }
 

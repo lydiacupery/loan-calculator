@@ -20,7 +20,7 @@ module.exports = ({ config: storybookBaseConfig }) => {
   );
 
   storybookBaseConfig.resolve.extensions.push('.ts', '.tsx');
-  storybookBaseConfig.resolve.modules.unshift(path.resolve(__dirname, '../modules'));
+  storybookBaseConfig.resolve.modules.unshift(path.resolve(__dirname, '..'));
 
   storybookBaseConfig.plugins.push(
     //   new HappyPack({
@@ -34,10 +34,9 @@ module.exports = ({ config: storybookBaseConfig }) => {
     //     ]
     //   }),
     new ForkTsCheckerWebpackPlugin({
-      // https://github.com/Realytics/fork-ts-checker-webpack-plugin#options
-      useTypescriptIncrementalApi: true,
-      memoryLimit: 4096,
-      // checkSyntacticErrors: true
+      typescript: {
+        memoryLimit: 4096,
+      },
     }),
     new webpack.DefinePlugin({
       // Flag to detect non-production

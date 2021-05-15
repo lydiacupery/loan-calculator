@@ -21,7 +21,16 @@ const getLoan: QueryResolvers.GetLoanResolver = async (parent, args, ctx) => {
   return loan;
 };
 
+const getLoanVersions: QueryResolvers.GetLoanVersionsResolver = async (
+  parent,
+  args,
+  ctx
+) => {
+  // want to be able to find all versions for a loan
+};
+
 export default {
   getLoans,
   getLoan,
+  getLoanVersions,
 };
