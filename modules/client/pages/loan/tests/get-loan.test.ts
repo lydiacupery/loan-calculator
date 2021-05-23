@@ -58,7 +58,6 @@ describe("Get loan query", () => {
       expect(fetchedLoan.extraPayment).toEqual(0);
 
       // completed payments
-      console.log("completed payments", fetchedLoan.completedPayments);
       expect(fetchedLoan.completedPayments).toHaveLength(2);
       expect(fetchedLoan.completedPayments[0]).toEqual(
         expect.objectContaining({
@@ -80,8 +79,6 @@ describe("Get loan query", () => {
       );
 
       expect(fetchedLoan.remainingPayments).toHaveLength(11);
-
-      console.log("...remaining", fetchedLoan.remainingPayments);
 
       // first payment
       const firstRemainingPayment = fetchedLoan.remainingPayments[0];

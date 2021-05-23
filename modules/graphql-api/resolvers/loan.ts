@@ -70,7 +70,24 @@ const remainingPayments: LoanResolvers.CompletedPaymentsResolver = async (
   );
 };
 
+const effectiveDateTimeRange: LoanResolvers.EffectiveDateTimeRangeResolver = async (
+  parent,
+  args,
+  ctx
+) => {
+  return {
+    start: Loan.effectiveDateTimeRange(parent).start,
+    end: Loan.effectiveDateTimeRange(parent).end,
+  };
+};
+
+const rate: LoanResolvers.RateResolver = async (parent, args, ctx) => {
+  return Loan.rate(parent);
+};
+
 export default {
   completedPayments,
   remainingPayments,
+  rate,
+  effectiveDateTimeRange,
 };

@@ -10,7 +10,6 @@ export interface HomePageUIProps {
 }
 
 export function HomePageUI(props: HomePageUIProps) {
-  console.log("public host", process.env.PUBLIC_HOST)
   const [resetting, setResetting] = React.useState(false);
   const classes = useStyles();
 

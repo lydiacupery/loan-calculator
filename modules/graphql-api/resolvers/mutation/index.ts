@@ -43,7 +43,6 @@ const deletePayment: MutationResolvers.DeletePaymentResolver = async (
   }
 
   await ctx.get(PaymentRepositoryPort).delete({ id: args.paymentId });
-  console.log("deleted that paymetn!!");
 
   const loan = await ctx
     .get(LoanRepositoryPort)

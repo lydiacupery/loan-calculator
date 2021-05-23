@@ -61,6 +61,8 @@ describe("Get loan versions", () => {
         },
       });
 
+      console.log("...result!", loanVersionsResult.data.getLoanVersions);
+
       // const loanVersions = loanVersionsResult.data.getLoanVersions;
       // if (!loanVersions) {
       //   throw new Error("could not fetch loan");

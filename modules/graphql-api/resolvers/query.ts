@@ -13,7 +13,6 @@ const getLoan: QueryResolvers.GetLoanResolver = async (parent, args, ctx) => {
   // set effective date time on ctx
   const effectiveDateTimePort = ctx.get(CurrentEffectiveDateTimePort);
   if (effectiveDateTimePort) {
-    console.log("setting effective date time", args.effectiveDateTime);
     effectiveDateTimePort.setCurrentEffectiveDateTime(args.effectiveDateTime);
   }
 
@@ -27,6 +26,11 @@ const getLoanVersions: QueryResolvers.GetLoanVersionsResolver = async (
   ctx
 ) => {
   // want to be able to find all versions for a loan
+  const loanVersions = await ctx
+    .get(LoanRepositoryPort)
+    .versions({ id: args.loanId });
+  console.log("got loan versions", loanVersions);
+  return loanVersions;
 };
 
 export default {

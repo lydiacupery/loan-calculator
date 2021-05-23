@@ -43,7 +43,6 @@ describe("Remove payment mutation", () => {
         }
       );
 
-      console.log("result...", updatedLoan.data?.deletePayment);
       expect(updatedLoan.data?.deletePayment?.completedPayments).toHaveLength(
         0
       );

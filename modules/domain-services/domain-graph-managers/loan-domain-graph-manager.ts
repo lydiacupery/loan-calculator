@@ -47,8 +47,6 @@ export class LoanDomainGraphManager {
       ? Payment.forDate(maxForDateForPayemnt)
       : DateIso.toIsoDate(Loan.startAt(loan));
 
-    console.log("max date for loan", maxForDateForLoan);
-
     const startDate =
       DateIso.getMonthDayFromIsoDate(maxForDateForLoan) >= 10
         ? // next month the tenth
@@ -78,8 +76,6 @@ export class LoanDomainGraphManager {
     const remainingPaymentCount = Math.ceil(
       Finance.numberOfPayments(interestRate / 12, -paymentAmount, totalPayment)
     );
-
-    console.log("remaining count", remainingPaymentCount);
 
     // need to make 'count' number of payments starting on startDate
 

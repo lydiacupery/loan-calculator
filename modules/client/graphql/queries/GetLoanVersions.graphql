@@ -3,7 +3,7 @@ query GetLoanVersions($loanId: ID!) {
     id
     rate
     extraPayment
-    effectiveDateRange {
+    effectiveDateTimeRange {
       start
       end
     }

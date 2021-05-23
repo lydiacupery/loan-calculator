@@ -85,10 +85,12 @@ export class LoanRepository
     return domainToDat.from(inserted);
   }
 
-  async versions(arg: { id: Flavor<Flavor<string, "A UUID">, "Loan Id"> }) {
+  async versions(args: { id: Flavor<Flavor<string, "A UUID">, "Loan Id"> }) {
     const versionedRecords = await this.ctx
       .get(LoanRecordRepositoryPort)
-      .findAllVersions.load({ id: argsToArgsConfig.id });
+      .findAllVersions.load({ id: args.id });
+    console.log("v records??", versionedRecords);
+    return versionedRecords.map(vr => domainToDat.from(vr));
   }
 }
 
