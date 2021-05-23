@@ -35,6 +35,8 @@ describe("Get loan versions", () => {
           start: firstVersionEnd,
           end: null,
         }),
+        rate: 0.035,
+        extraPayment: 1000,
       });
 
       const results = await ctx
@@ -42,13 +44,9 @@ describe("Get loan versions", () => {
         .select("*")
         .from("LoanVersion");
 
-      console.log("versions????", results);
-
       const allVersions = await ctx
         .get(LoanRecordRepositoryPort)
         .findAllVersions.load({ id: loanV1.id });
-
-      console.log("all vs?", allVersions);
 
       // are getting the correct versions
 

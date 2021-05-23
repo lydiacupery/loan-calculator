@@ -10,8 +10,8 @@ export async function up(knex: Knex): Promise<any> {
       .defaultTo(knex.raw("uuid_generate_v4()"));
     t.dateTime("startAt").notNullable();
     t.integer("paymentsPerYear").notNullable();
-    t.decimal("paymentAmount").notNullable();
-    t.decimal("principal").notNullable();
+    t.decimal("paymentAmount", 18, 2).notNullable();
+    t.decimal("principal", 18, 2).notNullable();
     t.string("name").notNullable();
   });
 
@@ -19,8 +19,8 @@ export async function up(knex: Knex): Promise<any> {
     t.uuid("id")
       .primary()
       .defaultTo(knex.raw("uuid_generate_v4()"));
-    t.decimal("extraPayment");
-    t.decimal("rate");
+    t.decimal("extraPayment", 18, 2);
+    t.decimal("rate", 18, 4);
 
     t.specificType("effectiveDateTimeRange", "tstzrange").notNullable();
     addForeignKeyColumn(t, "headerId", "Loan");

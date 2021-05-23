@@ -99,7 +99,6 @@ export abstract class EffectiveDateTimeDataPoolTableHelper<
   findAllVersions = new DataLoader<{ id: string }, TSavedR[]>(
     async idRecords => {
       const baseRecords = await this.find.loadMany(idRecords);
-      console.log("base records?", baseRecords);
       const versionedRecords: TSavedR[] = await this.db
         .table(this.recordType.versionTableName)
         .whereIn(
@@ -109,10 +108,12 @@ export abstract class EffectiveDateTimeDataPoolTableHelper<
       const groupedVersioned = groupBy(versionedRecords, "headerId");
       const keyedBase = keyBy(baseRecords, "id");
       return idRecords.map(rec => {
-        return groupedVersioned[rec.id].map(versioned => ({
-          ...keyedBase[rec.id],
-          ...versioned,
-        }));
+        return groupedVersioned[rec.id].map(versioned => {
+          return {
+            ...keyedBase[rec.id],
+            ...versioned,
+          };
+        });
       });
     },
     {
@@ -168,7 +169,9 @@ export abstract class EffectiveDateTimeDataPoolTableHelper<
 
   private insertVersion = new DataLoader<object, unknown>(
     batchDataLoaderFunction(100, async inputs => {
+      const resultsPre = await this.db.select("*").from("LoanVersion");
       await this.versionTable().insert(inputs);
+      const results = await this.db.select("*").from("LoanVersion");
       return inputs;
     }),
     {
@@ -301,11 +304,6 @@ export abstract class EffectiveDateTimeDataPoolTableHelper<
       ","
     )} WHERE "${idColumn}" = ANY(?) RETURNING "${idColumn}"`;
 
-    console.log(
-      "what is it tyring to do??",
-      this.db.raw(finalSqlString, allBindings as any).toSQL().sql,
-      this.db.raw(finalSqlString, allBindings as any).toSQL().bindings
-    );
     const result = await this.db.raw(finalSqlString, allBindings as any);
 
     return args.map(arg => {
