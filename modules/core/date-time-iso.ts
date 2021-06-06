@@ -41,6 +41,11 @@ export function toUTC(dateTime: Type): Type {
   return validateAndParse(dateTime).toISOString() as Type;
 }
 
+export const toSlashyDateAndTime = (x: Type): string =>
+  DateFns.format(validateAndParse(x), "MM/dd/yyyy h:mm a");
+
+export const toSlashyDate = (x: Type): string =>
+  DateFns.format(validateAndParse(x), "MM/dd/yyyy");
 export function dateTimeIso(
   literals: TemplateStringsArray,
   ...placeholders: never[]
