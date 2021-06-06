@@ -24,7 +24,7 @@ type Loan {
 
 type EffectiveDateTimeRange {
   start: IsoDateTime!
-  end: IsoDateTime!
+  end: IsoDateTime
 }
 
 type Payment {

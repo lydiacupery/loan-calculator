@@ -26,11 +26,11 @@ const getLoanVersions: QueryResolvers.GetLoanVersionsResolver = async (
   ctx
 ) => {
   // want to be able to find all versions for a loan
-  const loanVersions = await ctx
+  const loandWithVersionInfo = await ctx
     .get(LoanRepositoryPort)
     .versions({ id: args.loanId });
-  console.log("got loan versions", loanVersions);
-  return loanVersions;
+  console.log("got loan versions", loandWithVersionInfo);
+  return loandWithVersionInfo;
 };
 
 export default {

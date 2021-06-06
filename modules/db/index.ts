@@ -1,13 +1,14 @@
 import config from "config";
 import * as DateTimeIso from "modules/core/date-time-iso";
 const env = process.env.NODE_ENV;
-if(!env) {
-  throw new Error("aaaa no node env!" + JSON.stringify(process.env, null, 2))
+if (!env) {
+  throw new Error("aaaa no node env!" + JSON.stringify(process.env, null, 2));
 }
 
 const knexConfig: any = require("../../knexfile")[env];
 
 import knexModule from "knex";
+import { parse_tstzrange } from "./tstzrange";
 
 export type Knex = knexModule;
 const knex: typeof knexModule = require("knex");
@@ -59,6 +60,7 @@ export function getConnection() {
       oids.TimestampWithTimezone,
       DateTimeIso.toIsoDateTime
     );
+    pgTypes.setTypeParser(oids.TimestampWithTimezoneRange, parse_tstzrange);
 
     $connection = knex(knexConfig);
   }
