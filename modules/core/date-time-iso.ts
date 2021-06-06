@@ -46,6 +46,7 @@ export const toSlashyDateAndTime = (x: Type): string =>
 
 export const toSlashyDate = (x: Type): string =>
   DateFns.format(validateAndParse(x), "MM/dd/yyyy");
+
 export function dateTimeIso(
   literals: TemplateStringsArray,
   ...placeholders: never[]

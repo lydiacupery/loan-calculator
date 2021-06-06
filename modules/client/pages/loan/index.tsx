@@ -68,15 +68,20 @@ export const LoanPage: React.FC<Props> = props => {
           <Grid item xs={1}></Grid>
 
           <Grid item container xs={10}>
-            <Grid item container>
-              <LoanInfo
-                principal={loanInfo.principal}
-                paymentAmount={loanInfo.paymentAmount}
-                paymentsPerYear={loanInfo.paymentsPerYear}
-                startAt={loanInfo.startAt}
-                extraPayment={loanInfo.extraPayment}
-              />
-              <LoanTimeline loanId={props.loanId} />
+            <Grid item container direction="row" justify="center">
+              <Grid item container xs={4}>
+                <LoanInfo
+                  principal={loanInfo.principal}
+                  paymentAmount={loanInfo.paymentAmount}
+                  paymentsPerYear={loanInfo.paymentsPerYear}
+                  startAt={loanInfo.startAt}
+                  extraPayment={loanInfo.extraPayment}
+                />
+              </Grid>
+              <Grid item xs={1}></Grid>
+              <Grid item container xs={7}>
+                <LoanTimeline loanId={props.loanId} />
+              </Grid>
             </Grid>
 
             <Box m={3} />

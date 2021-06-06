@@ -25,7 +25,7 @@ export const LoanInfo: React.FC<Props> = props => {
           </Grid>
           <Grid item>
             <Typography variant="body1">
-              {DateTimeIso.dateFromTimestamp(props.startAt)}
+              {DateTimeIso.toSlashyDate(props.startAt)}
             </Typography>
           </Grid>
         </Grid>
