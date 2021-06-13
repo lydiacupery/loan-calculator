@@ -52,6 +52,6 @@ type Mutation {
   updateInterestRateForLoanBetween(
     loanId: ID!
     rate: Float!
-    updateForRange: EffectiveDateTimeRangeInput
+    updateForRange: EffectiveDateTimeRangeInput!
   ): Loan
 }

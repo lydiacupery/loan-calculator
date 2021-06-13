@@ -54,10 +54,14 @@ export class LoanRepository
   ): Promise<OpaqueTypeOf<Opaque<"Loan", LoanData>>[]> {
     throw new Error("Method not implemented.");
   }
-  update(
+  async update(
     object: OpaqueTypeOf<Opaque<"Loan", LoanData>>
   ): Promise<OpaqueTypeOf<Opaque<"Loan", LoanData>>> {
-    throw new Error("Method not implemented.");
+    const dbLoan = domainToDat.to(object);
+    const updatedLoan = await this.ctx
+      .get(LoanRecordRepositoryPort)
+      .update(dbLoan);
+    return domainToDat.from(updatedLoan);
   }
   delete(
     ...ids: { id: Flavor<Flavor<string, "A UUID">, "Loan Id"> }[]

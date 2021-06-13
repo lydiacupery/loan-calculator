@@ -1,13 +1,14 @@
-query GetLoan($loanId: ID!, $effectiveDateTime: IsoDateTime!) {
-  getLoan(loanId: $loanId, effectiveDateTime: $effectiveDateTime) {
+mutation UpdateInterestRateForLoanBetween(
+  $loanId: ID!
+  $rate: Float!
+  $updateForRange: EffectiveDateTimeRangeInput!
+) {
+  updateInterestRateForLoanBetween(
+    loanId: $loanId
+    rate: $rate
+    updateForRange: $updateForRange
+  ) {
     id
-    name
-    startAt
-    paymentsPerYear
-    paymentAmount
-    principal
-    extraPayment
-    rate
     completedPayments {
       id
       principalPayment

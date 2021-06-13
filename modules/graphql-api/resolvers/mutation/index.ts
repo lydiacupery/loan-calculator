@@ -5,6 +5,10 @@ import { PaymentRepositoryPort } from "modules/domain-services/payment/repositor
 import { MutationResolvers } from "modules/graphql-api/server-types.gen";
 import { LoanRecordRepositoryPort } from "modules/records/loan";
 import * as Payment from "modules/core/payment/entity";
+import * as Loan from "modules/core/loan/entity";
+import { TSTZRange } from "modules/db/tstzrange";
+import { result } from "lodash";
+import * as Result from "modules/atomic-object/result";
 
 const makePayment: MutationResolvers.MakePaymentResolver = async (
   parent,
@@ -33,7 +37,6 @@ const deletePayment: MutationResolvers.DeletePaymentResolver = async (
   args,
   ctx
 ) => {
-  // lookup loan id
   const payment = await ctx
     .get(PaymentRepositoryPort)
     .find({ id: args.paymentId });
@@ -53,4 +56,37 @@ const deletePayment: MutationResolvers.DeletePaymentResolver = async (
   return loan;
 };
 
-export default { makePayment, deletePayment };
+const updateInterestRateForLoanBetween: MutationResolvers.UpdateInterestRateForLoanBetweenResolver = async (
+  parent,
+  args,
+  ctx
+) => {
+  const loan = await ctx.get(LoanRepositoryPort).find({ id: args.loanId });
+  if (!loan) {
+    throw new Error(`Could not find loan for id ${args.loanId}`);
+  }
+  const updatedLoan = Loan.update(loan, l => {
+    return {
+      ...l,
+      rate: args.rate,
+      effectiveDateTimeRange: new TSTZRange({
+        start: args.updateForRange.start,
+        end: args.updateForRange.end || null,
+      }),
+    };
+  });
+
+  if (Result.isError(updatedLoan)) {
+    throw new Error(
+      `Error updating the rate on loan ${args.loanId} for effective date time range ${args.updateForRange}`
+    );
+  }
+
+  const loanUpdateResult = await ctx
+    .get(LoanRepositoryPort)
+    .update(updatedLoan);
+
+  return loanUpdateResult;
+};
+
+export default { makePayment, deletePayment, updateInterestRateForLoanBetween };
