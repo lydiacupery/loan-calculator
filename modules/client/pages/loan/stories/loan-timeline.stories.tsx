@@ -42,7 +42,7 @@ const Provider = mockProvider({
   },
 });
 
-storiesOf("Components/Error", module).add("404 Not Found", () => {
+storiesOf("Loan Timeline", module).add("Example", () => {
   return (
     <Provider>
       <LoanTimeline loanId="id" />

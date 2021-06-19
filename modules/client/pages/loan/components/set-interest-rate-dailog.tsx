@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   colors,
   Dialog,
@@ -6,6 +7,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Grid,
   IconButton,
   makeStyles,
   TextField,
@@ -22,8 +24,9 @@ import * as DateTimeIso from "modules/core/date-time-iso";
 import { toNumber } from "lodash";
 import { useForm } from "modules/atomic-object/forms/use-form";
 import { DateTimePicker } from "formik-material-ui-pickers";
-import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { fieldToTextField, TextFieldProps } from "formik-material-ui";
+import NumberFormat, { NumberFormatProps } from "react-number-format";
 
 type FormValues = {
   updateInterestRateForLoanStart: DateTimeIso.Type;
@@ -31,7 +34,28 @@ type FormValues = {
   rate: number;
 };
 
-export const SetInterestRate: React.FC<{
+export const PercentageInput: React.FC<NumberFormatProps> = React.memo(
+  props => {
+    return (
+      <NumberFormat
+        {...props}
+        getInputRef={props.inputRef}
+        onValueChange={values => {
+          props.onChange &&
+            props.onChange({
+              target: {
+                name: props.name,
+                value: values.value,
+              },
+            });
+        }}
+        suffix="%"
+      />
+    );
+  }
+);
+
+export const SetInterestRateDialog: React.FC<{
   loanId: string;
   currentRate: number;
 }> = props => {
@@ -44,7 +68,7 @@ export const SetInterestRate: React.FC<{
   const [open, setOpen] = React.useState(true);
 
   const initialValues: FormValues = {
-    rate: props.currentRate,
+    rate: props.currentRate * 100,
     updateInterestRateForLoanEnd: DateTimeIso.now(),
     updateInterestRateForLoanStart: DateTimeIso.now(),
   };
@@ -92,22 +116,48 @@ export const SetInterestRate: React.FC<{
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <Formik<FormValues>
-          initialValues={initialValues}
-          onSubmit={handleUpdate}
-          enableReinitialize
-        >
-          {({ values, handleSubmit, handleChange, handleBlur }) => (
-            <Form>
-              <DialogTitle id="alert-dialog-title">
-                Update the rate for this loan
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  Select the dates you would like to update the rate for
-                </DialogContentText>
-                <Field name="updateInterestRateForLoanStart">
+      <Formik<FormValues>
+        initialValues={initialValues}
+        onSubmit={handleUpdate}
+        enableReinitialize
+      >
+        {({ values, handleSubmit, handleChange, handleBlur }) => (
+          <Form>
+            <DialogTitle id="alert-dialog-title">
+              Update the rate for this loan
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                What is the new rate?
+              </DialogContentText>
+
+              <Grid item container xs={12}>
+                <Field
+                  name="rate"
+                  component={(props: TextFieldProps) => (
+                    <TextField
+                      // type="number"
+                      name="numberformat"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      InputProps={{
+                        inputComponent: props => (
+                          <PercentageInput {...props} defaultValue={10} />
+                        ),
+                      }}
+                      {...fieldToTextField(props)}
+                    />
+                  )}
+                  handleChange={handleChange}
+                />
+              </Grid>
+              <Box m={4} />
+
+              <DialogContentText id="alert-dialog-description">
+                When should the new rate to become effective?
+              </DialogContentText>
+              {/* <Field name="updateInterestRateForLoanStart">
                   {({
                     field, // { name, value, onChange, onBlur }
                     form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
@@ -134,23 +184,37 @@ export const SetInterestRate: React.FC<{
                       />
                     );
                   }}
-                </Field>
-                {/* <Field
+                </Field> */}
+              {/* <Field
                   component={DateTimePicker}
                   // name="updateInterestRateForLoanStart"
                   label="Range start"
                 /> */}
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={e => handleSubmit()} autoFocus>
-                  Update Rate
-                </Button>
-              </DialogActions>
-            </Form>
-          )}
-        </Formik>
-      </MuiPickersUtilsProvider>
+              <Grid item container xs={12}>
+                <Field
+                  name="updateInterestRateForLoanStart"
+                  component={(props: TextFieldProps) => (
+                    <TextField
+                      type="datetime-local"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      {...fieldToTextField(props)}
+                    />
+                  )}
+                  handleChange={handleChange}
+                />
+              </Grid>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button onClick={e => handleSubmit()} autoFocus>
+                Update Rate
+              </Button>
+            </DialogActions>
+          </Form>
+        )}
+      </Formik>
     </Dialog>
   );
 };

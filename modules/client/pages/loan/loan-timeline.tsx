@@ -14,7 +14,7 @@ import { makeStyles } from "modules/client/styles";
 import * as DateTimeIso from "modules/core/date-time-iso";
 import { formatPercentage, formatUSD } from "modules/core/formatter";
 import React from "react";
-import { SetInterestRate } from "./components/set-interest-rate-dailog";
+import { SetInterestRateDialog } from "./components/set-interest-rate-dailog";
 
 type Props = {
   loanId: string;
@@ -66,7 +66,7 @@ export const LoanTimeline: React.FC<Props> = props => {
         </Timeline>
         <Grid item container xs={12} justify="flex-end">
           <Button>Set Interest Rate</Button>
-          <SetInterestRate loanId={props.loanId} currentRate={0.05} />
+          <SetInterestRateDialog loanId={props.loanId} currentRate={0.05} />
         </Grid>
       </Paper>
     </Grid>

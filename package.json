@@ -160,6 +160,7 @@
     "react-apollo": "^2.4.1",
     "react-async-component": "^2.0.0",
     "react-dom": "^16.8",
+    "react-number-format": "^4.6.3",
     "react-router": "^4.3.0",
     "react-router-dom": "^4.3.0",
     "react-table": "^7.1.0",
