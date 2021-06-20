@@ -9,9 +9,11 @@ import {
   DialogTitle,
   Grid,
   IconButton,
+  InputAdornment,
   makeStyles,
   TextField,
 } from "@material-ui/core";
+import { TextField as FMUITextField } from "formik-material-ui";
 import { Clear, DeleteOutline } from "@material-ui/icons";
 import { Field, Form, Formik } from "formik";
 import { useMutationBundle } from "modules/client/graphql/hooks";
@@ -30,30 +32,8 @@ import NumberFormat, { NumberFormatProps } from "react-number-format";
 
 type FormValues = {
   updateInterestRateForLoanStart: DateTimeIso.Type;
-  updateInterestRateForLoanEnd: DateTimeIso.Type;
   rate: number;
 };
-
-export const PercentageInput: React.FC<NumberFormatProps> = React.memo(
-  props => {
-    return (
-      <NumberFormat
-        {...props}
-        getInputRef={props.inputRef}
-        onValueChange={values => {
-          props.onChange &&
-            props.onChange({
-              target: {
-                name: props.name,
-                value: values.value,
-              },
-            });
-        }}
-        suffix="%"
-      />
-    );
-  }
-);
 
 export const SetInterestRateDialog: React.FC<{
   loanId: string;
@@ -69,7 +49,6 @@ export const SetInterestRateDialog: React.FC<{
 
   const initialValues: FormValues = {
     rate: props.currentRate * 100,
-    updateInterestRateForLoanEnd: DateTimeIso.now(),
     updateInterestRateForLoanStart: DateTimeIso.now(),
   };
 
@@ -80,7 +59,6 @@ export const SetInterestRateDialog: React.FC<{
         rate: toNumber(currentValue.rate),
         updateForRange: {
           start: currentValue.updateInterestRateForLoanStart,
-          end: currentValue.updateInterestRateForLoanEnd,
         },
       };
     }
@@ -132,64 +110,13 @@ export const SetInterestRateDialog: React.FC<{
               </DialogContentText>
 
               <Grid item container xs={12}>
-                <Field
-                  name="rate"
-                  component={(props: TextFieldProps) => (
-                    <TextField
-                      // type="number"
-                      name="numberformat"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      InputProps={{
-                        inputComponent: props => (
-                          <PercentageInput {...props} defaultValue={10} />
-                        ),
-                      }}
-                      {...fieldToTextField(props)}
-                    />
-                  )}
-                  handleChange={handleChange}
-                />
+                <Field name="rate" component={PercentageInputTextField} />
               </Grid>
               <Box m={4} />
 
               <DialogContentText id="alert-dialog-description">
                 When should the new rate to become effective?
               </DialogContentText>
-              {/* <Field name="updateInterestRateForLoanStart">
-                  {({
-                    field, // { name, value, onChange, onBlur }
-                    form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
-                    meta,
-                  }) => {
-                    console.log("field???", field);
-                    return (
-                      <TextField
-                        id="datetime-local"
-                        label="Range Start"
-                        type="datetime-local"
-                        defaultValue={field.value}
-                        value={field.value}
-                        onChange={v => {
-                          console.log("got a v!", v., v);
-                        }}
-                        onSelect={s => {
-                          console.log(s);
-                        }}
-                        name="updateInterestRateForLoanStart"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      />
-                    );
-                  }}
-                </Field> */}
-              {/* <Field
-                  component={DateTimePicker}
-                  // name="updateInterestRateForLoanStart"
-                  label="Range start"
-                /> */}
               <Grid item container xs={12}>
                 <Field
                   name="updateInterestRateForLoanStart"
@@ -218,6 +145,21 @@ export const SetInterestRateDialog: React.FC<{
     </Dialog>
   );
 };
+
+function PercentageInputTextField(props: TextFieldProps) {
+  const {
+    form: { setFieldValue },
+    field: { name },
+  } = props;
+  return (
+    <TextField
+      {...fieldToTextField(props)}
+      InputProps={{
+        endAdornment: <InputAdornment position="end">%</InputAdornment>,
+      }}
+    />
+  );
+}
 
 const useStyles = makeStyles(theme => ({
   clearIcon: {
