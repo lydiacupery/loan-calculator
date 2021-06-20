@@ -1,13 +1,13 @@
 mutation UpdateInterestRateForLoanBetween(
-  $loanId: ID!
+  $loanId: ID! 
   $rate: Float!
-  $updateForRange: EffectiveDateTimeRangeInput!
-) {
-  updateInterestRateForLoanBetween(
-    loanId: $loanId
-    rate: $rate
-    updateForRange: $updateForRange
+  $effectiveStarting: IsoDateTime!
   ) {
+  updateInterestRateForLoanBetween(
+    loanId: $loanId 
+    rate: $rate
+    effectiveStarting: $effectiveStarting
+    ) {
     id
     completedPayments {
       id

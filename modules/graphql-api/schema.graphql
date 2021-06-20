@@ -50,8 +50,7 @@ type Mutation {
   ): Loan
   deletePayment(paymentId: ID!): Loan
   updateInterestRateForLoanBetween(
-    loanId: ID!
+    loanId: ID! 
     rate: Float!
-    updateForRange: EffectiveDateTimeRangeInput!
-  ): Loan
+    effectiveStarting: IsoDateTime!): Loan
 }

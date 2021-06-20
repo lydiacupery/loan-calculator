@@ -1,14 +1,12 @@
 import { ActionDispatchEventBusPort } from "modules/atomic-object/cqrs/event-bus/port";
+import * as Result from "modules/atomic-object/result";
+import * as Loan from "modules/core/loan/entity";
+import * as Payment from "modules/core/payment/entity";
+import { TSTZRange } from "modules/db/tstzrange";
 import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
 import { makePaymentToLoanEventType } from "modules/domain-services/payment/event";
 import { PaymentRepositoryPort } from "modules/domain-services/payment/repository";
 import { MutationResolvers } from "modules/graphql-api/server-types.gen";
-import { LoanRecordRepositoryPort } from "modules/records/loan";
-import * as Payment from "modules/core/payment/entity";
-import * as Loan from "modules/core/loan/entity";
-import { TSTZRange } from "modules/db/tstzrange";
-import { result } from "lodash";
-import * as Result from "modules/atomic-object/result";
 
 const makePayment: MutationResolvers.MakePaymentResolver = async (
   parent,
@@ -70,15 +68,15 @@ const updateInterestRateForLoanBetween: MutationResolvers.UpdateInterestRateForL
       ...l,
       rate: args.rate,
       effectiveDateTimeRange: new TSTZRange({
-        start: args.updateForRange.start,
-        end: args.updateForRange.end || null,
+        start: args.effectiveStarting,
+        end: null,
       }),
     };
   });
 
   if (Result.isError(updatedLoan)) {
     throw new Error(
-      `Error updating the rate on loan ${args.loanId} for effective date time range ${args.updateForRange}`
+      `Error updating the rate on loan ${args.loanId} for effective date time ${args.effectiveStarting}`
     );
   }
 

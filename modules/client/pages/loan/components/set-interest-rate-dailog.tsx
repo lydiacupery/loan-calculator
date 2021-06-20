@@ -52,18 +52,6 @@ export const SetInterestRateDialog: React.FC<{
     updateInterestRateForLoanStart: DateTimeIso.now(),
   };
 
-  const mutationBuilder = React.useCallback(
-    (currentValue: FormValues, initialValues: FormValues) => {
-      return {
-        loanId: props.loanId,
-        rate: toNumber(currentValue.rate),
-        updateForRange: {
-          start: currentValue.updateInterestRateForLoanStart,
-        },
-      };
-    }
-  );
-
   function handleClickOpen() {
     setOpen(true);
   }
@@ -74,17 +62,14 @@ export const SetInterestRateDialog: React.FC<{
 
   async function handleUpdate(values: FormValues) {
     console.log("got me some form values!", values);
-    // await updateInterestRateForLoanBetween({
-    //   variables: {
-    //     loanId: props.loanId,
-    //     updateForRange: {
-    //       start: values.updateInterestRateForLoanStart,
-    //       end: values.updateInterestRateForLoanEnd,
-    //     },
-    //     rate: values.rate,
-    //   },
-    // });
-    // handleClose();
+    await updateInterestRateForLoanBetween({
+      variables: {
+        loanId: props.loanId,
+        effectiveStarting: values.updateInterestRateForLoanStart,
+        rate: values.rate,
+      },
+    });
+    handleClose();
   }
 
   return (
