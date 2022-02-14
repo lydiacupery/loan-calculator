@@ -1,0 +1,23 @@
+#!/bin/bash
+
+CONFIG_DIR=/home/dev/config
+
+# VSCode server
+[ ! -d "${CONFIG_DIR}/vscode-server" ] && mkdir ${CONFIG_DIR}/vscode-server
+
+# Place to put any scripts you want in your path
+[ ! -d "${CONFIG_DIR}/bin" ] && mkdir ${CONFIG_DIR}/bin
+
+# SSH directory
+[ ! -d "${CONFIG_DIR}/ssh" ] && mkdir ${CONFIG_DIR}/ssh
+
+# SSH keys
+if [ ! -f "${CONFIG_DIR}/ssh/id_rsa.pub" ]; then
+  cat /dev/zero  | ssh-keygen -q -N "" > /dev/null
+  printf "\n\nYou have no keys! Add the following to your GitHub SSH keys:\n\n"
+  cat ${CONFIG_DIR}/ssh/id_rsa.pub
+  printf "\n"
+fi
+
+# Vim config
+[ ! -f "${CONFIG_DIR}/vimrc" ] && touch ${CONFIG_DIR}/vimrc

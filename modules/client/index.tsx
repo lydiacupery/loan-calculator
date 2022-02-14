@@ -13,6 +13,7 @@ import { AllLoansPageLoader } from "./pages/all-loans/loader";
 import * as AuthRoutes from "./routes/authentication-routes";
 import { LoanPageLoader } from "./pages/loan/loader";
 import { LoanRoute } from "./routes/loan";
+import { UpcomingPaymentsPageLoader } from "./pages/upcoming-payments/loader";
 /** Build the core app store with middlewares and reducer. Used to bootstrap the app to run and to test. */
 
 export function App(props: {}) {
@@ -53,6 +54,11 @@ function RoutesWithHeader() {
         />
         <Route exact path="/error" component={ServerErrorPageRouteLoader} />
         <Route exact path="/loans" component={AllLoansPageLoader} />
+        <Route
+          exact
+          path="/upcoming-payments"
+          component={UpcomingPaymentsPageLoader}
+        />
         <Route
           exact
           path={LoanRoute.PATH_TEMPLATE}

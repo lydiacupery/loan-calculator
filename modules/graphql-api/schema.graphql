@@ -6,6 +6,7 @@ type Query {
   getLoans: [Loan!]!
   getLoan(loanId: ID!, effectiveDateTime: IsoDateTime!): Loan
   getLoanVersions(loanId: ID!): [Loan!]!
+  getRemainingPaymentsForAllLoans: [Payment!]!
 }
 
 type Loan {
@@ -50,7 +51,8 @@ type Mutation {
   ): Loan
   deletePayment(paymentId: ID!): Loan
   updateInterestRateForLoanBetween(
-    loanId: ID! 
+    loanId: ID!
     rate: Float!
-    effectiveStarting: IsoDateTime!): Loan
+    effectiveStarting: IsoDateTime!
+  ): Loan
 }

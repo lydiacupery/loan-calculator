@@ -27,6 +27,11 @@ export function HomePageUI(props: HomePageUIProps) {
               <li>
                 <ButtonLink to={`/loans/`}>Loans</ButtonLink>
               </li>
+              <li>
+                <ButtonLink to={`/upcoming-payments/`}>
+                  Upcoming Payments
+                </ButtonLink>
+              </li>
             </ul>
           </Paper>
         </Grid>

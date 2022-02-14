@@ -1,4 +1,4 @@
-version: "2"
+version: "3.1"
 services:
   postgres:
     image: postgres:10.5
@@ -11,3 +11,20 @@ services:
     image: redis:4
     ports:
       - "6379:6379"
+#   dev:
+#     build: docker/dev
+#     command: /usr/local/lib/tail-and-wait
+#     volumes:
+#       - devappdata:/home/dev/app
+#       - devconfigdata:/home/dev/config
+#     ports:
+#       - "3000:3000"
+#       - "9001:9001"
+
+#     environment:
+#       - "DOCKER_DEV_EXEC=\ "
+
+# volumes:
+#   devappdata:
+#   devconfigdata:
+#   postgresdata:

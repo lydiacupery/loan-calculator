@@ -5,6 +5,7 @@ import { LoanRepositoryPort } from "modules/domain-services/loan/repository";
 import { PaymentRepositoryPort } from "modules/domain-services/payment/repository";
 import * as Payment from "modules/core/payment/entity";
 import * as Loan from "modules/core/loan/entity";
+import * as R from "ramda";
 import * as DateTimeIso from "modules/core/date-time-iso";
 import * as DateIso from "modules/core/date-iso";
 import * as Finance from "modules/core/finance";
@@ -18,10 +19,30 @@ export type ServiceContext = Hexagonal.Context<
 export class LoanDomainGraphManager {
   constructor(private readonly ctx: ServiceContext) {}
 
+  async getAllRemaningPaymentsForLoan(currentDateTime: DateTimeIso.Type) {
+    const loans = await this.ctx.get(LoanRepositoryPort).all();
+    const payments = await Promise.all(
+      loans.map(
+        async l =>
+          await this.getRemainingPaymentsForLoan(Loan.id(l), currentDateTime)
+      )
+    );
+    console.log("---got some payments", payments);
+    return R.sortBy(p => p.date, R.flatten(payments));
+  }
+
   async getRemainingPaymentsForLoan(
     loanId: LoanId,
     currentDateTime: DateTimeIso.Type
-  ) {
+  ): Promise<
+    {
+      date: DateIso.Type;
+      interestPayment: number;
+      principalPayment: number;
+      totalPayment: number;
+      remainingPrincipal: number;
+    }[]
+  > {
     const loan = await this.ctx.get(LoanRepositoryPort).find({ id: loanId });
     if (!loan) {
       throw new Error(`could not find loan with id ${loanId}`);
@@ -62,6 +83,7 @@ export class LoanDomainGraphManager {
       paymentAmount: Loan.paymentAmount(loan) + Loan.extraPayment(loan),
       startDate,
       interestRate: Loan.rate(loan) / 12, // again, making the assumption of 12 payment periods
+      loanId: Loan.id(loan),
     });
     return payments;
   }
@@ -71,8 +93,15 @@ export class LoanDomainGraphManager {
     paymentAmount: number;
     interestRate: number;
     startDate: DateIso.Type;
+    loanId: LoanId;
   }) {
-    const { totalPayment, paymentAmount, startDate, interestRate } = args;
+    const {
+      totalPayment,
+      paymentAmount,
+      startDate,
+      interestRate,
+      loanId,
+    } = args;
     const remainingPaymentCount = Math.ceil(
       Finance.numberOfPayments(interestRate / 12, -paymentAmount, totalPayment)
     );
@@ -128,7 +157,7 @@ export class LoanDomainGraphManager {
       [
         {
           date: startDate,
-          id: startDate.toString(),
+          id: startDate.toString() + loanId,
           interestPayment: totalPayment * interestRate,
           principalPayment: paymentAmount - totalPayment * interestRate,
           totalPayment: paymentAmount,

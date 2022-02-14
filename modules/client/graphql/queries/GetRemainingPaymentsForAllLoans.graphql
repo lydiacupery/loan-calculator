@@ -1,0 +1,10 @@
+query GetRemainingPaymentsForAllLoans {
+  getRemainingPaymentsForAllLoans {
+    id
+    principalPayment
+    interestPayment
+    remainingPrincipal
+    date
+    totalPayment
+  }
+}

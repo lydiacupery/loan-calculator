@@ -317,3 +317,8 @@ Database names:
 ## CI
 
 The project is configured to run in CircleCI (see .circleci/config.yml). It's possible to run [locally](https://circleci.com/docs/2.0/local-cli/) with `circleci local execute`. Warning: the tests may hang after completion if there aren't enough concurrent workers. Fix this by cranking up your cores in Docker or by specifying Jest's [--maxWorkers](https://jestjs.io/docs/en/cli.html#maxworkers-num). (We'd prefer not to _check in_ a maxWorkers setting; we want test concurrency to be elastic with the number of hardware threads available.)
+
+
+
+Building docker image:
+docker build . -f docker/Dockerfile
