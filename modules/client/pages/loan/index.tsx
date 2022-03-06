@@ -80,7 +80,7 @@ export const LoanPage: React.FC<Props> = props => {
               </Grid>
               <Grid item xs={1}></Grid>
               <Grid item container xs={7}>
-                <LoanTimeline loanId={props.loanId} />
+                {/* <LoanTimeline loanId={props.loanId} /> */}
               </Grid>
             </Grid>
 

@@ -7,7 +7,6 @@ import {
   GetLoan,
   MakePayment,
 } from "modules/client/graphql/types.gen";
-import { update } from "lodash";
 
 describe("Remove payment mutation", () => {
   it(

@@ -18,19 +18,11 @@ import { Flavor } from "modules/helpers";
 import { Isomorphism } from "@atomic-object/lenses";
 import * as Result from "modules/atomic-object/result";
 import { LoanId } from "modules/core/loan/value";
-import { PaymentRecord } from "modules/records/impl/core";
 import { LoanRepositoryPort } from "../loan/repository";
-import {
-  LoanDomainGraphManager,
-  LoanDomainGraphManagerPort,
-} from "../domain-graph-managers/loan-domain-graph-manager";
 import * as Loan from "modules/core/loan/entity";
 
 type ServiceContext = Hexagonal.Context<
-  | KnexPort
-  | PaymentRecordRepositoryPort
-  | LoanRepositoryPort
-  | LoanDomainGraphManagerPort
+  KnexPort | PaymentRecordRepositoryPort | LoanRepositoryPort
 >;
 
 const domainToDat: Isomorphism<Payment.Type, SavedPayment> = {
@@ -84,6 +76,7 @@ export class PaymentRepository
     const paymentsForLoan = await this.ctx
       .get(PaymentRecordRepositoryPort)
       .forLoan.load({ id: loanId });
+    console.log("payments for loan??", paymentsForLoan);
     return paymentsForLoan.map(payment => domainToDat.from(payment));
   }
 
@@ -134,11 +127,6 @@ export const PaymentRepositoryPort = Hexagonal.port<
 export type PaymentRepositoryPort = typeof PaymentRepositoryPort;
 export const PaymentRepositoryAdapter = Hexagonal.adapter({
   port: PaymentRepositoryPort,
-  requires: [
-    KnexPort,
-    PaymentRecordRepositoryPort,
-    LoanRepositoryPort,
-    LoanDomainGraphManagerPort,
-  ],
+  requires: [KnexPort, PaymentRecordRepositoryPort, LoanRepositoryPort],
   build: ctx => new PaymentRepository(ctx),
 });

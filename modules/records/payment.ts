@@ -8,7 +8,7 @@ import { buildRepositoryPortAndAdapter } from "./helpers";
 import { LoanId } from "modules/core/loan/value";
 import { PaymentId } from "modules/core/payment/value";
 import DataLoader from "dataloader";
-import { keyBy } from "lodash";
+import { keyBy } from "lodash-es";
 
 export interface UnsavedPayment {
   principalPayment: number;

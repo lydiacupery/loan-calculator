@@ -1,34 +1,22 @@
 import {
   Box,
   Button,
-  colors,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   Grid,
-  IconButton,
   InputAdornment,
   makeStyles,
   TextField,
 } from "@material-ui/core";
-import { TextField as FMUITextField } from "formik-material-ui";
-import { Clear, DeleteOutline } from "@material-ui/icons";
 import { Field, Form, Formik } from "formik";
-import { useMutationBundle } from "modules/client/graphql/hooks";
-import {
-  DeletePayment,
-  UpdateInterestRateForLoanBetween,
-} from "modules/client/graphql/types.gen";
-import React from "react";
-import * as DateTimeIso from "modules/core/date-time-iso";
-import { toNumber } from "lodash";
-import { useForm } from "modules/atomic-object/forms/use-form";
-import { DateTimePicker } from "formik-material-ui-pickers";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { fieldToTextField, TextFieldProps } from "formik-material-ui";
-import NumberFormat, { NumberFormatProps } from "react-number-format";
+import { useMutationBundle } from "modules/client/graphql/hooks";
+import { UpdateInterestRateForLoanBetween } from "modules/client/graphql/types.gen";
+import * as DateTimeIso from "modules/core/date-time-iso";
+import React from "react";
 
 type FormValues = {
   updateInterestRateForLoanStart: DateTimeIso.Type;

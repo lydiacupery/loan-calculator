@@ -48,13 +48,16 @@ export class LoanDomainGraphManager {
       throw new Error(`could not find loan with id ${loanId}`);
     }
 
-    const completedPayments = await this.ctx.get(PaymentRepositoryPort).all();
+    const completedPayments = await this.ctx
+      .get(PaymentRepositoryPort)
+      .forLoan(loanId);
     const totalPrincipalPayments = completedPayments.reduce(
       (prev, curr) => prev + Payment.principalPayment(curr),
       0
     );
 
     const remainingPrincipal = Loan.principal(loan) - totalPrincipalPayments;
+    console.log("remaining principal!!", remainingPrincipal);
 
     // for now, making the (probably incorrect) assumption that there are always 12 payments per year - on the 10th of each month
 
@@ -82,7 +85,7 @@ export class LoanDomainGraphManager {
       totalPayment: remainingPrincipal,
       paymentAmount: Loan.paymentAmount(loan) + Loan.extraPayment(loan),
       startDate,
-      interestRate: Loan.rate(loan) / 12, // again, making the assumption of 12 payment periods
+      interestRate: Loan.rate(loan), // again, making the assumption of 12 payment periods
       loanId: Loan.id(loan),
     });
     return payments;
@@ -102,9 +105,11 @@ export class LoanDomainGraphManager {
       interestRate,
       loanId,
     } = args;
+    console.log({ interestRate, paymentAmount, totalPayment });
     const remainingPaymentCount = Math.ceil(
       Finance.numberOfPayments(interestRate / 12, -paymentAmount, totalPayment)
     );
+    console.log({ remainingPaymentCount });
 
     // need to make 'count' number of payments starting on startDate
 

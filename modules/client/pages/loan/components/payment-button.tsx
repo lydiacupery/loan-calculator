@@ -15,7 +15,7 @@ import { MakePayment, Payment } from "modules/client/graphql/types.gen";
 import * as IsoDateTime from "modules/core/date-time-iso";
 import { useForm } from "modules/atomic-object/forms/use-form";
 import * as FMUI from "formik-material-ui";
-import { toNumber } from "lodash";
+import { toNumber } from "lodash-es";
 
 import { StringFormatDefinition } from "ajv";
 type FormValues = {
