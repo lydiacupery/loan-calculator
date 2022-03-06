@@ -106,8 +106,13 @@ export class LoanDomainGraphManager {
       loanId,
     } = args;
     console.log({ interestRate, paymentAmount, totalPayment });
+    const monthlyInterestRate = interestRate / 12;
     const remainingPaymentCount = Math.ceil(
-      Finance.numberOfPayments(interestRate / 12, -paymentAmount, totalPayment)
+      Finance.numberOfPayments(
+        monthlyInterestRate,
+        -paymentAmount,
+        totalPayment
+      )
     );
     console.log({ remainingPaymentCount });
 
@@ -144,7 +149,7 @@ export class LoanDomainGraphManager {
         } = Finance.getInterestAndPrincipalPortionsOfPayment({
           payment: paymentAmount,
           principal: prev.remainingPrincipal,
-          interestRate,
+          interestRate: monthlyInterestRate,
         });
         const date = DateIso.addMonths(prev.date, 1);
         return [
@@ -163,11 +168,11 @@ export class LoanDomainGraphManager {
         {
           date: startDate,
           id: startDate.toString() + loanId,
-          interestPayment: totalPayment * interestRate,
-          principalPayment: paymentAmount - totalPayment * interestRate,
+          interestPayment: totalPayment * monthlyInterestRate,
+          principalPayment: paymentAmount - totalPayment * monthlyInterestRate,
           totalPayment: paymentAmount,
           remainingPrincipal:
-            totalPayment - (paymentAmount - totalPayment * interestRate),
+            totalPayment - (paymentAmount - totalPayment * monthlyInterestRate),
         },
       ]
     );
